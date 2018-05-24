@@ -1,0 +1,4 @@
+twig:
+  class: App\TwigServiceProvider\TwigServiceProvider
+  params: { file: ../views/ }
+

@@ -1,0 +1,27 @@
+{
+  "name": "didpoule/blog_php",
+  "description": "Blog php réalisé dans le cadre d'un projet sur OpenClassRooms.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jordan Brito",
+      "email": "jbrito@herewedev.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "twig/twig": "2.x-dev",
+    "symfony/yaml": "^4.1@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app",
+      "": "src"
+    }
+  },
+  "scripts": {
+    "serve": [
+      "ENV=dev DB_HOST=127.0.0.1 DB_NAME=blog DB_USER=root DB_PASSWORD=root php -S localhost:8000 -t web/"
+    ]
+  }
+}

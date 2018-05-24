@@ -1,0 +1,10 @@
+billets:
+    path:  /billets/:slug
+    parameters: {slug:  '[\w+-]+'}
+    controller: Blog\Controller\PostController
+    action: showAction
+
+home:
+    path: /
+    controller: Blog\Controller\HomeController
+    action: homeAction
