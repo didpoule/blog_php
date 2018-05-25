@@ -3,7 +3,6 @@
 namespace App\Router;
 
 use App\Request\Request;
-use App\Route\Route;
 use App\ServicesProvider\ServicesProvider;
 use Symfony\Component\Yaml\Yaml;
 
@@ -77,12 +76,14 @@ class Router {
 				return $route;
 			};
 		}
-		throw new RouterException( "La route n'est pas valide" );
+		throw new RouterException("Route inconnue");
 	}
 
 	/**
 	 * Cherche une route avec son nom
+	 *
 	 * @param $name
+	 *
 	 * @return mixed
 	 * @throws RouterException
 	 */
@@ -102,15 +103,9 @@ class Router {
 		$action     = $this->matchedRoute->getAction();
 		$params     = $this->matchedRoute->getArgs();
 
-		// Si il y a un seul paramètre on envoie la valeur de ce paramètre;
-		if ( sizeof( $this->matchedRoute->getParameters() ) === 1 ) {
-			$params = $params[ array_keys( $params )[0] ];
-		}
-
 		$controller = new $controller( $this->services, $this );
 
-		$controller->$action( $params );
-
+		call_user_func_array( [ $controller, $action ], $params );
 	}
 
 
@@ -120,6 +115,4 @@ class Router {
 	public function getMatchedRoute() {
 		return $this->matchedRoute;
 	}
-
-
 }

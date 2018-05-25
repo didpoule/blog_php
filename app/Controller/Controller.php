@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Response\RedirectResponse;
 use App\Response\Response;
 use App\Router\Router;
+use App\Router\RouterException;
 use App\ServicesProvider\ServicesProvider;
 
 /**
@@ -31,14 +32,18 @@ class Controller {
 	 */
 	public function __construct( $services, $router ) {
 		$this->services = $services;
-		$this->router = $router;
+		$this->router   = $router;
 	}
 
+	/**
+	 * @param $fileName
+	 * @param array $datas
+	 *
+	 * @return mixed|void
+	 */
 	public function render( $fileName, $datas = [] ) {
 
-
-		$view = $this->services->get('twig')->load( $fileName );
-
+		$view = $this->services->get( 'twig' )->load( $fileName );
 
 		$content = $view->render( $datas );
 
@@ -51,14 +56,19 @@ class Controller {
 	 * @param $routeName string
 	 * @param array $arg
 	 */
-	public function redirect($routeName, $args = []) {
+	public function redirect( $routeName, $args = [] ) {
 
-		$route = $this->router->getRouteByName($routeName);
+		try {
+			$route = $this->router->getRouteByName( $routeName );
+			$url   = $route->generateUrl( $args );
 
-		$url = $route->generateUrl($args);
+			$response = new RedirectResponse( $url );
 
-		$response = new RedirectResponse($url);
+			$response->send();
+		} catch ( RouterException $e ) {
+			echo $e->getMessage();
+		}
 
-		$response->send();
+
 	}
 }

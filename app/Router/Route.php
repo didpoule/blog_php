@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Route;
+namespace App\Router;
 
 /**
  * Class Route
@@ -164,7 +164,6 @@ class Route {
 	 * @return string
 	 */
 	public function generateUrl($args): string {
-
 		$url = str_replace(array_keys($args), $args, $this->path);
 		$url = str_replace(":", "", $url);
 		return $url;
