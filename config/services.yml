@@ -1,4 +1,3 @@
 twig:
-  class: App\TwigServiceProvider\TwigServiceProvider
+  class: App\Templating\Templating
   params: { file: ../views/ }
-
