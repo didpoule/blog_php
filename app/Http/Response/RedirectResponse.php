@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Response;
-
+namespace App\Http\Response;
 
 /**
  * Class RedirectResponse
@@ -28,7 +27,7 @@ class RedirectResponse implements ResponseInterface {
 	 * Redirect to url
 	 */
 	public function send() {
-		header(sprintf("location: %s", $this->url));
+		header( sprintf( "location: %s", $this->url ) );
 	}
 
 }

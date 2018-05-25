@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Response\RedirectResponse;
-use App\Response\Response;
+use App\Http\Response\RedirectResponse;
+use App\Http\Response\Response;
 use App\Router\Router;
 use App\Router\RouterException;
 use App\ServicesProvider\ServicesProvider;

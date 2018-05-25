@@ -2,7 +2,7 @@
 
 namespace App\Router;
 
-use App\Request\Request;
+use App\Http\Request\Request;
 use App\ServicesProvider\ServicesProvider;
 use Symfony\Component\Yaml\Yaml;
 

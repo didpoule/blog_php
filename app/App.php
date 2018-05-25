@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Request\Request;
+use App\Http\Request\Request;
 use App\Router\Router;
 use App\Router\RouterException;
 use App\ServicesProvider\ServicesProvider;
@@ -52,11 +52,13 @@ class App {
 	 */
 	public function run() {
 		$this->router->parseRouting( $this->routingConfig );
+
 		try {
 			$this->router->getRoute();
-		} catch ( RouterException $e ) {
-			echo( $e->getMessage() );
+		} catch (RouterException $e) {
+			echo $e->getMessage();
 		}
+
 		if ( $this->router->getMatchedRoute() ) {
 			$this->router->call();
 		}

@@ -19,6 +19,11 @@ class Templating {
 	 */
 	private $twig;
 
+	/**
+	 * Templating constructor.
+	 *
+	 * @param $file
+	 */
 	public function __construct( $file ) {
 
 		$this->name = 'twig';

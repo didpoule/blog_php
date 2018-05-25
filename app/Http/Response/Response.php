@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Response;
+namespace App\Http\Response;
 
 /**
  * Class Response
@@ -18,15 +18,15 @@ class Response implements ResponseInterface {
 	 *
 	 * @param $content
 	 */
-	public function __construct($content) {
+	public function __construct( $content ) {
 		$this->content = $content;
 	}
 
 	/**
 	 * Gives content
+	 * @return string
 	 */
 	public function send() {
 		echo $this->content;
 	}
-
 }
