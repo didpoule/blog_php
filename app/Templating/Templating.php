@@ -33,7 +33,14 @@ class Templating {
 
 	}
 
+	/**
+	 * Appel du load de twig
+	 * @param $name
+	 * @param $args
+	 *
+	 * @return mixed
+	 */
 	public function __call( $name, $args ) {
-		call_user_func_array( [ $this->twig, $name ], $args );
+		return call_user_func_array( [ $this->twig, $name ], $args );
 	}
 }
