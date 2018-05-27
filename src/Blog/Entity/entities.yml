@@ -1,0 +1,20 @@
+post:
+    name: post
+    columns:
+        id: { type: 'int' }
+        title: { type: 'string' }
+        slug: { type: 'string' }
+        added: { type: 'datetime' }
+        updated: { type: 'datetime' }
+        published: { type: 'boolean' }
+        content: { type: 'string' }
+
+comment:
+    name: comment
+    columns:
+        id: { type: 'int' }
+        author: { type: 'string' }
+        added: { type: 'datetime' }
+        updated: { type: 'datetime' }
+        published: { type: 'boolean' }
+        content: { type: 'string' }

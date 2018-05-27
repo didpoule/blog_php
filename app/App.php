@@ -55,7 +55,7 @@ class App {
 
 		try {
 			$this->router->getRoute();
-		} catch (RouterException $e) {
+		} catch ( RouterException $e ) {
 			echo $e->getMessage();
 		}
 

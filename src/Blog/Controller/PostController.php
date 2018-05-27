@@ -3,7 +3,10 @@
 namespace Blog\Controller;
 
 use App\Controller\Controller;
-use App\Router\RouterException;
+use App\Orm\ORMException;
+use Blog\Entity\Post\Post;
+use Blog\Manager\PostManager;
+
 
 /**
  * Class PostController
@@ -11,19 +14,23 @@ use App\Router\RouterException;
  */
 class PostController extends Controller {
 
+	public function showAction( $id ) {
 
-	public function showAction( $slug ) {
-		/*
-		 * $this->services('manager')->getOneBy($slug);
-		 */
-		$titre = $slug;
+		$manager = $this->services->get( 'manager' );
+		$manager::setEntity( Post::class );
+
+		$manager = $manager::getManager();
 
 		try {
+			$post = $manager->findById( $id );
+
 			$this->render( "post/post.html.twig", [
-				"titre" => $titre
+				"post" => $post
 			] );
-		} catch ( \Twig_Error_Loader $e ) {
-			echo( $e->getMessage() );
+		} catch ( ORMException $e ) {
+			$this->render( "error/404.html.twig", [
+				"message" => $e->getMessage()
+				] );
 		}
 	}
 }

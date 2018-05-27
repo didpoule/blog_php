@@ -36,7 +36,7 @@ class Route {
 	/**
 	 * @var array
 	 */
-	private $args;
+	private $args = [];
 
 	/**
 	 * Route constructor.
@@ -126,20 +126,6 @@ class Route {
 		 * Récupération des valeur de parametre
 		 */
 		$this->args = array_slice( $matches, 1 );
-
-		/**
-		 * Association nom parametre avec valeur
-		 */
-		for ( $i = 0; $i < sizeof( $this->args ); $i ++ ) {
-			$name          = key( $this->parameters );
-			$args[ $name ] = $this->args[ $i ];
-
-			next( $this->parameters );
-		}
-
-		$this->args = $args;
-
-
 
 		return true;
 

@@ -1,7 +1,9 @@
 {% extends "template.html.twig" %}
 
-{% block pageTitle %}{{ titre }}{% endblock %}
+{% block pageTitle %}{{ post.title }}{% endblock %}
 
 {% block content %}
-    <h1>En construction...</h1>
+    <h1>{{ post.title }}</h1>
+    <span>Posté le: {{ post.added|date }}</span>
+    <p>{{ post.content }}</p>
 {% endblock %}

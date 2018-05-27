@@ -1,3 +1,7 @@
 twig:
   class: App\Templating\Templating
   params: { file: ../views/ }
+
+manager:
+  class: App\Orm\Manager
+  params: ../config/database.yml

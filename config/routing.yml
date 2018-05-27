@@ -1,6 +1,6 @@
 billets:
-    path:  /billets/:slug
-    parameters: {slug:  '[\w+-]+'}
+    path:  /billets/:id
+    parameters: {id:  '[\d]+'}
     controller: Blog\Controller\PostController
     action: showAction
 
