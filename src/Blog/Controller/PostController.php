@@ -69,12 +69,17 @@ class PostController extends Controller {
 		$post = $manager->find( $id );
 
 		$post->setTitle( 'Titre modifié' );
+		$post->setSlug($this->services->get('slug')->slugify($post->getTitle()));
 
 		$manager->update( $post );
 
 		$this->redirect( 'billet', [ 'id' => $id ] );
 	}
 
+	/**
+	 * Supprime un billet
+	 * @param $id
+	 */
 	public function deleteAction( $id ) {
 		$manager = $this->services->get( 'manager' );
 		$manager::setEntity( Post::class );
@@ -86,6 +91,9 @@ class PostController extends Controller {
 		$this->redirect( "billets" );
 	}
 
+	/**
+	 * Insère un billet
+	 */
 	public function insertAction() {
 		$manager = $this->services->get( 'manager' );
 		$manager::setEntity( Post::class );
@@ -94,11 +102,10 @@ class PostController extends Controller {
 
 		$post = new Post();
 		$post->setTitle('Un article bidon');
-		$post->setSlug('Un-article-bidon');
+		$post->setSlug($this->services->get('slug')->slugify($post->getTitle()));
 		$post->setAdded(new \DateTime());
 		$post->setContent('Un contenu tout pourri');
 		$manager->insert( $post );
-
 		$this->redirect("billets");
 	}
 }
