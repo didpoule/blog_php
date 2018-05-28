@@ -15,6 +15,7 @@ class PostController extends Controller {
 
 	/**
 	 * Affiche un billet
+	 *
 	 * @param $id int
 	 */
 	public function showAction( $id ) {
@@ -33,7 +34,7 @@ class PostController extends Controller {
 		} catch ( ORMException $e ) {
 			$this->render( "error/404.html.twig", [
 				"message" => $e->getMessage()
-				] );
+			] );
 		}
 	}
 
@@ -48,17 +49,18 @@ class PostController extends Controller {
 
 		$posts = $manager->findLasts();
 
-		$this->render("post/posts.html.twig", [
-			 "posts" => $posts
-		]);
 
+		$this->render( "post/posts.html.twig", [
+			"posts" => $posts
+		] );
 	}
 
 	/**
 	 * Modifie un billet
+	 *
 	 * @param $id int
 	 */
-	public function editAction($id) {
+	public function editAction( $id ) {
 		$manager = $this->services->get( 'manager' );
 		$manager::setEntity( Post::class );
 
@@ -66,10 +68,21 @@ class PostController extends Controller {
 
 		$post = $manager->find( $id );
 
-		$post->setTitle('Titre modifié');
+		$post->setTitle( 'Titre modifié' );
 
-		$manager->update($post);
+		$manager->update( $post );
 
-		$this->redirect('billet', ['id' => $id]);
+		$this->redirect( 'billet', [ 'id' => $id ] );
+	}
+
+	public function deleteAction( $id ) {
+		$manager = $this->services->get( 'manager' );
+		$manager::setEntity( Post::class );
+
+		$manager = $manager::getManager();
+
+		$manager->delete( $id );
+
+		$this->redirect( "billets" );
 	}
 }

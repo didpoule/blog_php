@@ -10,6 +10,6 @@ use App\Orm\Manager;
  */
 class PostManager extends Manager {
 	public function findLasts( $limit = null ) {
-			return $this->fetchAll(null, 0, $limit, ['added' => "DESC"]);
+			return $this->fetchAll(null, null, $limit, ['added' => "DESC"]);
 	}
 }

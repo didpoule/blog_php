@@ -118,12 +118,20 @@ class Manager {
 	 * @return string
 	 */
 	private function limit( $offset, $limit ) {
-		$limit = sprintf( "LIMIT %s,%s", $offset, $limit );
+		if ( ! is_null( $offset ) || ! is_null( $limit ) ) {
+			if ( is_null( $limit ) && ! is_null( $offset ) ) {
+				$limit = sprintf( "LIMIT %s", $offset );
 
-		//$offset = sprintf( "OFFSET %s", $offset );
+			} else {
+				$limit = sprintf( "LIMIT %s,%s", $offset, $limit );
+			}
 
-		return sprintf( "%s ", $limit );
+			//$offset = sprintf( "OFFSET %s", $offset );
 
+			return sprintf( "%s ", $limit );
+
+		}
+		return "";
 	}
 
 	/**
@@ -192,34 +200,49 @@ class Manager {
 	 * @param $entity Entity
 	 */
 	public function update( $entity ) {
-		$request   = sprintf( "UPDATE %s %s WHERE id = :id", self::$entity::getMeta()['name'], $this->set( $entity ) );
+		$request = sprintf( "UPDATE %s %s WHERE id = :id", self::$entity::getMeta()['name'], $this->set( $entity ) );
 
 		$statement = $this->pdo->prepare( $request );
 
-		$params = $this->setUpdateParams($entity);
+		$params = $this->setUpdateParams( $entity );
 
 		$statement->execute( $params );
 	}
 
 	/**
 	 * Récupère les valeurs des propriétés de l'entité
+	 *
 	 * @param $entity
 	 *
 	 * @return array
 	 */
-	private function setUpdateParams($entity) {
+	private function setUpdateParams( $entity ) {
 		$params = [];
 
 		foreach ( self::$entity::getMeta()['columns'] as $property => $value ) {
 			$getter = sprintf( "get%s", ucfirst( $property ) );
 			if ( $value['type'] === 'datetime' ) {
-				$date     = $entity->$getter()->format( "Y-m-d-H-i-s" );
-				$params[$property] = $date;
+				$date                = $entity->$getter()->format( "Y-m-d-H-i-s" );
+				$params[ $property ] = $date;
 			} else {
-				$params[$property] = $entity->$getter();
+				$params[ $property ] = $entity->$getter();
 
 			}
 		}
+
 		return $params;
+	}
+
+	private function remove( $params = [] ) {
+		$request = sprintf( "DELETE FROM %s %s", self::$entity::getMeta()['name'], $this->where( $params ) );
+
+		$statement = $this->pdo->prepare( $request );
+
+		$statement->execute( $params );
+
+	}
+
+	public function delete( $id ) {
+		$this->remove( [ "id" => $id ] );
 	}
 }
