@@ -141,6 +141,7 @@ class Route {
 		if ( isset( $this->parameters[ $match[1] ] ) ) {
 			return sprintf( "(%s)", $this->parameters[ $match[1] ] );
 		}
+
 		return '([^/]+)';
 	}
 
@@ -149,9 +150,10 @@ class Route {
 	 *
 	 * @return string
 	 */
-	public function generateUrl($args): string {
-		$url = str_replace(array_keys($args), $args, $this->path);
-		$url = str_replace(":", "", $url);
+	public function generateUrl( $args ): string {
+		$url = str_replace( array_keys( $args ), $args, $this->path );
+		$url = str_replace( ":", "", $url );
+
 		return $url;
 	}
 

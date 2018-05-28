@@ -59,7 +59,7 @@ class Manager {
 		$entity = new self::$entity();
 
 		try {
-			$entity->hydrate();
+			$entity->hydrate($result);
 		} catch ( ORMException $e ) {
 			die ( $e->getMessage() );
 		}
