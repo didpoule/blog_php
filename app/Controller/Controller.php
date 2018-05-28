@@ -68,7 +68,16 @@ class Controller {
 		} catch ( RouterException $e ) {
 			echo $e->getMessage();
 		}
+	}
 
-
+	/**
+	 * Racourci pour apeller un service
+	 *
+	 * @param $name
+	 *
+	 * @return bool|mixed
+	 */
+	public function __get( $name ) {
+		return $this->services->get( strtolower( $name ) );
 	}
 }

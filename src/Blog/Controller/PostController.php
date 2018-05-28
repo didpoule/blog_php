@@ -19,14 +19,12 @@ class PostController extends Controller {
 	 * @param $value mixed
 	 */
 	public function showAction( $value ) {
-
-
-		$manager = $this->services->get( 'manager' );
+		$manager = $this->manager;
 		$manager::setEntity( Post::class );
 
 		$manager = $manager::getManager();
 
-		if ( $this->services->get( 'slug' )->isSlug( $value ) ) {
+		if ( $this->slug->isSlug( $value ) ) {
 			$post = $manager->findBySlug( $value );
 		} else {
 			$post = $manager->find( $value );
@@ -41,7 +39,7 @@ class PostController extends Controller {
 	 * Récupère la liste de billets
 	 */
 	public function listAction() {
-		$manager = $this->services->get( 'manager' );
+		$manager = $this->manager;
 		$manager::setEntity( Post::class );
 
 		$manager = $manager::getManager();
@@ -60,7 +58,7 @@ class PostController extends Controller {
 	 * @param $id int
 	 */
 	public function editAction( $id ) {
-		$manager = $this->services->get( 'manager' );
+		$manager = $this->manager;
 		$manager::setEntity( Post::class );
 
 		$manager = $manager::getManager();
@@ -68,7 +66,7 @@ class PostController extends Controller {
 		$post = $manager->find( $id );
 
 		$post->setTitle( 'Titre modifié' );
-		$post->setSlug( $this->services->get( 'slug' )->slugify( $post->getTitle() ) );
+		$post->setSlug( $this->slug->slugify( $post->getTitle() ) );
 
 		$manager->update( $post );
 
@@ -81,7 +79,7 @@ class PostController extends Controller {
 	 * @param $id
 	 */
 	public function deleteAction( $id ) {
-		$manager = $this->services->get( 'manager' );
+		$manager = $this->manager;
 		$manager::setEntity( Post::class );
 
 		$manager = $manager::getManager();
@@ -95,14 +93,14 @@ class PostController extends Controller {
 	 * Insère un billet
 	 */
 	public function insertAction() {
-		$manager = $this->services->get( 'manager' );
+		$manager = $this->manager;
 		$manager::setEntity( Post::class );
 
 		$manager = $manager::getManager();
 
 		$post = new Post();
 		$post->setTitle( 'test article' );
-		$post->setSlug( $this->services->get( 'slug' )->slugify( $post->getTitle() ) );
+		$post->setSlug( $this->slug->slugify( $post->getTitle() ) );
 		$post->setAdded( new \DateTime() );
 		$post->setContent( 'Un contenu tout pourri' );
 		$manager->insert( $post );

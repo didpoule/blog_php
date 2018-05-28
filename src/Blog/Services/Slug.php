@@ -23,6 +23,6 @@ class Slug {
 	 * @param $string
 	 */
 	public function isSlug( $string ) {
-		return ! strstr( $string, " " );
+		return (!strstr( $string, " " ) && strlen($string) > 1 );
 	}
 }
