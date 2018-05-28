@@ -101,7 +101,7 @@ class Manager {
 	private function where( $params ) {
 		if ( ! empty( $params ) ) {
 			foreach ( $params as $property => $value ) {
-				$conditions[] = sprintf( "%s = :%s", key( self::$entity::getMeta()['columns'] ), $property );
+				$conditions[] = sprintf( "%s = :%s", $property, $property );
 			}
 
 			return sprintf( "WHERE %s", implode( ' AND ', $conditions ) );

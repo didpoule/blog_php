@@ -15,6 +15,13 @@ editBillet:
     controller: Blog\Controller\PostController
     action: editAction
 
+
+billetSlug:
+    path:  /billets/:slug
+    parameters: {slug:  '([A-Za-z0-9]+-[A-Za-z0-9]+)+$'}
+    controller: Blog\Controller\PostController
+    action: showAction
+
 billet:
     path:  /billets/:id
     parameters: {id:  '[\d]+'}

@@ -5,3 +5,6 @@ twig:
 manager:
   class: App\Orm\Manager
   params: ../config/database.yml
+
+slug:
+  class: Blog\Services\Slug

@@ -16,26 +16,25 @@ class PostController extends Controller {
 	/**
 	 * Affiche un billet
 	 *
-	 * @param $id int
+	 * @param $value mixed
 	 */
-	public function showAction( $id ) {
+	public function showAction( $value ) {
+
 
 		$manager = $this->services->get( 'manager' );
 		$manager::setEntity( Post::class );
 
 		$manager = $manager::getManager();
 
-		try {
-			$post = $manager->find( $id );
+		if ( $this->services->get( 'slug' )->isSlug( $value ) ) {
+			$post = $manager->findBySlug( $value );
+		} else {
+			$post = $manager->find( $value );
 
-			$this->render( "post/post.html.twig", [
-				"post" => $post
-			] );
-		} catch ( ORMException $e ) {
-			$this->render( "error/404.html.twig", [
-				"message" => $e->getMessage()
-			] );
 		}
+		$this->render( "post/post.html.twig", [
+			"post" => $post
+		] );
 	}
 
 	/**
@@ -69,7 +68,7 @@ class PostController extends Controller {
 		$post = $manager->find( $id );
 
 		$post->setTitle( 'Titre modifié' );
-		$post->setSlug($this->services->get('slug')->slugify($post->getTitle()));
+		$post->setSlug( $this->services->get( 'slug' )->slugify( $post->getTitle() ) );
 
 		$manager->update( $post );
 
@@ -78,6 +77,7 @@ class PostController extends Controller {
 
 	/**
 	 * Supprime un billet
+	 *
 	 * @param $id
 	 */
 	public function deleteAction( $id ) {
@@ -101,11 +101,11 @@ class PostController extends Controller {
 		$manager = $manager::getManager();
 
 		$post = new Post();
-		$post->setTitle('Un article bidon');
-		$post->setSlug($this->services->get('slug')->slugify($post->getTitle()));
-		$post->setAdded(new \DateTime());
-		$post->setContent('Un contenu tout pourri');
+		$post->setTitle( 'test article' );
+		$post->setSlug( $this->services->get( 'slug' )->slugify( $post->getTitle() ) );
+		$post->setAdded( new \DateTime() );
+		$post->setContent( 'Un contenu tout pourri' );
 		$manager->insert( $post );
-		$this->redirect("billets");
+		$this->redirect( "billets" );
 	}
 }
