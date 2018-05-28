@@ -137,42 +137,42 @@ class Post extends Entity {
 	/**
 	 * @return int
 	 */
-	public function getId(): int {
+	public function getId() {
 		return $this->id;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle(): string {
+	public function getTitle() {
 		return $this->title;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getSlug(): string {
+	public function getSlug() {
 		return $this->slug;
 	}
 
 	/**
 	 * @return \DateTime
 	 */
-	public function getAdded(): \DateTime {
+	public function getAdded() {
 		return $this->added;
 	}
 
 	/**
 	 * @return \DateTime
 	 */
-	public function getUpdated(): \DateTime {
+	public function getUpdated() {
 		return $this->updated;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function getPublished(): bool {
+	public function getPublished() {
 		return $this->published;
 	}
 
