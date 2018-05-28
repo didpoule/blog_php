@@ -43,6 +43,7 @@ class Manager {
 
 	/**
 	 * Récupère une ligne dans la base de donnée
+	 *
 	 * @param array $params
 	 *
 	 * @return mixed
@@ -51,13 +52,45 @@ class Manager {
 		$request   = sprintf( "SELECT * FROM %s %s LIMIT 0,1", self::$entity::getMeta()['name'], $this->where( $params ) );
 		$statement = $this->pdo->prepare( $request );
 
-
 		$statement->execute( $params );
 
 		$result = $statement->fetch( \PDO::FETCH_ASSOC );
 
+		$entity = new self::$entity();
 
-		return $result;
+		try {
+			$entity->hydrate();
+		} catch ( ORMException $e ) {
+			die ( $e->getMessage() );
+		}
+
+
+		return $entity;
+	}
+
+
+	/**
+	 * @param array $params
+	 */
+	public function fetchAll( $params = [], $offset = null, $limit = null, $sort = [] ) {
+		$request   = sprintf( "SELECT * FROM %s %s %s %s", self::$entity::getMeta()['name'], $this->where( $params ), $this->order( $sort ), $this->limit( $offset, $limit ) );
+		$statement = $this->pdo->prepare( $request );
+
+		$statement->execute( $params );
+
+		$results = $statement->fetchAll( \PDO::FETCH_ASSOC );
+		try {
+
+			foreach ( $results as $result ) {
+				$entity = new self::$entity();
+				$entity->hydrate( $result );
+				$entities[] = $entity;
+			}
+
+			return $entities;
+		} catch ( ORMException $e ) {
+			die( $e->getMessage() );
+		}
 	}
 
 	/**
@@ -68,11 +101,33 @@ class Manager {
 	private function where( $params ) {
 		if ( ! empty( $params ) ) {
 			foreach ( $params as $property => $value ) {
-				$conditions[] = sprintf( "%s = :%s", key(self::$entity::getMeta()['columns']), $property );
+				$conditions[] = sprintf( "%s = :%s", key( self::$entity::getMeta()['columns'] ), $property );
 			}
 
 			return sprintf( "WHERE %s", implode( ' AND ', $conditions ) );
 
+		}
+
+		return "";
+	}
+
+	private function limit( $offset, $limit ) {
+		$limit = sprintf( "LIMIT %s,%s", $offset, $limit );
+
+		//$offset = sprintf( "OFFSET %s", $offset );
+
+		return sprintf( "%s ", $limit );
+
+	}
+
+	private function order( $sort ) {
+		if ( ! is_null( $sort ) ) {
+			$order = [];
+			foreach ( $sort as $property => $value ) {
+				$order[] = sprintf( "%s %s", $property, $value );
+
+				return sprintf( "ORDER BY %s", implode( ',', $order ) );
+			}
 		}
 
 		return "";
@@ -95,5 +150,13 @@ class Manager {
 		}
 
 		return self::$manager;
+	}
+
+	public function find( $id ) {
+		return $this->fetch( [ 'id' => $id ] );
+	}
+
+	public function findAll() {
+		return $this->fetchAll();
 	}
 }

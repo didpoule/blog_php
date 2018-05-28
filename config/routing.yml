@@ -1,4 +1,9 @@
 billets:
+    path: /billets
+    controller: Blog\Controller\PostController
+    action: listAction
+
+billet:
     path:  /billets/:id
     parameters: {id:  '[\d]+'}
     controller: Blog\Controller\PostController

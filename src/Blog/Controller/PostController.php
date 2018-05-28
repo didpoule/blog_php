@@ -22,7 +22,7 @@ class PostController extends Controller {
 		$manager = $manager::getManager();
 
 		try {
-			$post = $manager->findById( $id );
+			$post = $manager->find( $id );
 
 			$this->render( "post/post.html.twig", [
 				"post" => $post
@@ -32,5 +32,19 @@ class PostController extends Controller {
 				"message" => $e->getMessage()
 				] );
 		}
+	}
+
+	public function listAction() {
+		$manager = $this->services->get( 'manager' );
+		$manager::setEntity( Post::class );
+
+		$manager = $manager::getManager();
+
+		$posts = $manager->findLasts(2);
+
+		$this->render("post/posts.html.twig", [
+			 "posts" => $posts
+		]);
+
 	}
 }

@@ -1,0 +1,10 @@
+{% extends "template.html.twig" %}
+{% block pageTitle %}Derniers billets{% endblock %}
+
+{% block content %}
+    {% if not posts is empty %}
+        {% for post in posts %}
+         <h2>{{ post.title }}</h2><span>Publié le: {{  post.added|date }}</span>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
