@@ -85,4 +85,20 @@ class PostController extends Controller {
 
 		$this->redirect( "billets" );
 	}
+
+	public function insertAction() {
+		$manager = $this->services->get( 'manager' );
+		$manager::setEntity( Post::class );
+
+		$manager = $manager::getManager();
+
+		$post = new Post();
+		$post->setTitle('Un article bidon');
+		$post->setSlug('Un-article-bidon');
+		$post->setAdded(new \DateTime());
+		$post->setContent('Un contenu tout pourri');
+		$manager->insert( $post );
+
+		$this->redirect("billets");
+	}
 }

@@ -131,6 +131,7 @@ class Manager {
 			return sprintf( "%s ", $limit );
 
 		}
+
 		return "";
 	}
 
@@ -161,7 +162,10 @@ class Manager {
 	private function set( $entity ) {
 		foreach ( $entity::getMeta()['columns'] as $property => $value ) {
 			if ( $property != "id" ) {
-				$set[] = sprintf( "%s = :%s", $property, $property );
+				$getter = sprintf( "get%s", ucfirst( $property ) );
+				if ( $entity->$getter() != null ) {
+					$set[] = sprintf( "%s = :%s", $property, $property );
+				}
 			}
 		}
 
@@ -204,7 +208,7 @@ class Manager {
 
 		$statement = $this->pdo->prepare( $request );
 
-		$params = $this->setUpdateParams( $entity );
+		$params = $this->setParams( $entity );
 
 		$statement->execute( $params );
 	}
@@ -216,23 +220,30 @@ class Manager {
 	 *
 	 * @return array
 	 */
-	private function setUpdateParams( $entity ) {
+	private function setParams( $entity ) {
 		$params = [];
 
 		foreach ( self::$entity::getMeta()['columns'] as $property => $value ) {
 			$getter = sprintf( "get%s", ucfirst( $property ) );
-			if ( $value['type'] === 'datetime' ) {
-				$date                = $entity->$getter()->format( "Y-m-d-H-i-s" );
-				$params[ $property ] = $date;
-			} else {
-				$params[ $property ] = $entity->$getter();
+			if ( $entity->$getter() != null ) {
+				if ( $value['type'] === 'datetime' ) {
+					$date                = $entity->$getter()->format( "Y-m-d-H-i-s" );
+					$params[ $property ] = $date;
+				} else {
+					$params[ $property ] = $entity->$getter();
 
+				}
 			}
 		}
 
 		return $params;
 	}
 
+	/**
+	 * Supression d'une entité de la base de données
+	 *
+	 * @param array $params
+	 */
 	private function remove( $params = [] ) {
 		$request = sprintf( "DELETE FROM %s %s", self::$entity::getMeta()['name'], $this->where( $params ) );
 
@@ -242,7 +253,54 @@ class Manager {
 
 	}
 
+	/**
+	 * @param $id
+	 */
 	public function delete( $id ) {
 		$this->remove( [ "id" => $id ] );
+	}
+
+
+	/**
+	 * Insertion d'une entité en base de données
+	 * @param $entity
+	 */
+	public function insert( $entity ) {
+		$request = sprintf( "INSERT INTO %s %s %s", self::$entity::getMeta()['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity, true ) );
+
+		$statement = $this->pdo->prepare( $request );
+
+		$params = $this->setParams( $entity );
+
+		$statement->execute( $params );
+	}
+
+	/**
+	 * Retourne la liste des propriétés de l'entité en chaine de caractere
+	 *
+	 * @param Entity $entity
+	 *
+	 * @return string
+	 */
+	private function stringProperties( Entity $entity, $prepare = false ) {
+		foreach ( self::$entity::getMeta()['columns'] as $property => $value ) {
+			if ( $property != "id" ) {
+				$getter = sprintf( "get%s", ucfirst( $property ) );
+
+				if ( $entity->$getter() != null ) {
+					if ( $prepare ) {
+						$properties[] = sprintf( ":%s", $property );
+					} else {
+						$properties[] = $property;
+					}
+				}
+			}
+		}
+
+		if ( $prepare ) {
+			return sprintf( "VALUES (%s)", implode( ",", $properties ) );
+		}
+
+		return sprintf( "(%s)", implode( ",", $properties ) );
 	}
 }

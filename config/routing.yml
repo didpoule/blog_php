@@ -1,3 +1,8 @@
+insertBillet:
+    path: /billets/insert
+    controller: Blog\Controller\PostController
+    action: insertAction
+
 deleteBillet:
     path: /billets/delete/:id
     parameters: {id: '[\d]+'}
