@@ -4,7 +4,9 @@
 {% block content %}
     {% if not posts is empty %}
         {% for post in posts %}
-         <h2>{{ post.title }}</h2><span>Publié le: {{  post.added|date }}</span>
+            <h2>{{ post.title }}</h2><span>Publié le: {{ post.added|date }}</span>
         {% endfor %}
+    {% else %}
+        Aucun billet à afficher.
     {% endif %}
 {% endblock %}

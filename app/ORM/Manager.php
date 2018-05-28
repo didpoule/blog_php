@@ -59,7 +59,7 @@ class Manager {
 		$entity = new self::$entity();
 
 		try {
-			$entity->hydrate($result);
+			$entity->hydrate( $result );
 		} catch ( ORMException $e ) {
 			die ( $e->getMessage() );
 		}
@@ -111,6 +111,12 @@ class Manager {
 		return "";
 	}
 
+	/**
+	 * @param $offset
+	 * @param $limit
+	 *
+	 * @return string
+	 */
 	private function limit( $offset, $limit ) {
 		$limit = sprintf( "LIMIT %s,%s", $offset, $limit );
 
@@ -120,6 +126,12 @@ class Manager {
 
 	}
 
+	/**
+	 *
+	 * @param $sort
+	 *
+	 * @return string
+	 */
 	private function order( $sort ) {
 		if ( ! is_null( $sort ) ) {
 			$order = [];
@@ -131,6 +143,21 @@ class Manager {
 		}
 
 		return "";
+	}
+
+	/**
+	 * @param $entity
+	 *
+	 * @return string
+	 */
+	private function set( $entity ) {
+		foreach ( $entity::getMeta()['columns'] as $property => $value ) {
+			if ( $property != "id" ) {
+				$set[] = sprintf( "%s = :%s", $property, $property );
+			}
+		}
+
+		return sprintf( "SET %s", implode( ',', $set ) );
 	}
 
 	/**
@@ -158,5 +185,41 @@ class Manager {
 
 	public function findAll() {
 		return $this->fetchAll();
+	}
+
+
+	/**
+	 * @param $entity Entity
+	 */
+	public function update( $entity ) {
+		$request   = sprintf( "UPDATE %s %s WHERE id = :id", self::$entity::getMeta()['name'], $this->set( $entity ) );
+
+		$statement = $this->pdo->prepare( $request );
+
+		$params = $this->setUpdateParams($entity);
+
+		$statement->execute( $params );
+	}
+
+	/**
+	 * Récupère les valeurs des propriétés de l'entité
+	 * @param $entity
+	 *
+	 * @return array
+	 */
+	private function setUpdateParams($entity) {
+		$params = [];
+
+		foreach ( self::$entity::getMeta()['columns'] as $property => $value ) {
+			$getter = sprintf( "get%s", ucfirst( $property ) );
+			if ( $value['type'] === 'datetime' ) {
+				$date     = $entity->$getter()->format( "Y-m-d-H-i-s" );
+				$params[$property] = $date;
+			} else {
+				$params[$property] = $entity->$getter();
+
+			}
+		}
+		return $params;
 	}
 }

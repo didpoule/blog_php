@@ -172,7 +172,7 @@ class Post extends Entity {
 	/**
 	 * @return bool
 	 */
-	public function isPublished(): bool {
+	public function getPublished(): bool {
 		return $this->published;
 	}
 

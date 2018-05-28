@@ -5,7 +5,6 @@ namespace Blog\Controller;
 use App\Controller\Controller;
 use App\Orm\ORMException;
 use Blog\Entity\Post\Post;
-use Blog\Manager\PostManager;
 
 
 /**
@@ -14,6 +13,10 @@ use Blog\Manager\PostManager;
  */
 class PostController extends Controller {
 
+	/**
+	 * Affiche un billet
+	 * @param $id int
+	 */
 	public function showAction( $id ) {
 
 		$manager = $this->services->get( 'manager' );
@@ -34,17 +37,39 @@ class PostController extends Controller {
 		}
 	}
 
+	/**
+	 * Récupère la liste de billets
+	 */
 	public function listAction() {
 		$manager = $this->services->get( 'manager' );
 		$manager::setEntity( Post::class );
 
 		$manager = $manager::getManager();
 
-		$posts = $manager->findLasts(2);
+		$posts = $manager->findLasts();
 
 		$this->render("post/posts.html.twig", [
 			 "posts" => $posts
 		]);
 
+	}
+
+	/**
+	 * Modifie un billet
+	 * @param $id int
+	 */
+	public function editAction($id) {
+		$manager = $this->services->get( 'manager' );
+		$manager::setEntity( Post::class );
+
+		$manager = $manager::getManager();
+
+		$post = $manager->find( $id );
+
+		$post->setTitle('Titre modifié');
+
+		$manager->update($post);
+
+		$this->redirect('billet', ['id' => $id]);
 	}
 }

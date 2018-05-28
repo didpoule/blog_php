@@ -1,13 +1,19 @@
-billets:
-    path: /billets
+editBillet:
+    path: /billets/edit/:id
+    parameters: {id: '[\d]+'}
     controller: Blog\Controller\PostController
-    action: listAction
+    action: editAction
 
 billet:
     path:  /billets/:id
     parameters: {id:  '[\d]+'}
     controller: Blog\Controller\PostController
     action: showAction
+
+billets:
+    path: /billets
+    controller: Blog\Controller\PostController
+    action: listAction
 
 home:
     path: /
