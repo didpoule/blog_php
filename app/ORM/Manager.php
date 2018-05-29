@@ -48,16 +48,75 @@ class Manager {
 	 *
 	 * @return mixed
 	 */
-	public function fetch( $params = [] ) {
-		$request = sprintf( "SELECT * FROM %s %s LIMIT 0,1", self::$entity::getMeta()['name'], $this->where( $params ) );
+	public function fetch( $params = [], $join = null, $alias = null ) {
+
+		$limit   = is_null( $join ) ? "LIMIT 0,1" : null;
+		$request = sprintf( "SELECT %s FROM %s AS %s %s %s %s", $this->select( $alias, $join ), self::$entity::getMeta()['name'], substr( self::$entity::getName(), 0, 1 ), $this->inner( $join ), $this->where( $params, $alias ), $limit );
 
 		$statement = $this->pdo->prepare( $request );
 
 		$statement->execute( $params );
 
-		$result = $statement->fetch( \PDO::FETCH_ASSOC );
+
+		$result = is_null( $join ) ? $statement->fetch( \PDO::FETCH_ASSOC ) : $statement->fetchAll( \PDO::FETCH_ASSOC );
+
 
 		if ( $result ) {
+			if ( ! is_null( $join ) ) {
+				// Séparation des résultats par entité
+				$i = 0;
+				foreach ( $result as $row ) {
+					foreach ( $row as $column => $value ) {
+						$colAlias = substr( $column, 0, 1 );
+						$aliasA   = substr( self::$entity::getName(), 0, 1 );
+						$aliasB   = substr( $join::getName(), 0, 1 );
+
+
+						/**
+						 * On enlève le préfixe pour pouvoir hydrater ensuite
+						 */
+
+						switch ( $colAlias ) {
+
+							case $aliasA:
+								$resultsA[ substr( $column, 2 ) ] = $value;
+								break;
+							case $aliasB:
+								$resultsB[ $i ][ substr( $column, 2 ) ] = $value;
+						}
+					}
+					$i ++;
+				}
+				/*
+				 * Hydratation de l'entité principale
+				 */
+				if ( $resultsA ) {
+
+					$entity = new self::$entity();
+					try {
+						$entity->hydrate( $resultsA );
+						$entities[ self::$entity::getName() ] = $entity;
+					} catch ( ORMException $e ) {
+						die( $e->getMessage() );
+					}
+				}
+				/*
+				 * Hydratation de l'entité jointe
+				 */
+				if ( $resultsB ) {
+					foreach ( $resultsB as $result ) {
+						$entity = new $join();
+						try {
+							$entity->hydrate( $result );
+							$entities[ $join::getName() ][] = $entity;
+						} catch ( ORMException $e ) {
+							die( $e->getMessage() );
+						}
+					}
+				}
+
+				return $entities;
+			}
 			$entity = new self::$entity();
 
 			try {
@@ -77,13 +136,17 @@ class Manager {
 	 * @param array $params
 	 */
 	public function fetchAll( $params = [], $offset = null, $limit = null, $sort = [] ) {
-		$request   = sprintf( "SELECT * FROM %s %s %s %s", self::$entity::getMeta()['name'], $this->where( $params ), $this->order( $sort ), $this->limit( $offset, $limit ) );
+
+		$request   = sprintf( "SELECT * FROM %s %s %s %s", self::$entity::getMeta()['name'], $this->order( $sort ), $this->limit( $offset, $limit ), $this->where( $params ) );
 		$statement = $this->pdo->prepare( $request );
 
 		$statement->execute( $params );
 
+
 		$results = $statement->fetchAll( \PDO::FETCH_ASSOC );
 		if ( $results ) {
+
+
 			foreach ( $results as $result ) {
 				$entity = new self::$entity();
 				try {
@@ -92,7 +155,6 @@ class Manager {
 					die( $e->getMessage() );
 				}
 				$entities[] = $entity;
-
 			}
 
 			return $entities;
@@ -102,14 +164,48 @@ class Manager {
 	}
 
 	/**
+	 * Génère le select avec des alias
+	 *
+	 * @param bool $alias
+	 *
+	 * @return string
+	 */
+	private function select( $alias = false, $join = null ) {
+		if ( $alias ) {
+			foreach ( self::$entity::getMeta()['columns'] as $property => $value ) {
+				$alias    = substr( self::$entity::getName(), 0, 1 );
+				$select[] = sprintf( "%s.%s AS %s_%s", $alias, $property, $alias, $property );
+			}
+
+			if ( $join ) {
+				foreach ( $join::getMeta()['columns'] as $property => $value ) {
+					$alias    = substr( $join::getName(), 0, 1 );
+					$select[] = sprintf( "%s.%s AS %s_%s", $alias, $property, $alias, $property );
+				}
+			}
+
+			return sprintf( "%s", implode( ',', $select ) );
+		}
+
+		return "*";
+	}
+
+	/**
+	 * Génère le WHERE de la requête préparée
+	 *
 	 * @param $params
 	 *
 	 * @return string
 	 */
-	private function where( $params ) {
+	private function where( $params, $alias = null ) {
 		if ( ! empty( $params ) ) {
+
 			foreach ( $params as $property => $value ) {
-				$conditions[] = sprintf( "%s = :%s", $property, $property );
+				if ( $alias ) {
+					$conditions[] = sprintf( "%s.%s = :%s", substr( self::$entity::getName(), 0, 1 ), $property, $property );
+				} else {
+					$conditions[] = sprintf( "%s = :%s", $property, $property );
+				}
 			}
 
 			return sprintf( "WHERE %s", implode( ' AND ', $conditions ) );
@@ -120,6 +216,8 @@ class Manager {
 	}
 
 	/**
+	 * Genre la LIMIT de la requête préparée
+	 *
 	 * @param $offset
 	 * @param $limit
 	 *
@@ -127,6 +225,7 @@ class Manager {
 	 */
 	private function limit( $offset, $limit ) {
 		if ( ! is_null( $offset ) || ! is_null( $limit ) ) {
+			// Si on a pas défini de limite
 			if ( is_null( $limit ) && ! is_null( $offset ) ) {
 				$limit = sprintf( "LIMIT %s", $offset );
 
@@ -142,6 +241,7 @@ class Manager {
 	}
 
 	/**
+	 * Géneère le ORDER de la requête préparée
 	 *
 	 * @param $sort
 	 *
@@ -155,6 +255,30 @@ class Manager {
 
 				return sprintf( "ORDER BY %s", implode( ',', $order ) );
 			}
+		}
+
+		return "";
+	}
+
+	/**
+	 * Ajoute un INNER JOIN à la requête préparée
+	 *
+	 * @param $class string
+	 *
+	 * @return string
+	 */
+	private function inner( $class ) {
+		if ( $class ) {
+			$table = $class::getName();
+
+			// Prefixe la jointure
+			$alias = substr( $table, 0, 1 );
+
+			// Jointure par la colonne du meme nom que l'entité principale
+			$join        = sprintf( "%s.%s", $alias, self::$entity::getName() );
+			$entityalias = substr( self::$entity::getName(), 0, 1 );
+
+			return sprintf( "INNER JOIN %s AS %s ON %s.id = %s", $table, $alias, $entityalias, $join );
 		}
 
 		return "";
@@ -183,6 +307,11 @@ class Manager {
 	 */
 	public static function setEntity( $entity ) {
 		self::$entity = $entity;
+
+		if ( self::$manager ) {
+			$manager       = self::$entity::getManager();
+			self::$manager = new $manager( self::$file );
+		}
 	}
 
 	/**
@@ -280,7 +409,7 @@ class Manager {
 	 * @param $entity
 	 */
 	public function insert( $entity ) {
-		$request = sprintf( "INSERT INTO %s %s %s", self::$entity::getMeta()['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity, true ) );
+		$request = sprintf( "INSERT INTO %s %s %s", self::$entity::getMeta()['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity ) );
 
 
 		$statement = $this->pdo->prepare( $request );
@@ -301,25 +430,17 @@ class Manager {
 	 *
 	 * @return string
 	 */
-	private function stringProperties( Entity $entity, $prepare = false ) {
+	private function stringProperties( Entity $entity ) {
 		foreach ( self::$entity::getMeta()['columns'] as $property => $value ) {
 			if ( $property != "id" ) {
 				$getter = sprintf( "get%s", ucfirst( $property ) );
 
 				if ( $entity->$getter() != null ) {
-					if ( $prepare ) {
-						$properties[] = sprintf( ":%s", $property );
-					} else {
-						$properties[] = $property;
-					}
+					$properties[] = sprintf( ":%s", $property );
 				}
 			}
 		}
 
-		if ( $prepare ) {
-			return sprintf( "VALUES (%s)", implode( ",", $properties ) );
-		}
-
-		return sprintf( "(%s)", implode( ",", $properties ) );
+		return sprintf( "VALUES (%s)", implode( ",", $properties ) );
 	}
 }

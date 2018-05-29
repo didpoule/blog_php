@@ -18,3 +18,4 @@ comment:
         updated: { type: 'datetime' }
         published: { type: 'boolean' }
         content: { type: 'string' }
+        post: { type: 'int' }

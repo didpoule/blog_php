@@ -1,28 +1,27 @@
 <?php
 
-namespace Blog\Entity\Post;
+namespace Blog\Entity\Comment;
+
 
 use App\Orm\Entity;
-use Blog\Manager\PostManager;
+use Blog\Manager\CommentManager;
 use Symfony\Component\Yaml\Yaml;
-use Blog\Entity\Comment\Comment;
 
 /**
- * Class Post
- * @package Blog\Entity
+ * Class Comment
+ * @package Blog\Entity\Comment
  */
-class Post extends Entity {
-
-	/**
-	 * @var string
-	 */
-
-	private static $name;
+class Comment extends Entity {
 
 	/**
 	 * @var array
 	 */
 	private static $meta;
+
+	/**
+	 * @var string
+	 */
+	private static $name;
 
 	/**
 	 * @var int
@@ -32,12 +31,12 @@ class Post extends Entity {
 	/**
 	 * @var string
 	 */
-	private $title;
+	private $author;
 
 	/**
 	 * @var string
 	 */
-	private $slug;
+	private $content;
 
 	/**
 	 * @var \DateTime
@@ -55,45 +54,45 @@ class Post extends Entity {
 	private $published;
 
 	/**
-	 * @var string
+	 * @var int
 	 */
-	private $content;
+	private $post;
 
 	/**
-	 * @var array
+	 * @return mixed
 	 */
-	private $comments;
+	public function getPost() {
+		return $this->post;
+	}
 
 	/**
-	 * Retourne le nom de l'entité
-	 * @return array|string
+	 * @param mixed $post
 	 */
+	public function setPost( $post ): void {
+		$this->post = $post;
+	}
+
 	public static function getName() {
 		if ( is_null( self::$name ) ) {
-			self::$name = "post";
+			self::$name = "comment";
 		}
 
 		return self::$name;
 	}
 
 	/**
-	 * Retourne la structure de la table en bdd
-	 * @return mixed
+	 * @return array
 	 */
 	public static function getMeta() {
-		if ( is_null( self::$meta ) ) {
-			$file       = Yaml::parseFile( __DIR__ . '/../entities.yml' );
-			self::$meta = $file['post'];
+		if (is_null(self::$meta)) {
+			$file = Yaml::parseFile(__DIR__ . '/../entities.yml');
+			self::$meta = $file['comment'];
 		}
-
 		return self::$meta;
 	}
 
-	/**
-	 * @return string
-	 */
 	public static function getManager() {
-		return PostManager::class;
+		return CommentManager::class;
 	}
 
 	/**
@@ -111,10 +110,10 @@ class Post extends Entity {
 	}
 
 	/**
-	 * @return string
+	 * @param string $author
 	 */
-	public function getContent() {
-		return $this->content;
+	public function setAuthor( string $author ): void {
+		$this->author = $author;
 	}
 
 	/**
@@ -122,20 +121,6 @@ class Post extends Entity {
 	 */
 	public function setContent( string $content ): void {
 		$this->content = $content;
-	}
-
-	/**
-	 * @param string $title
-	 */
-	public function setTitle( string $title ): void {
-		$this->title = $title;
-	}
-
-	/**
-	 * @param string $slug
-	 */
-	public function setSlug( string $slug ): void {
-		$this->slug = $slug;
 	}
 
 	/**
@@ -162,63 +147,44 @@ class Post extends Entity {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
-		return $this->title;
+	public function getAuthor(): string {
+		return $this->author;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getSlug() {
-		return $this->slug;
+	public function getContent(): string {
+		return $this->content;
 	}
 
 	/**
 	 * @return \DateTime
 	 */
-	public function getAdded() {
+	public function getAdded(): \DateTime {
 		return $this->added;
 	}
 
 	/**
 	 * @return \DateTime
 	 */
-	public function getUpdated() {
+	public function getUpdated(): \DateTime {
 		return $this->updated;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function getPublished() {
+	public function isPublished(): bool {
 		return $this->published;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getComments() {
-		return $this->comments;
-	}
 
-	/**
-	 * @param array $comments
-	 */
-	public function setComments( array $comments ): void {
-		$this->comments = $comments;
-	}
-
-	/**
-	 * @param Comment $comment
-	 */
-	public function addComment( Comment $comment ) {
-		$this->comments[] = $comment;
-	}
 }

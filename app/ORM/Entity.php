@@ -8,10 +8,6 @@ namespace App\Orm;
  */
 abstract class Entity {
 
-	/**
-	 * @return mixed
-	 */
-	public abstract static function getMeta();
 
 	/**
 	 * @param $datas
@@ -61,4 +57,14 @@ abstract class Entity {
 			throw new ORMException( sprintf( "Erreur: La methode '%s' n'existe pas dans l'entité '%s'", $setter, get_class( $this ) ) );
 		}
 	}
+
+	/**
+	 * @return mixed
+	 */
+	abstract public static function getManager();
+
+	/**
+	 * @return mixed
+	 */
+	abstract public static function getName();
 }

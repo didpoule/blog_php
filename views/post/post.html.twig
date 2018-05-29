@@ -5,9 +5,20 @@
 {% block content %}
     {% if not post is null %}
         <h1>{{ post.title }}</h1>
-        <span>Posté le: {{ post.added|date }}</span>
-        <span>Modifié le: {{ post.updated|date }}</span>
+        <div>
+            <span>Publié le: {{ post.added|date }}</span>
+            <span>Modifié le: {{ post.updated|date }}</span>
+        </div>
         <p>{{ post.content }}</p>
+
+        <h2>Commentaires</h2>
+        {% if not post.comments is null %}
+            {% for comment in post.comments %}
+                <h3>{{ comment.author }}</h3>
+                <div><span>Posté le {{ comment.added|date }}</span></div>
+                <p>{{ comment.content }}</p>
+            {% endfor %}
+        {% endif %}
     {% else %}
         <h1>Le billet demandé n'existe pas.</h1>
     {% endif %}

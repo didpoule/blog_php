@@ -25,9 +25,9 @@ class PostController extends Controller {
 		$manager = $manager::getManager();
 
 		if ( $this->slug->isSlug( $value ) ) {
-			$post = $manager->findBySlug( $value );
+			$post = $manager->findOne( [ "slug" => $value ] );
 		} else {
-			$post = $manager->find( $value );
+			$post = $manager->findOne( [ "id" => $value ] );
 
 		}
 
@@ -36,6 +36,7 @@ class PostController extends Controller {
 				"message" => "Le billet demandé n'existe pas."
 			] );
 		} else {
+
 			$this->render( "post/post.html.twig", [
 				"post" => $post
 			] );

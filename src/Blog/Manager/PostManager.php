@@ -3,6 +3,7 @@
 namespace Blog\Manager;
 
 use App\Orm\Manager;
+use Blog\Entity\Comment\Comment;
 
 /**
  * Class PostManager
@@ -19,7 +20,24 @@ class PostManager extends Manager {
 		return $this->fetchAll( null, null, $limit, [ 'added' => "DESC" ] );
 	}
 
-	public function findBySlug( $slug ) {
-		return $this->fetch( [ "slug" => $slug ] );
+	/**
+	 * Récupère un post avec les commentaires associés
+	 * @param $param
+	 *
+	 * @return mixed
+	 */
+	public function findOne( $param ) {
+		$result = $this->fetch( $param, Comment::class, true );
+
+		if ( $result ) {
+			$post = $result['post'];
+
+			foreach ( $result['comment'] as $comment ) {
+				$post->addComment( $comment );
+			}
+		}
+
+		return $post;
+
 	}
 }
