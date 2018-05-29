@@ -30,9 +30,17 @@ class PostController extends Controller {
 			$post = $manager->find( $value );
 
 		}
-		$this->render( "post/post.html.twig", [
-			"post" => $post
-		] );
+
+		if ( ! $post ) {
+			$this->render( 'error/404.html.twig', [
+				"message" => "Le billet demandé n'existe pas."
+			] );
+		} else {
+			$this->render( "post/post.html.twig", [
+				"post" => $post
+			] );
+		}
+
 	}
 
 	/**
@@ -65,12 +73,20 @@ class PostController extends Controller {
 
 		$post = $manager->find( $id );
 
-		$post->setTitle( 'Titre modifié' );
-		$post->setSlug( $this->slug->slugify( $post->getTitle() ) );
+		if ( $post ) {
+			$post->setTitle( 'Titre modifié' );
+			$post->setSlug( $this->slug->slugify( $post->getTitle() ) );
 
-		$manager->update( $post );
-
-		$this->redirect( 'billet', [ 'id' => $id ] );
+			try {
+				$post->setUpdated( new \DateTime() );
+				$manager->update( $post );
+				$this->redirect( 'billet', [ 'id' => $id ] );
+			} catch ( ORMException $e ) {
+				echo $e->getMessage();
+			}
+		} else {
+			$this->redirect( 'billets' );
+		}
 	}
 
 	/**
@@ -86,7 +102,9 @@ class PostController extends Controller {
 
 		$manager->delete( $id );
 
+
 		$this->redirect( "billets" );
+
 	}
 
 	/**
@@ -103,7 +121,9 @@ class PostController extends Controller {
 		$post->setSlug( $this->slug->slugify( $post->getTitle() ) );
 		$post->setAdded( new \DateTime() );
 		$post->setContent( 'Un contenu tout pourri' );
+
 		$manager->insert( $post );
+
 		$this->redirect( "billets" );
 	}
 }

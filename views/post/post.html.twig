@@ -3,7 +3,12 @@
 {% block pageTitle %}{{ post.title }}{% endblock %}
 
 {% block content %}
-    <h1>{{ post.title }}</h1>
-    <span>Posté le: {{ post.added|date }}</span>
-    <p>{{ post.content }}</p>
+    {% if not post is null %}
+        <h1>{{ post.title }}</h1>
+        <span>Posté le: {{ post.added|date }}</span>
+        <span>Modifié le: {{ post.updated|date }}</span>
+        <p>{{ post.content }}</p>
+    {% else %}
+        <h1>Le billet demandé n'existe pas.</h1>
+    {% endif %}
 {% endblock %}

@@ -49,23 +49,27 @@ class Manager {
 	 * @return mixed
 	 */
 	public function fetch( $params = [] ) {
-		$request   = sprintf( "SELECT * FROM %s %s LIMIT 0,1", self::$entity::getMeta()['name'], $this->where( $params ) );
+		$request = sprintf( "SELECT * FROM %s %s LIMIT 0,1", self::$entity::getMeta()['name'], $this->where( $params ) );
+
 		$statement = $this->pdo->prepare( $request );
 
 		$statement->execute( $params );
 
 		$result = $statement->fetch( \PDO::FETCH_ASSOC );
 
-		$entity = new self::$entity();
+		if ( $result ) {
+			$entity = new self::$entity();
 
-		try {
-			$entity->hydrate( $result );
-		} catch ( ORMException $e ) {
-			die ( $e->getMessage() );
+			try {
+				$entity->hydrate( $result );
+			} catch ( ORMException $e ) {
+				die ( $e->getMessage() );
+			}
+
+			return $entity;
 		}
 
-
-		return $entity;
+		return false;
 	}
 
 
@@ -79,18 +83,22 @@ class Manager {
 		$statement->execute( $params );
 
 		$results = $statement->fetchAll( \PDO::FETCH_ASSOC );
-		try {
-
+		if ( $results ) {
 			foreach ( $results as $result ) {
 				$entity = new self::$entity();
-				$entity->hydrate( $result );
+				try {
+					$entity->hydrate( $result );
+				} catch ( ORMException $e ) {
+					die( $e->getMessage() );
+				}
 				$entities[] = $entity;
+
 			}
 
 			return $entities;
-		} catch ( ORMException $e ) {
-			die( $e->getMessage() );
 		}
+
+		return false;
 	}
 
 	/**
@@ -125,8 +133,6 @@ class Manager {
 			} else {
 				$limit = sprintf( "LIMIT %s,%s", $offset, $limit );
 			}
-
-			//$offset = sprintf( "OFFSET %s", $offset );
 
 			return sprintf( "%s ", $limit );
 
@@ -204,13 +210,16 @@ class Manager {
 	 * @param $entity Entity
 	 */
 	public function update( $entity ) {
-		$request = sprintf( "UPDATE %s %s WHERE id = :id", self::$entity::getMeta()['name'], $this->set( $entity ) );
+		if ( $this->find( $entity->getId() ) ) {
+			$request = sprintf( "UPDATE %s %s WHERE id = :id", self::$entity::getMeta()['name'], $this->set( $entity ) );
 
-		$statement = $this->pdo->prepare( $request );
+			$statement = $this->pdo->prepare( $request );
 
-		$params = $this->setParams( $entity );
+			$params = $this->setParams( $entity );
 
-		$statement->execute( $params );
+			return $statement->execute( $params );
+		}
+		throw new ORMException( "Impossible de mettre à jour cette entité car inexistant en base de donnée." );
 	}
 
 	/**
@@ -249,7 +258,11 @@ class Manager {
 
 		$statement = $this->pdo->prepare( $request );
 
-		$statement->execute( $params );
+		$result = $statement->execute( $params );
+
+		$statement->closeCursor();
+
+		return $result;
 
 	}
 
@@ -257,22 +270,28 @@ class Manager {
 	 * @param $id
 	 */
 	public function delete( $id ) {
-		$this->remove( [ "id" => $id ] );
+		return $this->remove( [ "id" => $id ] );
 	}
 
 
 	/**
 	 * Insertion d'une entité en base de données
+	 *
 	 * @param $entity
 	 */
 	public function insert( $entity ) {
 		$request = sprintf( "INSERT INTO %s %s %s", self::$entity::getMeta()['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity, true ) );
 
+
 		$statement = $this->pdo->prepare( $request );
 
 		$params = $this->setParams( $entity );
 
-		$statement->execute( $params );
+		$result = $statement->execute( $params );
+
+		$statement->closeCursor();
+
+		return $result;
 	}
 
 	/**

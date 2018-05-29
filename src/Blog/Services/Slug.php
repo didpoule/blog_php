@@ -23,6 +23,6 @@ class Slug {
 	 * @param $string
 	 */
 	public function isSlug( $string ) {
-		return (!strstr( $string, " " ) && strlen($string) > 1 );
+		return (preg_match('/([A-Za-z0-9]+-[A-Za-z0-9]+)+$/', $string));
 	}
 }

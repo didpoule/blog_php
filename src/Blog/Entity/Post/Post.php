@@ -57,7 +57,7 @@ class Post extends Entity {
 	 */
 	public static function getMeta() {
 		if ( is_null( self::$meta ) ) {
-			$file       = Yaml::parseFile( __DIR__ .'/../entities.yml' );
+			$file       = Yaml::parseFile( __DIR__ . '/../entities.yml' );
 			self::$meta = $file['post'];
 		}
 
