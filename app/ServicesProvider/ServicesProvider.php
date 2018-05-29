@@ -37,25 +37,25 @@ class ServicesProvider {
 	 */
 	public function get( $service ) {
 
-			// Si le service n'est pas encore créé
-			if ( ! key_exists( $service, $this->container ) ) {
-				// On le créé
-				try {
-					if ( $this->createService( $service ) ) {
+		// Si le service n'est pas encore créé
+		if ( ! key_exists( $service, $this->container ) ) {
+			// On le créé
+			try {
+				if ( $this->createService( $service ) ) {
 
-						// Apelle de la methode pour retourner l'instance créé par le service
+					// Apelle de la methode pour retourner l'instance créé par le service
 
-						return $this->container[ $service ];
+					return $this->container[ $service ];
 
-					}
-
-				} catch (ServicesException $e) {
-						echo $e->getMessage();
 				}
-			}
 
-			// On renvoie le service
-			return $this->container[ $service ];
+			} catch ( ServicesException $e ) {
+				echo $e->getMessage();
+			}
+		}
+
+		// On renvoie le service
+		return $this->container[ $service ];
 	}
 
 	/**
@@ -75,9 +75,10 @@ class ServicesProvider {
 
 				// Si on a trouvé le service on l'instancie et on renvoie true
 				$this->container[ $service ] = new $class( $params );
+
 				return true;
 			}
 		}
-		throw new ServicesException("Le service demandé n'existe pas.");
+		throw new ServicesException( "Le service demandé n'existe pas." );
 	}
 }

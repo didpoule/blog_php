@@ -1,5 +1,6 @@
-post:
+Blog\Entity\Post:
     name: post
+    manager: Blog\Manager\PostManager
     columns:
         id: { type: 'int' }
         title: { type: 'string' }
@@ -9,8 +10,9 @@ post:
         published: { type: 'boolean' }
         content: { type: 'string' }
 
-comment:
+Blog\Entity\Comment:
     name: comment
+    manager: Blog\Manager\CommentManager
     columns:
         id: { type: 'int' }
         author: { type: 'string' }

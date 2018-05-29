@@ -7,33 +7,19 @@ use Symfony\Component\Yaml\Yaml;
 class Database {
 
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
-	 * @var Database
-	 */
-	private static $database;
-
-	/**
 	 * @var \PDO
 	 */
 	private $pdo;
 
 	/**
-	 *
+	 * @var array
 	 */
-	public static function getInstance($file) {
+	private static $managers;
 
-		if ( self::$database === null ) {
-
-			$params = Yaml::parseFile($file);
-			self::$database = new Database($params['database']);
-		}
-
-		return self::$database;
-	}
+	/**
+	 * @var array
+	 */
+	private static $metas;
 
 	/**
 	 * Database constructor.
@@ -41,20 +27,31 @@ class Database {
 	 * @param $params
 	 */
 	public function __construct( $params ) {
-		try {
-			$this->pdo = new \PDO(
-				"mysql:dbname=" . $params['name'] .
-				";host=" . $params['host'] .
-				":" . $params['port'],
-				$params['user'],
-				$params['password']
-			);
-		} catch(\PDOException $e) {
-			echo $e->getMessage();
-		}
+
+		$file        = Yaml::parseFile( $params['file'] )['database'];
+		self::$metas = Yaml::parseFile( $params['metas'] );
+
+		$db = sprintf( "mysql:dbname=%s;host=%s:%s", $file['name'], $file['host'], $file['port'] );
+
+		$this->pdo = new \PDO( $db, $file['user'], $file['password'] );
+
 	}
 
 	public function getPdo() {
 		return $this->pdo;
+	}
+
+	/**
+	 * @param $entity string className entité
+	 */
+	public function getManager( $entity ) {
+		if ( is_null( self::$managers[ $entity ] ) ) {
+			$manager                   = self::$metas[ $entity ]["manager"];
+			self::$managers[ $entity ] = new $manager( $this->pdo, $entity, self::$metas[ $entity ] );
+
+			$entity::setMeta( self::$metas[ $entity ] );
+		}
+
+		return self::$managers[ $entity ];
 	}
 }

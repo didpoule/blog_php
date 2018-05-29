@@ -1,28 +1,14 @@
 <?php
 
-namespace Blog\Entity\Post;
+namespace Blog\Entity;
 
 use App\Orm\Entity;
-use Blog\Manager\PostManager;
-use Symfony\Component\Yaml\Yaml;
-use Blog\Entity\Comment\Comment;
 
 /**
  * Class Post
  * @package Blog\Entity
  */
 class Post extends Entity {
-
-	/**
-	 * @var string
-	 */
-
-	private static $name;
-
-	/**
-	 * @var array
-	 */
-	private static $meta;
 
 	/**
 	 * @var int
@@ -63,45 +49,6 @@ class Post extends Entity {
 	 * @var array
 	 */
 	private $comments;
-
-	/**
-	 * Retourne le nom de l'entité
-	 * @return array|string
-	 */
-	public static function getName() {
-		if ( is_null( self::$name ) ) {
-			self::$name = "post";
-		}
-
-		return self::$name;
-	}
-
-	/**
-	 * Retourne la structure de la table en bdd
-	 * @return mixed
-	 */
-	public static function getMeta() {
-		if ( is_null( self::$meta ) ) {
-			$file       = Yaml::parseFile( __DIR__ . '/../entities.yml' );
-			self::$meta = $file['post'];
-		}
-
-		return self::$meta;
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getManager() {
-		return PostManager::class;
-	}
-
-	/**
-	 * @param array $meta
-	 */
-	public static function setMeta( array $meta ): void {
-		self::$meta = $meta;
-	}
 
 	/**
 	 * @param int $id

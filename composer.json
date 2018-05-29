@@ -20,8 +20,8 @@
     }
   },
   "scripts": {
-    "serve": [
-      "ENV=dev DB_HOST=127.0.0.1 DB_NAME=blog DB_USER=root DB_PASSWORD=root php -S localhost:8000 -t web/"
+    "server": [
+      "php -S localhost:8000 -t web/"
     ]
   }
 }

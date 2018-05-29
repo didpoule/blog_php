@@ -39,7 +39,7 @@ class Controller {
 	 * @param $fileName
 	 * @param array $datas
 	 *
-	 * @return mixed|void
+	 * @return Response
 	 */
 	public function render( $fileName, $datas = [] ) {
 
@@ -49,7 +49,8 @@ class Controller {
 
 		$response = new Response( $content );
 
-		return $response->send();
+		return $response;
+
 	}
 
 	/**
@@ -62,9 +63,8 @@ class Controller {
 			$route = $this->router->getRouteByName( $routeName );
 			$url   = $route->generateUrl( $args );
 
-			$response = new RedirectResponse( $url );
+			return new RedirectResponse( $url );
 
-			$response->send();
 		} catch ( RouterException $e ) {
 			echo $e->getMessage();
 		}

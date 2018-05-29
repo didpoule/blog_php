@@ -3,7 +3,6 @@
 namespace Blog\Manager;
 
 use App\Orm\Manager;
-use Blog\Entity\Comment\Comment;
 
 /**
  * Class PostManager
@@ -12,32 +11,20 @@ use Blog\Entity\Comment\Comment;
 class PostManager extends Manager {
 
 	/**
-	 * @param null $limit
+	 * PostManager constructor.
 	 *
-	 * @return array
+	 * @param $entity
+	 * @param $meta
 	 */
+	public function __construct( \PDO $pdo, $entity, $meta ) {
+		parent::__construct( $pdo, $entity, $meta );
+	}
+
 	public function findLasts( $limit = null ) {
 		return $this->fetchAll( null, null, $limit, [ 'added' => "DESC" ] );
 	}
 
-	/**
-	 * Récupère un post avec les commentaires associés
-	 * @param $param
-	 *
-	 * @return mixed
-	 */
-	public function findOne( $param ) {
-		$result = $this->fetch( $param, Comment::class, true );
-
-		if ( $result ) {
-			$post = $result['post'];
-
-			foreach ( $result['comment'] as $comment ) {
-				$post->addComment( $comment );
-			}
-		}
-
-		return $post;
-
+	public function find( $params = [] ) {
+		return $this->fetch( $params );
 	}
 }

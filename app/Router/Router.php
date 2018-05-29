@@ -73,10 +73,10 @@ class Router {
 			if ( $route->match( $this->request->getUrl() ) ) {
 				$this->matchedRoute = $route;
 
-				return $route;
+				return $this->call();
 			};
 		}
-		throw new RouterException("Route inconnue");
+		throw new RouterException( "Route inconnue" );
 	}
 
 	/**
@@ -105,7 +105,7 @@ class Router {
 
 		$controller = new $controller( $this->services, $this );
 
-		call_user_func_array( [ $controller, $action ], $params );
+		return call_user_func_array( [ $controller, $action ], $params );
 	}
 
 

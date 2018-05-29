@@ -1,27 +1,15 @@
 <?php
 
-namespace Blog\Entity\Comment;
+namespace Blog\Entity;
 
 
 use App\Orm\Entity;
-use Blog\Manager\CommentManager;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class Comment
  * @package Blog\Entity\Comment
  */
 class Comment extends Entity {
-
-	/**
-	 * @var array
-	 */
-	private static $meta;
-
-	/**
-	 * @var string
-	 */
-	private static $name;
 
 	/**
 	 * @var int
@@ -72,35 +60,6 @@ class Comment extends Entity {
 		$this->post = $post;
 	}
 
-	public static function getName() {
-		if ( is_null( self::$name ) ) {
-			self::$name = "comment";
-		}
-
-		return self::$name;
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getMeta() {
-		if (is_null(self::$meta)) {
-			$file = Yaml::parseFile(__DIR__ . '/../entities.yml');
-			self::$meta = $file['comment'];
-		}
-		return self::$meta;
-	}
-
-	public static function getManager() {
-		return CommentManager::class;
-	}
-
-	/**
-	 * @param array $meta
-	 */
-	public static function setMeta( array $meta ): void {
-		self::$meta = $meta;
-	}
 
 	/**
 	 * @param int $id

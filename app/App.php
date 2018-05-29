@@ -54,13 +54,10 @@ class App {
 		$this->router->parseRouting( $this->routingConfig );
 
 		try {
-			$this->router->getRoute();
+			$this->router->getRoute()->send();
+
 		} catch ( RouterException $e ) {
 			echo $e->getMessage();
-		}
-
-		if ( $this->router->getMatchedRoute() ) {
-			$this->router->call();
 		}
 	}
 }

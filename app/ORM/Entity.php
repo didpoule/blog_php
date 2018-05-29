@@ -8,17 +8,22 @@ namespace App\Orm;
  */
 abstract class Entity {
 
+	/**
+	 * @var array
+	 */
+	protected static $meta;
 
 	/**
 	 * @param $datas
 	 */
+
+	public static function setMeta( $meta ) {
+		static::$meta = $meta;
+	}
+
 	public function hydrate( $datas ) {
 		foreach ( $datas as $column => $value ) {
-			try {
-				$this->hydrateProperty( $column, $value );
-			} catch ( ORMException $e ) {
-				throw $e;
-			}
+			$this->hydrateProperty( $column, $value );
 		}
 
 		return $this;
@@ -35,7 +40,8 @@ abstract class Entity {
 
 
 		if ( method_exists( $this, $setter ) ) {
-			switch ( $this::getMeta()['columns'][ $column ]['type'] ) {
+
+			switch ( static::$meta['columns'][ $column ]['type'] ) {
 				case "int":
 					$this->$setter( (int) $value );
 					break;
@@ -58,13 +64,4 @@ abstract class Entity {
 		}
 	}
 
-	/**
-	 * @return mixed
-	 */
-	abstract public static function getManager();
-
-	/**
-	 * @return mixed
-	 */
-	abstract public static function getName();
 }

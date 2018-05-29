@@ -9,8 +9,8 @@ class HomeController extends Controller {
 	public function homeAction() {
 
 
-		$this->render('home/home.html.twig', [
+		return $this->render( 'home/home.html.twig', [
 			// TODO
-		]);
+		] );
 	}
 }

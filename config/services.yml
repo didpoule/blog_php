@@ -2,9 +2,9 @@ twig:
   class: App\Templating\Templating
   params: { file: ../views/ }
 
-manager:
-  class: App\Orm\Manager
-  params: ../config/database.yml
-
 slug:
   class: Blog\Services\Slug
+
+database:
+  class: App\Orm\Database
+  params: { file: ../config/database.yml, metas: ../config/entities.yml }
