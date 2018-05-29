@@ -171,7 +171,7 @@ abstract class Manager {
 	 * @return string
 	 */
 	private function set( $entity ) {
-		foreach ( $entity::getMeta()['columns'] as $property => $value ) {
+		foreach ( self::$meta['columns'] as $property => $value ) {
 			if ( $property != "id" ) {
 				$getter = sprintf( "get%s", ucfirst( $property ) );
 				if ( $entity->$getter() != null ) {
@@ -220,7 +220,8 @@ abstract class Manager {
 	 * @param $entity Entity
 	 */
 	public function update( $entity ) {
-		if ( $this->find( $entity->getId() ) ) {
+		if ( $entity->validate() ) {
+
 			$request = sprintf( "UPDATE %s %s WHERE id = :id", self::$meta['name'], $this->set( $entity ) );
 
 			$statement = $this->pdo->prepare( $request );
@@ -228,7 +229,10 @@ abstract class Manager {
 			$params = $this->setParams( $entity );
 
 			return $statement->execute( $params );
+
 		}
+
+		return false;
 	}
 
 	/**
@@ -289,18 +293,18 @@ abstract class Manager {
 	 * @param $entity
 	 */
 	public function insert( $entity ) {
-		$request = sprintf( "INSERT INTO %s %s %s", self::$meta['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity ) );
+		if ( $entity->validate() ) {
 
+			$request = sprintf( "INSERT INTO %s %s %s", self::$meta['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity, true ) );
 
-		$statement = $this->pdo->prepare( $request );
+			$statement = $this->pdo->prepare( $request );
 
-		$params = $this->setParams( $entity );
+			$params = $this->setParams( $entity );
 
-		$result = $statement->execute( $params );
+			return $statement->execute( $params );
+		}
 
-		$statement->closeCursor();
-
-		return $result;
+		return false;
 	}
 
 	/**
@@ -310,17 +314,25 @@ abstract class Manager {
 	 *
 	 * @return string
 	 */
-	private function stringProperties( Entity $entity ) {
+	private function stringProperties( Entity $entity, $prepare = false ) {
 		foreach ( self::$meta['columns'] as $property => $value ) {
 			if ( $property != "id" ) {
 				$getter = sprintf( "get%s", ucfirst( $property ) );
 
 				if ( $entity->$getter() != null ) {
-					$properties[] = sprintf( ":%s", $property );
+					if ( $prepare ) {
+						$properties[] = sprintf( ":%s", $property );
+					} else {
+						$properties[] = $property;
+					}
 				}
 			}
 		}
 
-		return sprintf( "VALUES (%s)", implode( ",", $properties ) );
+		if ( $prepare ) {
+			return sprintf( "VALUES (%s)", implode( ",", $properties ) );
+		}
+
+		return sprintf( "(%s)", implode( ",", $properties ) );
 	}
 }

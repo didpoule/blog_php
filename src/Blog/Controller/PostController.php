@@ -29,7 +29,7 @@ class PostController extends Controller {
 
 		if ( ! $post ) {
 
-			$this->render( 'error/404.html.twig', [
+			return $this->render( 'error/404.html.twig', [
 				"message" => "Le billet demandé n'existe pas."
 			] );
 		} else {
@@ -68,22 +68,19 @@ class PostController extends Controller {
 	 */
 	public function editAction( $id ) {
 		$manager = $this->database->getManager( Post::class );
-		$post    = $manager->find( $id );
+		$post    = $manager->find( [ "id" => $id ] );
 
 		if ( $post ) {
-			$post->setTitle( 'Titre modifié' );
+			$post->setTitle( "truc machin" );
 			$post->setSlug( $this->slug->slugify( $post->getTitle() ) );
 
-			try {
-				$post->setUpdated( new \DateTime() );
-				$manager->update( $post );
-				$this->redirect( 'billet', [ 'id' => $id ] );
-			} catch ( ORMException $e ) {
-				echo $e->getMessage();
+			$post->setUpdated( new \DateTime() );
+			if ( $manager->update( $post ) ) {
+				return $this->redirect( 'billet', [ 'id' => $id ] );
 			}
-		} else {
-			$this->redirect( 'billets' );
 		}
+
+		return $this->redirect( 'billets' );
 	}
 
 	/**
@@ -96,7 +93,7 @@ class PostController extends Controller {
 		$manager->delete( $id );
 
 
-		$this->redirect( "billets" );
+		return $this->redirect( "billets" );
 
 	}
 
@@ -113,6 +110,6 @@ class PostController extends Controller {
 
 		$manager->insert( $post );
 
-		$this->redirect( "billets" );
+		return $this->redirect( "billets" );
 	}
 }

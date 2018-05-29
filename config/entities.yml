@@ -2,22 +2,51 @@ Blog\Entity\Post:
     name: post
     manager: Blog\Manager\PostManager
     columns:
-        id: { type: 'int' }
-        title: { type: 'string' }
-        slug: { type: 'string' }
-        added: { type: 'datetime' }
-        updated: { type: 'datetime' }
-        published: { type: 'boolean' }
-        content: { type: 'string' }
+        id:
+         type: int
+         required: false
+        title:
+         type: string
+         required: true
+        slug:
+         type: string
+         required: true
+        added:
+         type: datetime
+         required: false
+        updated:
+         type: datetime
+         required: false
+        published:
+         type: boolean
+         required: false
+        content:
+         type: string
+         required: true
 
 Blog\Entity\Comment:
     name: comment
     manager: Blog\Manager\CommentManager
     columns:
-        id: { type: 'int' }
-        author: { type: 'string' }
-        added: { type: 'datetime' }
-        updated: { type: 'datetime' }
-        published: { type: 'boolean' }
-        content: { type: 'string' }
-        post: { type: 'int' }
+        id:
+        type: int
+        required: false
+        author:
+         type: string
+         required: true
+        added:
+         type: datetime
+         required: false
+        updated:
+         type: datetime
+         required: false
+        published:
+         type: boolean
+         required: false
+        content:
+         type: string
+         required: true
+        post:
+         type: int
+         required: true
+
