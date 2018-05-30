@@ -1,5 +1,6 @@
 insertBillet:
     path: /billets/insert
+    parameters:
     controller: Blog\Controller\PostController
     action: insertAction
 
@@ -30,10 +31,12 @@ billet:
 
 billets:
     path: /billets
+    parameters:
     controller: Blog\Controller\PostController
     action: listAction
 
 home:
     path: /
+    parameters:
     controller: Blog\Controller\HomeController
     action: homeAction

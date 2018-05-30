@@ -4,6 +4,7 @@ twig:
 
 slug:
   class: Blog\Services\Slug
+  params:
 
 database:
   class: App\Orm\Database
