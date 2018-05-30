@@ -47,10 +47,7 @@ class Controller {
 
 		$content = $view->render( $datas );
 
-		$response = new Response( $content );
-
-		return $response;
-
+		return new Response( $content );
 	}
 
 	/**

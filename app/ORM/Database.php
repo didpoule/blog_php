@@ -45,7 +45,7 @@ class Database {
 	 * @param $entity string className entité
 	 */
 	public function getManager( $entity ) {
-		if ( is_null( self::$managers[ $entity ] ) ) {
+		if ( !isset( self::$managers[ $entity ] ) ) {
 			$manager                   = self::$metas[ $entity ]["manager"];
 			self::$managers[ $entity ] = new $manager( $this->pdo, $entity, self::$metas[ $entity ] );
 
