@@ -2,6 +2,7 @@
 
 namespace Blog\Manager;
 
+use App\Orm\Database;
 use App\Orm\Manager;
 
 /**
@@ -10,8 +11,8 @@ use App\Orm\Manager;
  */
 class CommentManager extends Manager {
 
-	public function __construct( \PDO $pdo, $entity, $meta ) {
-		parent::__construct( $pdo, $entity, $meta );
+	public function __construct( Database $database, $entity, $meta ) {
+		parent::__construct( $database, $entity, $meta );
 	}
 
 	public function findLasts( $limit = null ) {

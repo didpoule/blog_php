@@ -1,4 +1,35 @@
 {% extends "template.html.twig" %}
 
-{% block pageTitle %}Accueil{% endblock %}
-{% block content %}Bienvenue{% endblock %}
+{% block pageTitle %}La couverture{% endblock %}
+{% block content %}
+    <div class="row">
+        <section>
+            <div class="post-container">
+                <article>
+                    <h2>{{ edito.title }}</h2>
+                    <p>{{ edito.content }}</p>
+                </article>
+            </div>
+        </section>
+    </div>
+    <div class="row">
+        <section>
+            <div class="post-container">
+                <article>
+                    <h2 class="text-right">{{ synopsis.title }}</h2>
+                    <p>{{ synopsis.content }}</p>
+                </article>
+                <div class="post-buttons">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"> <i class="fab fa-twitter"></i></a>
+                    </div>
+                    <div class="read-more">
+                        <button class="btn btn-primary" onclick="window.location = '/chapitres'">Commencer la lecture</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}

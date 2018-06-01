@@ -4,9 +4,15 @@
 {% block content %}
     {% if not posts is empty %}
         {% for post in posts %}
-            <h2>{{ post.title }}</h2><span>Publié le: {{ post.added|date }}</span>
+            <div class="row">
+                <div class="listed-article">
+                    <h2><a href="/chapitres/{{ post.slug }}">Chapitre {{ post.number }} : {{ post.title }}</a></h2>
+                </div>
+            </div>
         {% endfor %}
     {% else %}
-        Aucun billet à afficher.
+        <div class="row">
+            <p>Le premier n'est pas encore arrivé, revenez plus tard.</p>
+        </div>
     {% endif %}
 {% endblock %}

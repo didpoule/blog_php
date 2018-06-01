@@ -2,6 +2,7 @@
 
 namespace Blog\Manager;
 
+use App\Orm\Database;
 use App\Orm\Manager;
 
 /**
@@ -16,15 +17,24 @@ class PostManager extends Manager {
 	 * @param $entity
 	 * @param $meta
 	 */
-	public function __construct( \PDO $pdo, $entity, $meta ) {
-		parent::__construct( $pdo, $entity, $meta );
+	public function __construct( Database $database, $entity, $meta ) {
+		parent::__construct( $database, $entity, $meta );
 	}
 
-	public function findLasts( $limit = null ) {
-		return $this->fetchAll( null, null, $limit, [ 'added' => "DESC" ] );
+	public function findChapters( $catId, $limit = null ) {
+		return $this->fetchAll( [ "category" => $catId ], null, $limit, [ 'added' => "ASC" ] );
 	}
 
 	public function find( $params = [] ) {
 		return $this->fetch( $params );
 	}
+
+	public function getNbChapters() {
+		$request = "SELECT COUNT(*) AS count FROM post WHERE number IS NOT NULL";
+		$statement = $this->pdo->prepare($request);
+		$statement->execute();
+
+		return $statement->fetch()[0];
+	}
+
 }

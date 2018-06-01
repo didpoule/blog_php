@@ -51,6 +51,16 @@ class Post extends Entity {
 	private $comments;
 
 	/**
+	 * @var integer
+	 */
+	private $category;
+
+	/**
+	 * @var int
+	 */
+	private $number;
+
+	/**
 	 * @param int $id
 	 */
 	public function setId( int $id ): void {
@@ -168,4 +178,33 @@ class Post extends Entity {
 	public function addComment( Comment $comment ) {
 		$this->comments[] = $comment;
 	}
+
+	/**
+	 * @return integer
+	 */
+	public function getCategory() {
+		return $this->category;
+	}
+
+	/**
+	 * @param string $category
+	 */
+	public function setCategory( int $category ): void {
+		$this->category = $category;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getNumber() {
+		return $this->number;
+	}
+
+	/**
+	 * @param int $number
+	 */
+	public function setNumber( int $number ): void {
+		$this->number = $number;
+	}
+
 }

@@ -4,22 +4,48 @@
 
 {% block content %}
     {% if not post is null %}
-        <h1>{{ post.title }}</h1>
-        <div>
-            <span>Publié le: {{ post.added|date }}</span>
-            <span>Modifié le: {{ post.updated|date }}</span>
-        </div>
-        <p>{{ post.content }}</p>
 
+        {% if state is not null %}
+            {% if state == "next" %}
+                <h2>Vous venez de terminer le chapitre {{ current - 1 }}</h2>
+            {% endif %}
+        {% endif %}
+        <section class="single-chapter" id="{{ post.number }}">
+            <article class="chapter-content" data-chapter="{{ post.number }}">
+                <h2>Chapitre {{ post.number }}</h2>
+                <h1>{{ post.title }}</h1>
+                <p>{{ post.content }}</p>
+            </article>
+            <div class="chapter-navigation">
+                <div class="chapter-previous">
+                    <button class="btn btn-primary" onclick="window.location = '/chapitres/previous'">Chapitre
+                        précédent
+                    </button>
+                </div>
+                <div class="chapter-next">
+                    <button class="btn btn-primary" onclick="window.location = '/chapitres/next'">Chapitre suivant
+                    </button>
+                </div>
+
+            </div>
+        </section>
+        <hr>
+        <section class="comments-section">
         <h2>Commentaires</h2>
+        <div class="comments">
+
         {% if not post.comments is null %}
             {% for comment in post.comments %}
                 <h3>{{ comment.author }}</h3>
                 <div><span>Posté le {{ comment.added|date }}</span></div>
                 <p>{{ comment.content }}</p>
             {% endfor %}
+        {% else %}
+            <p>Il n'y a pas encore de commentaire.</p>
         {% endif %}
     {% else %}
         <h1>Le billet demandé n'existe pas.</h1>
     {% endif %}
+    </div>
+    </section>
 {% endblock %}

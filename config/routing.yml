@@ -1,42 +1,54 @@
 insertBillet:
-    path: /billets/insert
-    parameters:
+    path: /chapitres/insert
+    parameters: {}
     controller: Blog\Controller\PostController
     action: insertAction
 
 deleteBillet:
-    path: /billets/delete/:id
+    path: /chapitres/delete/:id
     parameters: {id: '[\d]+'}
     controller: Blog\Controller\PostController
     action: deleteAction
 
 editBillet:
-    path: /billets/edit/:id
+    path: /chapitres/edit/:id
     parameters: {id: '[\d]+'}
     controller: Blog\Controller\PostController
     action: editAction
 
+nextChapter:
+    path: /chapitres/next
+    parameters: {}
+    controller: Blog\Controller\Postcontroller
+    action: nextAction
 
-billetSlug:
-    path:  /billets/:slug
+previousChapter:
+    path: /chapitres/previous
+    parameters: {}
+    controller: Blog\Controller\Postcontroller
+    action: previousAction
+
+
+numberChapter:
+    path: /chapitres/slug
+    parameters: {number:  '[\d]+'}
+    controller: Blog\Controller\PostController
+    action: showAction
+
+slugChapter:
+    path:  /chapitres/:slug
     parameters: {slug:  '([A-Za-z0-9]+-[A-Za-z0-9]+)+$'}
     controller: Blog\Controller\PostController
     action: showAction
 
-billet:
-    path:  /billets/:id
-    parameters: {id:  '[\d]+'}
-    controller: Blog\Controller\PostController
-    action: showAction
-
-billets:
-    path: /billets
-    parameters:
+chapter:
+    path: /chapitres
+    parameters: {}
     controller: Blog\Controller\PostController
     action: listAction
 
 home:
     path: /
-    parameters:
+    parameters: {}
     controller: Blog\Controller\HomeController
     action: homeAction

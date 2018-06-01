@@ -1,15 +1,48 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-
-    <title>{% block pageTitle %}{% endblock %} - Nom du blog</title>
+    <link rel="stylesheet" href="http://localhost:8000/assets/css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <title>Un billet simple pour l'Alaska - {% block pageTitle %}{% endblock %}</title>
+    <meta name="description"
+          content="Ecrivain et passionné du monde numérique, j'ai créé ce blog afin de vous faire découvrir mon nouveau roman Billet simple pour l'Alaska que je publierai par chapitre."/>
 </head>
 <body>
 <div id="page-content">
-    {% block content %}{% endblock %}
-</div>
+    <header>
+        <div class="header-container">
+            <div id="company-name">
+                <a href="/"><strong>Un billet simple pour l'Alaska</strong></a>
+            </div>
+            <ul id="main-menu">
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/chapitres">Chapitres</a></li>
+                <li><a href="#">À propos</a></li>
+            </ul>
+        </div>
 
+    </header>
+
+    <div id="hero-image">
+        <img src="http://localhost:8000/assets/images/header.jpg" alt="Train pour l'Alaska"/>
+    </div>
+
+    <div id="body-container">{% block content %}{% endblock %}</div>
+
+    <footer>
+        <hr class="footer-separator">
+        <div class="container">
+            <div class="footer-block">
+                <a href="#">Administration</a>
+            </div>
+            <div class="footer-block">
+                <a href="#">Mentions légales</a>
+            </div>
+        </div>
+    </footer>
+</div>
 </body>
 </html>

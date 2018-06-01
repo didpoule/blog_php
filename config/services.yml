@@ -13,3 +13,7 @@ database:
 request:
   class: App\Http\Request\Request
   params: {}
+
+readchapters:
+  class: Blog\Services\ReadChapters
+  params: {}

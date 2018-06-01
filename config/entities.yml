@@ -23,6 +23,12 @@ Blog\Entity\Post:
         content:
          type: string
          required: true
+        category:
+         type: int
+         required: true
+        number:
+         type: int
+         required: false
 
 Blog\Entity\Comment:
     name: comment
@@ -50,3 +56,13 @@ Blog\Entity\Comment:
          type: int
          required: true
 
+Blog\Entity\Category:
+    name: category
+    manager: Blog\Manager\CategoryManager
+    columns:
+        id:
+         type: int
+         required: false
+        name:
+         type: string
+         required: true
