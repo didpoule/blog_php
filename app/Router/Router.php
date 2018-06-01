@@ -38,9 +38,10 @@ class Router {
 	 *
 	 * @param Request $request
 	 */
-	public function __construct( Request $request, $services ) {
-		$this->request  = $request;
+	public function __construct($services ) {
 		$this->services = $services;
+		$this->request  = $this->services->get("request");
+
 	}
 
 	/**

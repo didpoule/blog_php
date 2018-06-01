@@ -150,10 +150,11 @@ class Route {
 	 *
 	 * @return string
 	 */
-	public function generateUrl( $args ): string {
+	public function generateUrl( $args, $anchor = null ): string {
 		$url = str_replace( array_keys( $args ), $args, $this->path );
 		$url = str_replace( ":", "", $url );
 
+		$url .= $anchor;
 		return $url;
 	}
 
