@@ -54,11 +54,11 @@ class Controller {
 	 * @param $routeName string
 	 * @param array $arg
 	 */
-	public function redirect( $routeName, $args = [] ) {
+	public function redirect( $routeName, $args = [], $anchor = null ) {
 
 		try {
 			$route = $this->router->getRouteByName( $routeName );
-			$url   = $route->generateUrl( $args );
+			$url   = $route->generateUrl( $args, $anchor );
 
 			return new RedirectResponse( $url );
 
