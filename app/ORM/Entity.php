@@ -21,6 +21,11 @@ abstract class Entity {
 		static::$meta = $meta;
 	}
 
+	/**
+	 * @param $datas
+	 *
+	 * @return $this
+	 */
 	public function hydrate( $datas ) {
 		foreach ( $datas as $column => $value ) {
 			$this->hydrateProperty( $column, $value );

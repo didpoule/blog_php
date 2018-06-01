@@ -47,11 +47,10 @@ class Database {
 	public function getManager( $entity ) {
 		if ( !isset( self::$managers[ $entity ] ) ) {
 			$manager                   = self::$metas[ $entity ]["manager"];
-			self::$managers[ $entity ] = new $manager( $this->pdo, $entity, self::$metas[ $entity ] );
+			self::$managers[ $entity ] = new $manager( $this, $entity, self::$metas[ $entity ] );
 
 			$entity::setMeta( self::$metas[ $entity ] );
 		}
-
 		return self::$managers[ $entity ];
 	}
 }

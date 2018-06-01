@@ -9,6 +9,11 @@ namespace App\Orm;
 abstract class Manager {
 
 	/**
+	 * @var Database
+	 */
+	protected $database;
+
+	/**
 	 * @var \PDO
 	 */
 	protected $pdo;
@@ -29,9 +34,9 @@ abstract class Manager {
 	 * @param $entity
 	 * @param $meta
 	 */
-	public function __construct( \PDO $pdo, $entity, $meta ) {
-		$this->pdo = $pdo;
-
+	public function __construct( Database $database, $entity, $meta ) {
+		$this->database = $database;
+		$this->pdo = $database->getPdo();
 		static::$entity = $entity;
 		static::$meta   = $meta;
 	}
@@ -45,8 +50,7 @@ abstract class Manager {
 	 */
 	public function fetch( $params = [] ) {
 
-		$request = sprintf( "SELECT * FROM  %s %s LIMIT 0,1", self::$meta['name'], $this->where( $params ) );
-
+		$request = sprintf( "SELECT * FROM  %s %s LIMIT 0,1", static::$meta['name'], $this->where( $params ) );
 
 		$statement = $this->pdo->prepare( $request );
 
@@ -57,7 +61,7 @@ abstract class Manager {
 
 
 		if ( $result ) {
-			$entity = new self::$entity();
+			$entity = new static::$entity();
 			$entity->hydrate( $result );
 
 			return $entity;
@@ -72,7 +76,7 @@ abstract class Manager {
 	 */
 	public function fetchAll( $params = [], $offset = null, $limit = null, $sort = [] ) {
 
-		$request   = sprintf( "SELECT * FROM %s %s %s %s", self::$meta['name'], $this->limit( $offset, $limit ), $this->where( $params ), $this->order( $sort ) );
+		$request   = sprintf( "SELECT * FROM %s %s %s %s", static::$meta['name'], $this->limit( $offset, $limit ), $this->where( $params ), $this->order( $sort ) );
 		$statement = $this->pdo->prepare( $request );
 
 		$statement->execute( $params );
@@ -83,7 +87,7 @@ abstract class Manager {
 
 
 			foreach ( $results as $result ) {
-				$entity = new self::$entity();
+				$entity = new static::$entity();
 				try {
 					$entity->hydrate( $result );
 				} catch ( ORMException $e ) {
