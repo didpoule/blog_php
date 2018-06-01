@@ -9,3 +9,7 @@ slug:
 database:
   class: App\Orm\Database
   params: { file: ../config/database.yml, metas: ../config/entities.yml }
+
+request:
+  class: App\Http\Request\Request
+  params: {}

@@ -19,11 +19,6 @@ class App {
 	private $router;
 
 	/**
-	 * @var Request
-	 */
-	private $request;
-
-	/**
 	 * @var string
 	 */
 	private $routingConfig;
@@ -39,9 +34,7 @@ class App {
 	public function __construct() {
 		$this->services = new ServicesProvider( __DIR__ . "/../config/services.yml" );
 
-		$this->request = new Request();
-
-		$this->router = new Router( $this->request, $this->services );
+		$this->router  = new Router( $this->services );
 
 		$this->routingConfig = __DIR__ . "/../config/routing.yml";
 
@@ -54,7 +47,9 @@ class App {
 		$this->router->parseRouting( $this->routingConfig );
 
 		try {
-			$this->router->getRoute()->send();
+			$response = $this->router->getRoute();
+
+			$response->send();
 
 		} catch ( RouterException $e ) {
 			echo $e->getMessage();
