@@ -68,6 +68,14 @@ class Controller {
 	}
 
 	/**
+	 * Renvoie a l'url précédente
+	 * @return RedirectResponse
+	 */
+	public function redirectToBack() {
+		return new RedirectResponse ( $_SERVER['HTTP_REFERER'] );
+	}
+
+	/**
 	 * Racourci pour apeller un service
 	 *
 	 * @param $name

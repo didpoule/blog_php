@@ -69,8 +69,11 @@ class Request {
 	 * @param $value
 	 * @param $expire int N jours
 	 */
-	public function setCookie( $name, $value, $expire ) {
-		setcookie( $name, $value, time() + ( $expire * 86400 ), null, null, false, true );
+	public function setCookie( $name, $value, $expire, $path = "/" ) {
+		if ( isset( $this->cookie[ $name ] ) ) {
+			unset( $this->cookie[ $name ] );
+		}
+		setcookie( $name, htmlspecialchars($value), time() + ( $expire * 86400 ), $path, null, false, true );
 	}
 
 	/**
@@ -91,4 +94,13 @@ class Request {
 	public function getPost( $name ) {
 		return isset( $this->post[ $name ] ) ? $this->post[ $name ] : false;
 	}
+
+	public function getToken() {
+		return $_SESSION['token'];
+	}
+
+	public function setToken() {
+		$_SESSION['token'] = uniqid();
+	}
+
 }
