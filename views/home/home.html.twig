@@ -9,23 +9,32 @@
                     <h2>{{ edito.title }}</h2>
                     <p>{{ edito.content }}</p>
                 </article>
+
             </div>
         </section>
     </div>
     <div class="row">
         <section>
             <div class="post-container">
-                <article>
-                    <h2 class="text-right">{{ synopsis.title }}</h2>
-                    <p>{{ synopsis.content }}</p>
-                </article>
+                {% if featured is not null %}
+                    <article>
+                        <h2 class="text-right">{{ featured.title }}</h2>
+                        <p>{{ featured.content }}</p>
+                    </article>
+                {% endif %}
+
                 <div class="post-buttons">
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"> <i class="fab fa-twitter"></i></a>
-                    </div>
                     <div class="read-more">
-                        <button class="btn btn-primary" onclick="window.location = '/chapitres'">Commencer la lecture</button>
+                        {% if featured.number == 0 %}
+                            <button class="btn btn-primary" onclick="window.location = '/chapitres'">
+                                Commencer la lecture
+                            </button>
+                        {% else %}
+                            <button class="btn btn-primary"
+                                    onclick="window.location = '/chapitres/chapitre-{{ featured.number }}#{{ featured.number }}'">
+                                Continuer la lecture
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

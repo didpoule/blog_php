@@ -35,8 +35,8 @@ Blog\Entity\Comment:
     manager: Blog\Manager\CommentManager
     columns:
         id:
-        type: int
-        required: false
+         type: int
+         required: false
         author:
          type: string
          required: true

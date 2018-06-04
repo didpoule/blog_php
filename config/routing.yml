@@ -1,3 +1,8 @@
+insertComment:
+    path: /comment/insert
+    parameters: {}
+    controller: Blog\Controller\CommentController
+    action: insertAction
 insertBillet:
     path: /chapitres/insert
     parameters: {}
@@ -28,10 +33,9 @@ previousChapter:
     controller: Blog\Controller\Postcontroller
     action: previousAction
 
-
-numberChapter:
-    path: /chapitres/slug
-    parameters: {number:  '[\d]+'}
+idChapter:
+    path: /chapitres/:id
+    parameters: {id:  '[\d]+'}
     controller: Blog\Controller\PostController
     action: showAction
 

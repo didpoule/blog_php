@@ -33,19 +33,22 @@
         <section class="comments-section">
         <h2>Commentaires</h2>
         <div class="comments">
-
-        {% if not post.comments is null %}
-            {% for comment in post.comments %}
-                <h3>{{ comment.author }}</h3>
-                <div><span>Posté le {{ comment.added|date }}</span></div>
-                <p>{{ comment.content }}</p>
-            {% endfor %}
-        {% else %}
-            <p>Il n'y a pas encore de commentaire.</p>
-        {% endif %}
+            {% if not comments is null %}
+                {% for comment in comments %}
+                    <h3>{{ comment.author|raw }}</h3>
+                    <div><span>Posté le {{ comment.added|date }}</span></div>
+                    <p>{{ comment.content|raw }}</p>
+                {% endfor %}
+            {% else %}
+                <p>Il n'y a pas encore de commentaire.</p>
+            {% endif %}
+        </div>
     {% else %}
-        <h1>Le billet demandé n'existe pas.</h1>
+        <h2>Le billet demandé n'existe pas.</h2>
     {% endif %}
+    <div id="comment-form">
+        <h2>Écrire un commentaire</h2>
+        {{ form|raw }}
     </div>
     </section>
 {% endblock %}

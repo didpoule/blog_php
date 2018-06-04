@@ -106,7 +106,7 @@ class Comment extends Entity {
 	/**
 	 * @return int
 	 */
-	public function getId(): int {
+	public function getId() {
 		return $this->id;
 	}
 
@@ -134,14 +134,14 @@ class Comment extends Entity {
 	/**
 	 * @return \DateTime
 	 */
-	public function getUpdated(): \DateTime {
+	public function getUpdated() {
 		return $this->updated;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isPublished(): bool {
+	public function getPublished() {
 		return $this->published;
 	}
 

@@ -22,4 +22,5 @@ class CommentManager extends Manager {
 	public function findAllByPost( $id ) {
 		return $this->fetchAll( [ "post" => $id ], null, null, [ "added" => "DESC" ] );
 	}
+
 }

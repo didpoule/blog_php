@@ -37,4 +37,17 @@ class PostManager extends Manager {
 		return $statement->fetch()[0];
 	}
 
+	public function getExtract($params = []) {
+		$post = $this->fetch($params);
+
+		$extract = (substr($post->getContent(), 0, 500));
+
+		$text = explode(' ', $extract);
+		$text = implode(' ', array_slice($text, 0, -1)) . "...";
+
+
+		$post->setContent($text);
+
+		return $post;
+	}
 }

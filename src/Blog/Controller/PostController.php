@@ -3,10 +3,10 @@
 namespace Blog\Controller;
 
 use App\Controller\Controller;
-use App\Orm\ORMException;
 use Blog\Entity\Category;
 use Blog\Entity\Comment;
 use Blog\Entity\Post;
+use Blog\Forms\CommentForm;
 
 /**
  * Class PostController
@@ -25,31 +25,36 @@ class PostController extends Controller {
 		if ( $this->slug->isSlug( $value ) ) {
 			$post = $manager->find( [ "slug" => $value ] );
 		} else {
-			$post = $manager->find( [ "number" => $value ] );
+			$post = $manager->find( [ "id" => $value ] );
 
 		}
 		$nbChapters   = $manager->getNbChapters();
 		$readChapters = $this->readChapters;
-		$readChapters->init( $this->request, $nbChapters );
 
+		$readChapters->init( $this->request, $nbChapters );
 		$current = ( $readChapters->getCookie() > 1 ) ?? null;
 
 		if ( ! $post ) {
 
 			return $this->render( 'error/404.html.twig', [
-				"message" => "Le chapitre demandé n'as pas encore été écrit."
+				"message" => "Le chapitre demandé n'a pas encore été écrit."
 			] );
 		} else {
 			$manager = $this->database->getManager( Comment::class );
 
+			$this->request->setToken();
+
+			$form = new CommentForm($post->getId(), $this->request->getToken());
+
 			$comments = $manager->findAllByPost( $post->getId() );
+
 
 			return $this->render( "post/post.html.twig", [
 				"post"     => $post,
 				"comments" => $comments,
 				"state"    => $readChapters->getState(),
-				"current"  => $current
-
+				"current"  => $current,
+				"form"     => $form->getForm()
 
 			] );
 		}

@@ -12,6 +12,8 @@ html, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquot
     width: 100%;
     max-width: 1920px;
     margin: 0 auto;
+
+    background: rgba(255,240,188,.2);
 }
 
 header > .header-container {
@@ -24,7 +26,7 @@ header > .header-container {
     margin: auto auto 10px auto;
 }
 
-a:hover, button:hover {
+a:hover, button:hover, input[type="submit"]:hover {
     transform: translateY(3px);
 }
 
@@ -113,10 +115,11 @@ img {
     width: 50%;
     padding: 10px 20px;
 
-    border-radius: 5px;
-    -webkit-box-shadow: 0px 5px 10px -3px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow: 0px 5px 10px -3px rgba(0, 0, 0, 0.5);
-    box-shadow: 0px 5px 10px -3px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    -webkit-box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.5);
+    background: white;
 }
 
 .row:nth-child(2) section .post-container {
@@ -194,7 +197,10 @@ footer .container {
 
 .comments-section {
     margin: 0 auto;
+    padding: 10px;
     width: 90%;
+
+    background: white;
 }
 
 .comments {
@@ -210,4 +216,36 @@ footer .container {
 }
 .chapter-next {
     margin-left: 25px;
+}
+
+#comment-form form {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 50px;
+    width: 500px;
+}
+
+#comment-form input, #comment-form textarea {
+    margin-bottom: 20px;
+    border: 2px rgba(0,0,0,.1) solid;
+    border-radius: 5px;
+}
+
+#comment-form input {
+    width: 50%;
+}
+
+#comment-form textarea {
+    width: 90%;
+    height: 300px;
+}
+
+#comment-form label {
+    font-size: 1.2em;
+    text-transform: capitalize;
+}
+
+#comment-form input[type="submit"] {
+    width: 25%;
 }

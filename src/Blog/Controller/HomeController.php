@@ -9,24 +9,38 @@ use Blog\Entity\Post;
 class HomeController extends Controller {
 
 	public function homeAction() {
-		$manager = $this->database->getManager(Category::class);
+		$manager = $this->database->getManager( Category::class );
 
-		$editoCat = $manager->findByName('edito');
-		$synopsisCat = $manager->findByName('synopsis');
+		$editoCat = $manager->findByName( 'edito' );
 
-		$manager = $this->database->getManager(Post::class);
-
-		if ($editoCat) {
-			$edito = $manager->fetch(["category" => $editoCat->getId()]);
+		// Récupération catégorie synopsis si pas de chapitre en cours
+		if ( ! $this->request->getCookie( 'current' ) && $this->request->getCookie('current') < 2 ) {
+			$synopsisCat = $manager->findByName( 'synopsis' );
 		}
 
-		if ($synopsisCat) {
-			$synopsis = $manager->fetch(["category" => $synopsisCat->getId()]);
+
+		$manager = $this->database->getManager( Post::class );
+
+		// Récupération de l'edito
+		if ( $editoCat ) {
+			$edito = $manager->fetch( [ "category" => $editoCat->getId() ] );
 		}
+
+		// Récupération du synopsis
+		if ( isset( $synopsisCat ) ) {
+			$synopsis = $manager->fetch( [ "category" => $synopsisCat->getId() ] );
+		}
+
+		// Récupération du chapitre en cours
+		if ( $this->request->getCookie( 'current' ) ) {
+			$chapter = $manager->getExtract( [ "number" => $this->request->getCookie( "current" ) ] );
+		}
+
+		$featured = ( isset( $synopsis ) ) ? $synopsis : $chapter;
 
 		return $this->render( 'home/home.html.twig', [
-			'edito' => $edito,
-			'synopsis' => $synopsis
+			'edito'    => $edito,
+			'featured' => $featured
 
 		] );
 	}
