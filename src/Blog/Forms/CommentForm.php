@@ -2,27 +2,36 @@
 
 namespace Blog\Forms;
 
+use Blog\Entity\Comment;
 use Blog\Services\Form;
 
 class CommentForm extends Form {
 
-	public function __construct($postId, $token) {
+	/**
+	 * CommentForm constructor.
+	 *
+	 * @param null $postId
+	 * @param null $token
+	 */
+	public function __construct( $postId = null, $token = null ) {
+		self::$entity = Comment::class;
+
 		$this->action = "/comment/insert";
 		$this->fields = [
 			"author"  => [
-				"type" => "text",
+				"type"  => "text",
 				"label" => "Pseudonyme"
 			],
 			"content" => [
-				"type" => "textarea",
+				"type"  => "textarea",
 				"label" => "message"
 			],
-			"post" => [
-				"type" => "hidden",
-				"value" =>  $postId
+			"post"    => [
+				"type"  => "hidden",
+				"value" => $postId
 			],
-			"token" => [
-				"type" => "hidden",
+			"token"   => [
+				"type"  => "hidden",
 				"value" => $token
 			]
 		];
