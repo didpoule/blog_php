@@ -4,7 +4,7 @@ twig:
 
 slug:
   class: Blog\Services\Slug
-  params:
+  params: {}
 
 database:
   class: App\Orm\Database
@@ -16,4 +16,12 @@ request:
 
 readchapters:
   class: Blog\Services\ReadChapters
+  params: {}
+
+form:
+  class: Blog\Services\Form
+  params: { metas: ../config/entities.yml }
+
+bag:
+  class: Blog\Services\MessagesBag
   params: {}

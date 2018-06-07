@@ -44,17 +44,17 @@ class PostController extends Controller {
 
 			$this->request->setToken();
 
-			$form = new CommentForm($post->getId(), $this->request->getToken());
+			$form = new CommentForm( $post->getId(), $this->request->getToken() );
 
 			$comments = $manager->findAllByPost( $post->getId() );
-
 
 			return $this->render( "post/post.html.twig", [
 				"post"     => $post,
 				"comments" => $comments,
 				"state"    => $readChapters->getState(),
 				"current"  => $current,
-				"form"     => $form->getForm()
+				"form"     => $form->getForm(),
+				"bag" => $this->bag
 
 			] );
 		}

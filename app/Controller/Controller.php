@@ -71,8 +71,8 @@ class Controller {
 	 * Renvoie a l'url précédente
 	 * @return RedirectResponse
 	 */
-	public function redirectToBack() {
-		return new RedirectResponse ( $_SERVER['HTTP_REFERER'] );
+	public function redirectToBack($anchor = null) {
+		return new RedirectResponse ( $_SERVER['HTTP_REFERER'] . "#$anchor" );
 	}
 
 	/**

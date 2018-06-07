@@ -4,35 +4,26 @@ namespace Blog\Controller;
 
 use App\Controller\Controller;
 use Blog\Entity\Comment;
+use Blog\Forms\CommentForm;
 
 class CommentController extends Controller {
 
 	public function insertAction() {
 		$manager = $this->database->getManager( Comment::class );
 
-		// Comparaison du token envoyé avec celui de la session
-		if ( $this->request->getPost( 'token' ) === $this->request->getToken() ) {
+		$form = $this->form->get( CommentForm::class );
 
-			if ( ( $this->request->getPost( 'author' ) && $this->request->getPost( 'content' ) && $this->request->getPost( 'post' ) ) &&
-			     ! is_null( $this->request->getPost( 'author' ) ) && ! is_null( $this->request->getPost( 'content' ) ) && ! is_null( $this->request->getPost( 'content' ) ) ) {
+		$comment = $form->sendForm( $this->request );
 
-				$comment = new Comment();
-				$comment->setAuthor( htmlspecialchars( $this->request->getPost( 'author' ) ) );
-				$comment->setContent( htmlspecialchars( $this->request->getPost( 'content' ) ) );
-				$comment->setPost( htmlspecialchars( $this->request->getPost( 'post' ) ) );
-
-				$comment->setAdded( new \DateTime() );
-
-				$manager->insert( $comment );
-
-				return $this->redirect( 'idChapter', [ 'id' => $comment->getPost() ] );
+		if ( ! is_array( $comment ) ) {
+			$manager->insert( $comment );
+			$this->bag->addMessage( "Votre commentaire a bien été envoyé.", "success" );
+		} else {
+			foreach ( $comment as $error ) {
+				$this->bag->addMessage( sprintf( "Erreur: le champ %s doit être renseigné", $error ), "danger" );
 			}
-
-			return $this->redirectToBack();
 		}
 
-		return $this->render( 'error/token.html.twig', [
-			"message" => "Le token est invalide."
-		] );
+		return $this->redirectToBack( 'comment-form' );
 	}
 }

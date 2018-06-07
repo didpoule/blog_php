@@ -36,7 +36,7 @@ abstract class Manager {
 	 */
 	public function __construct( Database $database, $entity, $meta ) {
 		$this->database = $database;
-		$this->pdo = $database->getPdo();
+		$this->pdo      = $database->getPdo();
 		static::$entity = $entity;
 		static::$meta   = $meta;
 	}
@@ -297,18 +297,13 @@ abstract class Manager {
 	 * @param $entity
 	 */
 	public function insert( $entity ) {
-		if ( $entity->validate() ) {
+		$request = sprintf( "INSERT INTO %s %s %s", self::$meta['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity, true ) );
 
-			$request = sprintf( "INSERT INTO %s %s %s", self::$meta['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity, true ) );
+		$statement = $this->pdo->prepare( $request );
 
-			$statement = $this->pdo->prepare( $request );
+		$params = $this->setParams( $entity );
 
-			$params = $this->setParams( $entity );
-
-			return $statement->execute( $params );
-		}
-
-		return false;
+		return $statement->execute( $params );
 	}
 
 	/**
