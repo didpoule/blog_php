@@ -1,0 +1,10 @@
+{% extends "template.html.twig" %}
+
+{% block pageTitle %}Authentification{% endblock %}
+{% block content %}
+    <div class="row">
+        {% if form is not null %}
+            {{ form|raw }}
+        {% endif %}
+    </div>
+{% endblock %}

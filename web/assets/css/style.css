@@ -12,8 +12,6 @@ html, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquot
     width: 100%;
     max-width: 1920px;
     margin: 0 auto;
-
-    background: rgba(255,240,188,.2);
 }
 
 header > .header-container {
@@ -75,7 +73,6 @@ a:hover, button:hover, input[type="submit"]:hover {
 img {
     display: none;
 }
-
 
 #hero-image::after {
     content: " ";
@@ -177,7 +174,7 @@ footer .container {
 
 .chapter-content {
     text-align: justify;
-    columns:  2;
+    columns: 2;
     column-gap: 100px;
     margin-bottom: 50px;
 }
@@ -211,14 +208,16 @@ footer .container {
     display: flex;
     justify-content: center;
 }
+
 .chapter-previous {
     margin-right: 25px;
 }
+
 .chapter-next {
     margin-left: 25px;
 }
 
-#comment-form form {
+#comment-form {
     display: flex;
     flex-direction: column;
 
@@ -228,7 +227,7 @@ footer .container {
 
 #comment-form input, #comment-form textarea {
     margin-bottom: 20px;
-    border: 2px rgba(0,0,0,.1) solid;
+    border: 2px rgba(0, 0, 0, .1) solid;
     border-radius: 5px;
 }
 
@@ -248,4 +247,15 @@ footer .container {
 
 #comment-form input[type="submit"] {
     width: 25%;
+}
+
+#user-form {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+
+}
+
+#user-form input {
+    margin-bottom: 20px;
 }

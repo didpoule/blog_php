@@ -1,0 +1,19 @@
+#hero-image {
+    display: none;
+}
+
+.row {
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.sidebar {
+    padding: 15px;
+}
+
+.container-fluid {
+    padding: 0;
+}
+.nav-item {
+    margin-bottom: 10px;
+}

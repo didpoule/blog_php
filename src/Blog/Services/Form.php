@@ -34,6 +34,11 @@ class Form {
 	 */
 	private static $metas;
 
+	/**
+	 * @var string
+	 */
+	protected static $name;
+
 	public function __construct( $metas ) {
 		self::$metas = Yaml::parseFile( $metas );
 	}
@@ -43,7 +48,6 @@ class Form {
 	 */
 	public function sendForm( Request $request ) {
 		if ( $request->getPost( 'token' ) === $request->getToken() ) {
-
 			$entity = $this->hydrate( $request );
 
 			$errors = $entity->validate();
@@ -83,7 +87,7 @@ class Form {
 	}
 
 	public function getForm() {
-		$content = sprintf( "<form action='%s' method='post'>", $this->action );
+		$content = sprintf( "<form action='%s' method='post' id='%s-form'>", $this->action, static::$name );
 		foreach ( $this->fields as $field => $params ) {
 			if ( $params['type'] != 'hidden' ) {
 				$content .= sprintf( "<label for='%s'>%s :</label>", $field, $params['label'] );
@@ -91,6 +95,9 @@ class Form {
 			switch ( $params['type'] ) {
 				case "text" :
 					$content .= sprintf( "<input type='text' name='%s' id='%s'/>", $field, $field );
+					break;
+				case "password" :
+					$content .= sprintf( "<input type='password' name='%s' id='%s' />", $field, $field );
 					break;
 				case "textarea" :
 					$content .= sprintf( "<textarea id='%s' name='%s'></textarea>", $field, $field );

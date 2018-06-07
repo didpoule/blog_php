@@ -15,6 +15,7 @@ class CommentForm extends Form {
 	 */
 	public function __construct( $postId = null, $token = null ) {
 		self::$entity = Comment::class;
+		self::$name = 'comment';
 
 		$this->action = "/comment/insert";
 		$this->fields = [

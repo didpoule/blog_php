@@ -6,9 +6,10 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
           integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    {% block head %}{% endblock %}
     <title>Un billet simple pour l'Alaska - {% block pageTitle %}{% endblock %}</title>
     <meta name="description"
-          content="Ecrivain et passionné du monde numérique, j'ai créé ce blog afin de vous faire découvrir mon nouveau roman Billet simple pour l'Alaska que je publierai par chapitre."/>
+          content="Ecrivain et passionné du monde numérique, j'ai créé ce blog afin de vous faire découvrir mon nouveau roman Un billet simple pour l'Alaska que je publierai par chapitre."/>
 </head>
 <body>
 <div id="page-content">
@@ -36,7 +37,7 @@
         <hr class="footer-separator">
         <div class="container">
             <div class="footer-block">
-                <a href="#">Administration</a>
+                <a href="/login">Administration</a>
             </div>
             <div class="footer-block">
                 <a href="#">Mentions légales</a>

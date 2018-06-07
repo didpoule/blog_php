@@ -46,18 +46,18 @@
     {% else %}
         <h2>Le billet demandé n'existe pas.</h2>
     {% endif %}
-    <div id="comment-form">
-        <h2>Écrire un commentaire</h2>
-        {% if bag.messages is not empty %}
-            {% for message in bag.messages %}
-                <div class="alert alert-{{ bag.messages[0].type }} alert-dismissible fade show" role="alert">
-                    {{ bag.getMessage.message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-        {% endif %}
-        {{ form|raw }}
+
+    <h2>Écrire un commentaire</h2>
+    {% if bag.messages is not empty %}
+        {% for message in bag.messages %}
+            <div class="alert alert-{{ bag.messages[0].type }} alert-dismissible fade show" role="alert">
+                {{ bag.getMessage.message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {{ form|raw }}
     </section>
 {% endblock %}

@@ -66,3 +66,17 @@ Blog\Entity\Category:
         name:
          type: string
          required: true
+
+Blog\Entity\User:
+    name: user
+    manager: Blog\Manager\UserManager
+    columns:
+        id:
+          type: int
+          required: false
+        username:
+          type: string
+          required: true
+        password:
+          type: string
+          required: true

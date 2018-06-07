@@ -51,6 +51,18 @@ chapter:
     controller: Blog\Controller\PostController
     action: listAction
 
+login:
+    path: /login
+    parameters: {}
+    controller: Blog\Controller\UserController
+    action: loginAction
+
+admin:
+    path: /admin
+    parameters: {}
+    controller: Blog\Controller\BackController
+    action: homeAction
+
 home:
     path: /
     parameters: {}
