@@ -91,7 +91,10 @@ class Request {
 	 *
 	 * @return bool|mixed
 	 */
-	public function getPost( $name ) {
+	public function getPost( $name = null ) {
+		if(is_null($name)) {
+			return $this->post;
+		}
 		return isset( $this->post[ $name ] ) ? $this->post[ $name ] : false;
 	}
 
