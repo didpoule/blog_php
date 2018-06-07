@@ -13,7 +13,7 @@ Blog\Entity\Post:
          required: true
         added:
          type: datetime
-         required: false
+         required: true
         updated:
          type: datetime
          required: false
@@ -42,7 +42,7 @@ Blog\Entity\Comment:
          required: true
         added:
          type: datetime
-         required: false
+         required: true
         updated:
          type: datetime
          required: false

@@ -51,9 +51,7 @@ abstract class Entity {
 				$this->$setter( (string) $value );
 				break;
 			case "datetime":
-
-				$date = \DateTime::createFromFormat( "Y-m-d H:i:s", $value );
-
+				$date = new \DateTime();
 				$this->$setter( $date );
 				break;
 			case "boolean":
@@ -65,16 +63,20 @@ abstract class Entity {
 	/**
 	 * Vérifie si les propriétés requises ne sont pas null
 	 *
-	 * @return bool
+	 * @return mixed
 	 */
 	public function validate() {
-
+		$errors = [];
 		foreach ( static::$meta['columns'] as $property => $params ) {
 			$getter = sprintf( "get%s", ucfirst( $property ) );
 
-			if ( $this->$getter() === null && $params['required'] === true ) {
-				return false;
+			if ( empty($this->$getter()) && $params['required'] === true ) {
+				$errors[] = $property;
 			}
+		}
+
+		if ( ! empty( $errors ) ) {
+			return $errors;
 		}
 
 		return true;
