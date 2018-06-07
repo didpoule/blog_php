@@ -73,12 +73,22 @@ class ServicesProvider {
 				$class  = $values['class'];
 				$params = $values['params'];
 
+				/**
+				 * Injecte les services requis en paramètre
+				 */
+				foreach($params as $param => $value) {
+					if(array_key_exists($value, $this->datas)) {
+						$params[$param] = $this->get($value);
+					}
+				}
 				// Si on a trouvé le service on l'instancie et on renvoie true
-				$this->container[ $service ] = new $class( $params );
+
+				$reflect = new \ReflectionClass($class);
+				$this->container[$service] = $reflect->newInstanceArgs($params);
 
 				return true;
 			}
 		}
-		throw new ServicesException( "Le service demandé n'existe pas." );
+		throw new ServicesException( "Le service $service n'existe pas." );
 	}
 }

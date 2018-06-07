@@ -24,12 +24,13 @@ class Database {
 	/**
 	 * Database constructor.
 	 *
-	 * @param $params
+	 * @param $file
+	 * @param $meta
 	 */
-	public function __construct( $params ) {
+	public function __construct( $file, $meta ) {
 
-		$file        = Yaml::parseFile( $params['file'] )['database'];
-		self::$metas = Yaml::parseFile( $params['metas'] );
+		$file        = Yaml::parseFile( $file )['database'];
+		self::$metas = Yaml::parseFile( $meta );
 
 		$db = sprintf( "mysql:dbname=%s;host=%s:%s", $file['name'], $file['host'], $file['port'] );
 
@@ -45,12 +46,13 @@ class Database {
 	 * @param $entity string className entité
 	 */
 	public function getManager( $entity ) {
-		if ( !isset( self::$managers[ $entity ] ) ) {
+		if ( ! isset( self::$managers[ $entity ] ) ) {
 			$manager                   = self::$metas[ $entity ]["manager"];
 			self::$managers[ $entity ] = new $manager( $this, $entity, self::$metas[ $entity ] );
 
 			$entity::setMeta( self::$metas[ $entity ] );
 		}
+
 		return self::$managers[ $entity ];
 	}
 }
