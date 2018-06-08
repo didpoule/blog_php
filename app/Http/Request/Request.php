@@ -73,7 +73,7 @@ class Request {
 		if ( isset( $this->cookie[ $name ] ) ) {
 			unset( $this->cookie[ $name ] );
 		}
-		setcookie( $name, htmlspecialchars($value), time() + ( $expire * 86400 ), $path, null, false, true );
+		setcookie( $name, htmlspecialchars( $value ), time() + ( $expire * 86400 ), $path, null, false, true );
 	}
 
 	/**
@@ -92,13 +92,18 @@ class Request {
 	 * @return bool|mixed
 	 */
 	public function getPost( $name = null ) {
-		if(is_null($name)) {
+		if ( is_null( $name ) ) {
 			return $this->post;
 		}
+
 		return isset( $this->post[ $name ] ) ? $this->post[ $name ] : false;
 	}
 
 	public function getToken() {
+		if ( ! isset( $_SESSION['token'] ) ) {
+			$_SESSION['token'] = uniqid();
+		}
+
 		return $_SESSION['token'];
 	}
 
