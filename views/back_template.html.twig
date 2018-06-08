@@ -3,6 +3,7 @@
 {% block pageTitle %}Administration{% endblock %}
 {% block head %}
     <link rel="stylesheet" href="/assets/css/admin.css">
+    <link rel="stylesheet" href="/assets/trumbowyg/dist/ui/trumbowyg.min.css">
 {% endblock %}
 {% block content %}
     <div class="container-fluid">
@@ -90,5 +91,29 @@
         </div>
     </div>
 
+{% block scripts %}
+    <script src="/assets/trumbowyg/dist/trumbowyg.min.js"></script>
+    <script src="/assets/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js"></script>
+    <script src="/assets/trumbowyg/dist/plugins/fontsize/trumbowyg.fontsize.min.js"></script>
+    <script src="/assets/trumbowyg/dist/plugins/colors/ui/trumbowyg.colors.css"></script>
+    <script>$('#content').trumbowyg({
+            lang: 'fr',
+            btns: [
+                ['fontsize'],
+                ['foreColor', 'backColor'],
+                ['formatting'],
+                ['strong', 'em', 'del'],
+                ['superscript', 'subscript'],
+                ['link'],
+                ['insertImage'],
+                ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                ['unorderedList', 'orderedList'],
+                ['horizontalRule'],
+                ['removeformat'],
+                ['fullscreen']
+            ],
 
+
+        });</script>
+    {% endblock %}
 {% endblock %}
