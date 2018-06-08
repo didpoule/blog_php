@@ -28,6 +28,7 @@ abstract class Entity {
 	 */
 	public function hydrate( $datas ) {
 		foreach ( $datas as $column => $value ) {
+
 			$this->hydrateProperty( $column, $value );
 		}
 
@@ -43,20 +44,24 @@ abstract class Entity {
 		$property = $column;
 		$setter   = sprintf( "set%s", ucfirst( $property ) );
 
-		switch ( static::$meta['columns'][ $column ]['type'] ) {
-			case "int":
-				$this->$setter( (int) $value );
-				break;
-			case "string":
-				$this->$setter( (string) $value );
-				break;
-			case "datetime":
-				$date = new \DateTime();
-				$this->$setter( $date );
-				break;
-			case "boolean":
-				$this->$setter( (boolean) $value );
-				break;
+		if ( ! is_null( $value ) ) {
+
+
+			switch ( static::$meta['columns'][ $column ]['type'] ) {
+				case "int":
+					$this->$setter( (int) $value );
+					break;
+				case "string":
+					$this->$setter( (string) $value );
+					break;
+				case "datetime":
+					$date = new \DateTime();
+					$this->$setter( $date );
+					break;
+				case "boolean":
+					$this->$setter( (boolean) $value );
+					break;
+			}
 		}
 	}
 
@@ -70,7 +75,7 @@ abstract class Entity {
 		foreach ( static::$meta['columns'] as $property => $params ) {
 			$getter = sprintf( "get%s", ucfirst( $property ) );
 
-			if ( empty($this->$getter()) && $params['required'] === true ) {
+			if ( empty( $this->$getter() ) && $params['required'] === true ) {
 				$errors[] = $property;
 			}
 		}
