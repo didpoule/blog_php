@@ -100,6 +100,10 @@ class Router {
 	 * Appelle la méthode du contrôleur de la route
 	 */
 	public function call() {
+		if(!$this->request->getPost()) {
+			$this->request->setToken();
+		}
+
 		$controller = $this->matchedRoute->getController();
 		$action     = $this->matchedRoute->getAction();
 		$params     = $this->matchedRoute->getArgs();

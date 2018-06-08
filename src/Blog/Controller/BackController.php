@@ -94,7 +94,8 @@ class BackController extends Controller {
 
 				$this->form->get( PostForm::class );
 				$result = $form->sendForm( $this->request, $synopsis );
-				if ( ! is_array( $result ) ) {
+				if ( ! is_array( $result ) && $result !== false ) {
+
 					$manager->update( $synopsis );
 
 					$this->bag->addMessage( "Mise a jour effectuée", "success" );
@@ -150,7 +151,8 @@ class BackController extends Controller {
 			if ( $this->request->getPost() ) {
 				$this->form->get( ChapterForm::class );
 				$result = $form->sendForm( $this->request, $chapter );
-				if ( ! is_array( $result ) ) {
+				if ( ! is_array( $result ) && $result !== false ) {
+
 					$manager->update( $chapter );
 
 					$this->bag->addMessage( "Mise a jour effectuée", "success" );
@@ -196,7 +198,8 @@ class BackController extends Controller {
 			} else {
 				$this->form->get( ChapterForm::class );
 				$result = $form->sendForm( $this->request, $chapter );
-				if ( ! is_array( $result ) ) {
+				if ( ! is_array( $result ) && $result !== false ) {
+
 					$manager->insert( $result );
 
 					$this->bag->addMessage( "Chapitre enregistré avec succès", "success" );
@@ -228,7 +231,7 @@ class BackController extends Controller {
 					$this->bag->addMesasge( "Erreur : Impossible de supprimer le chapitre demandé.", "danger" );
 				}
 
-				return $this->redirect('adminChapters');
+				return $this->redirect( 'adminChapters' );
 			}
 		}
 

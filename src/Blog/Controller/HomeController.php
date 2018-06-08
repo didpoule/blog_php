@@ -28,7 +28,7 @@ class HomeController extends Controller {
 		}
 
 		// Récupération du synopsis
-		if ( !$chapter ) {
+		if ( !isset($chapter) ) {
 			$synopsis = $manager->fetch( [ "category" => $synopsisCat->getId() ] );
 		}
 

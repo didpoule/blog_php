@@ -18,13 +18,12 @@ class PostForm extends Form {
 		$this->fields = [
 			"content" => [
 				"type"  => "textarea",
-				"label" => "Contenu",
 				"value" => isset( $post ) ? $post->getContent() : null
 			],
 			"token"   => [
 				"type"  => "hidden",
 				"value" => $token
-			]
+			],
 		];
 	}
 }

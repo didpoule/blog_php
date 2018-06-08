@@ -96,7 +96,7 @@ class Form {
 			}
 			switch ( $params['type'] ) {
 				case "text" :
-					$content .= sprintf( "<input type='text' name='%s' id='%s' value='%s'/>", $field, $field,
+					$content .= sprintf( "<input type='text' name='%s' id='%s' value=\"%s\"/>", $field, $field,
 						isset ( $params['value'] ) ? $params['value'] : null );
 					break;
 				case "password" :
@@ -113,11 +113,11 @@ class Form {
 					$content .= sprintf( "<input type='date' id='%s' name='%s' />", $field, $field );
 					break;
 				case "number" :
-					$content .= sprintf( "<input type='number' id='%s' name='%s'  value='%s'/>", $field, $field,
+					$content .= sprintf( "<input type='number' id='%s' name='%s'  value=\"%s\"/>", $field, $field,
 						isset ( $params['value'] ) ? $params['value'] : null );
 					break;
 				case "hidden" :
-					$content .= sprintf( "<input type='hidden' id='%s' name='%s' value='%s'/>", $field, $field, $params['value'] );
+					$content .= sprintf( "<input type='hidden' id='%s' name='%s' value=\"%s\" />", $field, $field, $params['value'] );
 			}
 		}
 		$content .= sprintf( "<input type='submit' value='Envoyer' class='btn btn-primary'/>" );

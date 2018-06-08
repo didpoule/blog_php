@@ -46,10 +46,6 @@ h2 {
     text-align: center;
 }
 
-#mceu_13 {
-    display: none;
-}
-
 tr {
     text-align: center;
 }
@@ -60,4 +56,8 @@ tr {
 
 input[type='number'] {
     width: 40px;
+}
+
+input[type='submit'] {
+    width: 25%;
 }

@@ -22,7 +22,7 @@ class PostManager extends Manager {
 	}
 
 	public function findChapters( $catId, $limit = null ) {
-		return $this->fetchAll( [ "category" => $catId ], null, $limit, [ 'added' => "ASC" ] );
+		return $this->fetchAll( [ "category" => $catId ], null, $limit, [ 'number' => "ASC" ] );
 	}
 
 	public function find( $params = [] ) {

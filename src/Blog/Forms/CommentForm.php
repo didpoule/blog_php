@@ -13,11 +13,11 @@ class CommentForm extends Form {
 	 * @param null $postId
 	 * @param null $token
 	 */
-	public function __construct( $postId = null, $token = null ) {
+	public function __construct( $comment = null, $post = null, $token = null ) {
 		self::$entity = Comment::class;
 		self::$name = 'comment';
 
-		$this->action = "/comment/insert";
+		$this->action = "/chapitres/chapitre-" . (isset($post) ? $post->getNumber() : null);
 		$this->fields = [
 			"author"  => [
 				"type"  => "text",
@@ -29,7 +29,7 @@ class CommentForm extends Form {
 			],
 			"post"    => [
 				"type"  => "hidden",
-				"value" => $postId
+				"value" =>  isset($post) ? $post->getId() : null
 			],
 			"token"   => [
 				"type"  => "hidden",

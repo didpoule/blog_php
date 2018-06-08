@@ -6,7 +6,7 @@
         {% for post in posts %}
             <div class="row">
                 <div class="listed-article">
-                    <h2><a href="/chapitres/{{ post.id }}">Chapitre {{ post.number }} : {{ post.title }}</a></h2>
+                    <h2><a href="/chapitres/chapitre-{{ post.number }}">Chapitre {{ post.number }} : {{ post.title }}</a></h2>
                 </div>
             </div>
         {% endfor %}

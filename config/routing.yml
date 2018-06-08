@@ -39,7 +39,13 @@ idChapter:
     controller: Blog\Controller\PostController
     action: showAction
 
-chapter:
+numberChapter:
+    path: /chapitres/chapitre-:number
+    parameters: {number:  '[\d]+'}
+    controller: Blog\Controller\PostController
+    action: showAction
+
+chapters:
     path: /chapitres
     parameters: {}
     controller: Blog\Controller\PostController

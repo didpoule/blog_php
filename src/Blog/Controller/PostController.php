@@ -21,13 +21,14 @@ class PostController extends Controller {
 	 */
 	public function showAction( $value ) {
 		$manager = $this->database->getManager( Post::class );
-		$post    = $manager->find( [ "id" => $value ] );
+		$post    = $manager->find( [ "number" => $value ] );
 
 		$nbChapters   = $manager->getNbChapters();
 		$readChapters = $this->readChapters;
 
 		$readChapters->init( $this->request, $nbChapters );
 		$current = ( $readChapters->getCookie() > 1 ) ?? null;
+
 
 		if ( ! $post ) {
 			return $this->render( 'error/404.html.twig', [
@@ -36,9 +37,27 @@ class PostController extends Controller {
 		} else {
 			$manager = $this->database->getManager( Comment::class );
 
-			$this->request->setToken();
+			$comment = new Comment();
+			$comment->setPost( $post->getId() );
 
-			$form = new CommentForm( $post->getId(), $this->request->getToken() );
+			$form = new CommentForm( $comment, $post, $this->request->getToken() );
+
+
+			if ( $this->request->getPost() ) {
+				$this->form->get( CommentForm::class );
+				$result = $form->sendForm( $this->request, $comment );
+				if ( ! is_array( $result ) && $result !== false ) {
+					$manager->insert( $result );
+					$this->bag->addMessage( "Votre commentaire a bien été envoyé.", "success" );
+				} else {
+					foreach ( $result as $error ) {
+						$this->bag->addMessage( sprintf( "Erreur: le champ %s doit être renseigné", $error ), "danger" );
+					}
+				}
+
+				return $this->redirect( 'numberChapter', [ "number" => $post->getNumber() ] );
+
+			}
 
 			$comments = $manager->findAllByPost( $post->getId() );
 
@@ -120,7 +139,7 @@ class PostController extends Controller {
 		$readChapters->init( $this->request, $nbChapters );
 
 
-		return $this->redirect( "slugChapter", [ "slug" => sprintf( "chapitre-%s", $readChapters->getCurrent() ) ], sprintf( "#%s", $readChapters->getCurrent() ) );
+		return $this->redirect( "numberChapter", [ "number" => sprintf( "%s", $readChapters->getCurrent() ) ], sprintf( "#%s", $readChapters->getCurrent() ) );
 	}
 
 	public function previousAction() {
@@ -132,6 +151,6 @@ class PostController extends Controller {
 		$readChapters->init( $this->request, $nbChapters );
 
 
-		return $this->redirect( "slugChapter", [ "slug" => sprintf( "chapitre-%s", $readChapters->getCurrent() ) ], sprintf( "#%s", $readChapters->getCurrent() ) );
+		return $this->redirect( "numberChapter", [ "number" => sprintf( "%s", $readChapters->getCurrent() ) ], sprintf( "#%s", $readChapters->getCurrent() ) );
 	}
 }

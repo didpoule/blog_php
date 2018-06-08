@@ -22,30 +22,32 @@
                         <td>{{ chapter.number }}</td>
                         <td>{{ chapter.published ? "Oui" : "Non" }}</td>
                         <td><a href="/admin/chapter/{{ chapter.id }}"><i class="fas fa-edit"></i></a> -
-                            <button type="button" data-toggle="modal" data-target="#remove"><i
+                            <button type="button" data-toggle="modal" data-target="#remove-{{ chapter.id }}"><i
                                         class="fas fa-trash-alt"></i></button>
                         </td>
-                        <div class="modal fade" id="remove" tabindex="-1" role="dialog" aria-labelledby="modal-label"
-                             aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="modal-label">Confirmer suppression de chapitre</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                            &times;
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Êtes-vous sûr de vouloir supprimer ce chapitre ?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-danger" data-dismiss="modal">Annuler</button>
-                                        <a class="btn btn-primary" href="/admin/chapter/delete/{{ chapter.id }}">Confirmer</a>
-                                    </div>
-                                </div><!-- /.modal-content -->
-                            </div><!-- /.modal-dialog -->
-                        </div><!-- /.modal -->
                     </tr>
+                    <div class="modal fade" id="remove-{{ chapter.id }}" tabindex="-1" role="dialog"
+                         aria-labelledby="modal-label"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="modal-label">Confirmer suppression de chapitre</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        &times;
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Êtes-vous sûr de vouloir supprimer ce chapitre ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                                    <a class="btn btn-primary"
+                                       href="/admin/chapter/delete/{{ chapter.id }}">Confirmer</a>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
                 {% endfor %}
             {% else %}
                 <tr>
