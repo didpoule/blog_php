@@ -21,11 +21,6 @@ class Post extends Entity {
 	private $title;
 
 	/**
-	 * @var string
-	 */
-	private $slug;
-
-	/**
 	 * @var \DateTime
 	 */
 	private $added;
@@ -89,13 +84,6 @@ class Post extends Entity {
 	}
 
 	/**
-	 * @param string $slug
-	 */
-	public function setSlug( string $slug ): void {
-		$this->slug = $slug;
-	}
-
-	/**
 	 * @param \DateTime $added
 	 */
 	public function setAdded( \DateTime $added ): void {
@@ -128,13 +116,6 @@ class Post extends Entity {
 	 */
 	public function getTitle() {
 		return $this->title;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getSlug() {
-		return $this->slug;
 	}
 
 	/**

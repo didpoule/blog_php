@@ -1,3 +1,18 @@
+.header-container {
+    margin: 0 !important;
+    max-width: 100% !important;
+    background-color: #293133;
+    padding: 0 10px 0 10px !important;
+}
+
+#main-menu {
+    margin-right: 50px;
+}
+
+.header-container a, #main-menu li a {
+    color: #f8f9fa;
+}
+
 #hero-image {
     display: none;
 }
@@ -14,6 +29,35 @@
 .container-fluid {
     padding: 0;
 }
+
 .nav-item {
     margin-bottom: 10px;
+}
+
+nav ul {
+    margin-left: 10px;
+}
+
+textarea {
+    height: 500px;
+}
+
+h2 {
+    text-align: center;
+}
+
+#mceu_13 {
+    display: none;
+}
+
+tr {
+    text-align: center;
+}
+
+.table-title {
+    font-size: 1.2em;
+}
+
+input[type='number'] {
+    width: 40px;
 }

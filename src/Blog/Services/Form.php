@@ -46,9 +46,10 @@ class Form {
 	/**
 	 * @param $entity string className entity
 	 */
-	public function sendForm( Request $request ) {
+	public function sendForm( Request $request, $entity = null ) {
 		if ( $request->getPost( 'token' ) === $request->getToken() ) {
-			$entity = $this->hydrate( $request );
+
+			$entity = $this->hydrate( $request, $entity );
 
 			$errors = $entity->validate();
 
@@ -65,20 +66,21 @@ class Form {
 	/**
 	 * @param Request $request
 	 */
-	private function hydrate( Request $request ) {
+	private function hydrate( Request $request, $entity = null ) {
+
 		foreach ( self::$metas[ static::$entity ]['columns'] as $property => $params ) {
 
-			if ( $params['required'] ) {
-				if ( array_key_exists( $property, $request->getPost() ) ) {
-					$datas[ $property ] = $request->getPost( $property );
-				} else {
-					$datas[ $property ] = null;
-				}
+			if ( array_key_exists( $property, $request->getPost() ) ) {
+				$datas[ $property ] = $request->getPost( $property );
+			} else {
+				$datas[ $property ] = null;
 			}
 
 		}
 
-		$entity = new static::$entity();
+		if ( ! isset( $entity ) ) {
+			$entity = new static::$entity();
+		}
 
 		$entity->hydrate( $datas );
 
@@ -89,24 +91,30 @@ class Form {
 	public function getForm() {
 		$content = sprintf( "<form action='%s' method='post' id='%s-form'>", $this->action, static::$name );
 		foreach ( $this->fields as $field => $params ) {
-			if ( $params['type'] != 'hidden' ) {
+			if ( $params['type'] != 'hidden' && isset( $params['label'] ) ) {
 				$content .= sprintf( "<label for='%s'>%s :</label>", $field, $params['label'] );
 			}
 			switch ( $params['type'] ) {
 				case "text" :
-					$content .= sprintf( "<input type='text' name='%s' id='%s'/>", $field, $field );
+					$content .= sprintf( "<input type='text' name='%s' id='%s' value='%s'/>", $field, $field,
+						isset ( $params['value'] ) ? $params['value'] : null );
 					break;
 				case "password" :
 					$content .= sprintf( "<input type='password' name='%s' id='%s' />", $field, $field );
 					break;
 				case "textarea" :
-					$content .= sprintf( "<textarea id='%s' name='%s'></textarea>", $field, $field );
+					$content .= sprintf( "<textarea id='%s' name='%s'>%s</textarea>", $field, $field,
+						isset ( $params['value'] ) ? $params['value'] : null );
 					break;
 				case "boolean" :
 					$content .= sprintf( "<input type='checkbox' id='%s' name='%s' />", $field, $field );
 					break;
 				case "date" :
 					$content .= sprintf( "<input type='date' id='%s' name='%s' />", $field, $field );
+					break;
+				case "number" :
+					$content .= sprintf( "<input type='number' id='%s' name='%s'  value='%s'/>", $field, $field,
+						isset ( $params['value'] ) ? $params['value'] : null );
 					break;
 				case "hidden" :
 					$content .= sprintf( "<input type='hidden' id='%s' name='%s' value='%s'/>", $field, $field, $params['value'] );

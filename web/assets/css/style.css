@@ -218,15 +218,16 @@ footer .container {
 }
 
 #comment-form {
-    display: flex;
-    flex-direction: column;
-
     margin-left: 50px;
     width: 500px;
 }
 
-#comment-form input, #comment-form textarea {
-    margin-bottom: 20px;
+form {
+    display: flex;
+    flex-direction: column;
+}
+input, textarea, .mce-tinymce {
+    margin-bottom: 20px !important;
     border: 2px rgba(0, 0, 0, .1) solid;
     border-radius: 5px;
 }
@@ -256,6 +257,16 @@ footer .container {
 
 }
 
-#user-form input {
-    margin-bottom: 20px;
+#login-form {
+    margin: auto;
+    width: 40%;
+}
+
+#user-form {
+    width: 50%;
+}
+
+input[type=submit] {
+    width: 50%;
+    margin: auto;
 }

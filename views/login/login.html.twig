@@ -1,10 +1,23 @@
-{% extends "template.html.twig" %}
+{% extends "front_template.html.twig" %}
 
 {% block pageTitle %}Authentification{% endblock %}
 {% block content %}
+    <h2 class="text-center">Connexion</h2>
     <div class="row">
-        {% if form is not null %}
-            {{ form|raw }}
-        {% endif %}
+        <section id="login-form">
+            {% if bag.messages is not empty %}
+                {% for message in bag.messages %}
+                    <div class="alert alert-{{ bag.messages[0].type }} alert-dismissible fade show" role="alert">
+                        {{ bag.getMessage.message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% if form is not null %}
+                {{ form|raw }}
+            {% endif %}
+        </section>
     </div>
 {% endblock %}

@@ -21,13 +21,8 @@ class PostController extends Controller {
 	 */
 	public function showAction( $value ) {
 		$manager = $this->database->getManager( Post::class );
+		$post    = $manager->find( [ "id" => $value ] );
 
-		if ( $this->slug->isSlug( $value ) ) {
-			$post = $manager->find( [ "slug" => $value ] );
-		} else {
-			$post = $manager->find( [ "id" => $value ] );
-
-		}
 		$nbChapters   = $manager->getNbChapters();
 		$readChapters = $this->readChapters;
 
@@ -35,7 +30,6 @@ class PostController extends Controller {
 		$current = ( $readChapters->getCookie() > 1 ) ?? null;
 
 		if ( ! $post ) {
-
 			return $this->render( 'error/404.html.twig', [
 				"message" => "Le chapitre demandé n'a pas encore été écrit."
 			] );
@@ -54,7 +48,7 @@ class PostController extends Controller {
 				"state"    => $readChapters->getState(),
 				"current"  => $current,
 				"form"     => $form->getForm(),
-				"bag" => $this->bag
+				"bag"      => $this->bag
 
 			] );
 		}

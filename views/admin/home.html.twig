@@ -1,30 +1,7 @@
-{% extends "template.html.twig" %}
-
-{% block pageTitle %}Administration{% endblock %}
-{% block head %}
-    <link rel="stylesheet" href="/assets/css/admin.css">
-{% endblock %}
-{% block content %}
-    <div class="container-fluid">
-
-        <div class="row">
-
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                <div class="sidebar-sticky">
-                    <h6 class="sidebar-heading text-muted justify-content-between">Chapitres</h6>
-                    <ul class="nav flex-column">
-                        <li class="nav-item"><a href="#">Liste des chapitres</a></li>
-                        <li class="nav-item"><a href="#">Écrire un chapitre</a></li>
-                    </ul>
-                </div>
-
-            </nav>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                <h2>Administration</h2>
-            </main>
-        </div>
+{% extends "back_template.html.twig" %}
+{% block adminContent %}
+    <h2>Administration</h2>
+    <div>
+        <p>Bienvenue dans votre administration</p>
     </div>
-
-
 {% endblock %}

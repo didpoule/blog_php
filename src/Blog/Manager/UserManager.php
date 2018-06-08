@@ -24,10 +24,8 @@ class UserManager extends Manager {
 		$result = $statement->fetch( \PDO::FETCH_ASSOC );
 
 		if ( $result ) {
-			if ( $username === $result['username'] ) {
-				if ( password_verify( $password, $result['password'] ) ) {
-					return true;
-				}
+			if ( $username === $result['username'] && password_verify( $password, $result['password'] ) ) {
+				return true;
 			}
 		}
 

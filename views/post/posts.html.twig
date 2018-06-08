@@ -1,4 +1,4 @@
-{% extends "template.html.twig" %}
+{% extends "front_template.html.twig" %}
 {% block pageTitle %}Derniers billets{% endblock %}
 
 {% block content %}
@@ -6,7 +6,7 @@
         {% for post in posts %}
             <div class="row">
                 <div class="listed-article">
-                    <h2><a href="/chapitres/{{ post.slug }}">Chapitre {{ post.number }} : {{ post.title }}</a></h2>
+                    <h2><a href="/chapitres/{{ post.id }}">Chapitre {{ post.number }} : {{ post.title }}</a></h2>
                 </div>
             </div>
         {% endfor %}

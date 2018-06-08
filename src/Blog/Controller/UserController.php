@@ -16,9 +16,7 @@ class UserController extends Controller {
 
 		if ( ! isset( $_SESSION['authenticated'] ) ) {
 
-			if(!$this->request->getToken()) {
-				$this->request->setToken();
-			}
+			$this->request->getToken();
 
 			if ( $this->request->getPost() ) {
 				$manager = $this->database->getManager( User::class );
@@ -28,9 +26,12 @@ class UserController extends Controller {
 
 				if ( ! is_array( $user ) ) {
 					if ( $manager->checkLogin( $user->getUsername(), $user->getPassword() ) ) {
-						var_dump('test');
 						$_SESSION['authenticated'] = true;
-						return $this->redirect('admin');
+
+						return $this->redirect( 'admin' );
+					} else {
+						$this->bag->addMessage("Erreur: Le nom d'utilisateur et/ou le mot de passe sont incorrectes.", "danger");
+						return $this->redirect('login');
 					}
 				}
 				foreach ( $user as $error ) {
@@ -40,10 +41,12 @@ class UserController extends Controller {
 			$form = new UserForm( $this->request->getToken() );
 
 			return $this->render( 'login/login.html.twig', [
-				'form' => $form->getForm()
+				'form' => $form->getForm(),
+				'bag' => $this->bag
 			] );
 		}
-	return $this->redirect('admin');
+
+		return $this->redirect( 'admin' );
 	}
 
 }

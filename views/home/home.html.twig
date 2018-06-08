@@ -1,4 +1,4 @@
-{% extends "template.html.twig" %}
+{% extends "front_template.html.twig" %}
 
 {% block pageTitle %}La couverture{% endblock %}
 {% block content %}
@@ -7,7 +7,7 @@
             <div class="post-container">
                 <article>
                     <h2>{{ edito.title }}</h2>
-                    <p>{{ edito.content }}</p>
+                    <p>{{ edito.content|raw }}</p>
                 </article>
 
             </div>
@@ -19,7 +19,7 @@
                 {% if featured is not null %}
                     <article>
                         <h2 class="text-right">{{ featured.title }}</h2>
-                        <p>{{ featured.content }}</p>
+                        <p>{{ featured.content|raw }}</p>
                     </article>
                 {% endif %}
 

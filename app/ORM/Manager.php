@@ -224,19 +224,13 @@ abstract class Manager {
 	 * @param $entity Entity
 	 */
 	public function update( $entity ) {
-		if ( $entity->validate() ) {
+		$request = sprintf( "UPDATE %s %s WHERE id = :id", self::$meta['name'], $this->set( $entity ) );
 
-			$request = sprintf( "UPDATE %s %s WHERE id = :id", self::$meta['name'], $this->set( $entity ) );
+		$statement = $this->pdo->prepare( $request );
 
-			$statement = $this->pdo->prepare( $request );
+		$params = $this->setParams( $entity );
 
-			$params = $this->setParams( $entity );
-
-			return $statement->execute( $params );
-
-		}
-
-		return false;
+		return $statement->execute( $params );
 	}
 
 	/**

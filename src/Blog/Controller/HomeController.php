@@ -12,12 +12,7 @@ class HomeController extends Controller {
 		$manager = $this->database->getManager( Category::class );
 
 		$editoCat = $manager->findByName( 'edito' );
-
-		// Récupération catégorie synopsis si pas de chapitre en cours
-		if ( ! $this->request->getCookie( 'current' ) && $this->request->getCookie('current') < 2 ) {
-			$synopsisCat = $manager->findByName( 'synopsis' );
-		}
-
+		$synopsisCat = $manager->findByName( 'synopsis' );
 
 		$manager = $this->database->getManager( Post::class );
 
@@ -26,14 +21,15 @@ class HomeController extends Controller {
 			$edito = $manager->fetch( [ "category" => $editoCat->getId() ] );
 		}
 
-		// Récupération du synopsis
-		if ( isset( $synopsisCat ) ) {
-			$synopsis = $manager->fetch( [ "category" => $synopsisCat->getId() ] );
-		}
 
 		// Récupération du chapitre en cours
 		if ( $this->request->getCookie( 'current' ) ) {
 			$chapter = $manager->getExtract( [ "number" => $this->request->getCookie( "current" ) ] );
+		}
+
+		// Récupération du synopsis
+		if ( !$chapter ) {
+			$synopsis = $manager->fetch( [ "category" => $synopsisCat->getId() ] );
 		}
 
 		$featured = ( isset( $synopsis ) ) ? $synopsis : $chapter;

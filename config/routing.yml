@@ -39,12 +39,6 @@ idChapter:
     controller: Blog\Controller\PostController
     action: showAction
 
-slugChapter:
-    path:  /chapitres/:slug
-    parameters: {slug:  '([A-Za-z0-9]+-[A-Za-z0-9]+)+$'}
-    controller: Blog\Controller\PostController
-    action: showAction
-
 chapter:
     path: /chapitres
     parameters: {}
@@ -56,6 +50,48 @@ login:
     parameters: {}
     controller: Blog\Controller\UserController
     action: loginAction
+
+adminEdito:
+    path: /admin/edito
+    parameters: {}
+    controller: Blog\Controller\BackController
+    action: editoAction
+
+adminSynopsis:
+    path: /admin/synopsis
+    parameters: {}
+    controller: Blog\Controller\BackController
+    action: synopsisAction
+
+adminChapterEdit:
+    path: /admin/chapter/edit/:id
+    parameters: {id: '[\d]+'}
+    controller: Blog\Controller\BackController
+    action: chapterEditAction
+
+adminChapterDelete:
+    path: /admin/chapter/delete/:id
+    parameters: {id: '[\d]+'}
+    controller: Blog\Controller\BackController
+    action: chapterDeleteAction
+
+adminChapterNew:
+    path: /admin/chapter/new
+    parameters: {}
+    controller: Blog\Controller\BackController
+    action: chapterNewAction
+
+adminChapters:
+    path: /admin/chapters
+    parameters: {}
+    controller: Blog\Controller\BackController
+    action: chaptersAction
+
+adminChapter:
+    path: /admin/chapter/:id
+    parameters: {id: '[\d]+'}
+    controller: Blog\Controller\BackController
+    action: chapterAction
 
 admin:
     path: /admin
