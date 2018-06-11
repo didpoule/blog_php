@@ -11,7 +11,8 @@ class CommentController extends Controller {
 	public function insertAction() {
 		$manager = $this->database->getManager( Comment::class );
 
-		$form = $this->form->get( CommentForm::class );
+		$form = $this->form->get( CommentForm::class, [
+		] );
 
 		$comment = $form->sendForm( $this->request );
 
@@ -25,5 +26,13 @@ class CommentController extends Controller {
 		}
 
 		return $this->redirectToBack( 'comment-form' );
+	}
+
+	public function getAction($postId, $offset, $limit) {
+		$manager = $this->database->getManager(Comment::class);
+
+		$comments = $manager->findAllByPost(["post" => $postId, "published" => 1], $offset, $limit);
+
+		return $this->json($comments);
 	}
 }

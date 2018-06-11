@@ -37,15 +37,19 @@ class PostController extends Controller {
 		} else {
 			$manager = $this->database->getManager( Comment::class );
 
-			$comment = new Comment();
+			$comment = $manager->getNew();
 			$comment->setPost( $post->getId() );
-
-			$form = new CommentForm( $comment, $post, $this->request->getToken() );
+			$form = $this->form->get( CommentForm::class, [
+				"admin"   => false,
+				"action"  => "/chapitres/chapitre-" . $post->getNumber(),
+				"comment" => $comment,
+				"post"    => $post
+			] );
 
 
 			if ( $this->request->getPost() ) {
-				$this->form->get( CommentForm::class );
-				$result = $form->sendForm( $this->request, $comment );
+
+				$result = $form->sendForm();
 				if ( ! is_array( $result ) && $result !== false ) {
 					$manager->insert( $result );
 					$this->bag->addMessage( "Votre commentaire a bien été envoyé.", "success" );
@@ -59,7 +63,8 @@ class PostController extends Controller {
 
 			}
 
-			$comments = $manager->findAllByPost( [ "post" => $post->getId(), "published" => 1 ] );
+			$limit    = 5;
+			$comments = $manager->findAllByPost( [ "post" => $post->getId(), "published" => 1 ], 0, $limit );
 
 			return $this->render( "post/post.html.twig", [
 				"post"     => $post,
@@ -67,7 +72,7 @@ class PostController extends Controller {
 				"state"    => $readChapters->getState(),
 				"current"  => $current,
 				"form"     => $form->getForm(),
-				"bag"      => $this->bag
+				"limit"    => $limit
 
 			] );
 		}

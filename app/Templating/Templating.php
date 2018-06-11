@@ -2,6 +2,8 @@
 
 namespace App\Templating;
 
+use App\Services\MessagesBag;
+
 class Templating {
 
 	/**
@@ -24,7 +26,7 @@ class Templating {
 	 *
 	 * @param $file
 	 */
-	public function __construct( $file ) {
+	public function __construct( $file, MessagesBag $bag ) {
 
 		$this->name = 'twig';
 		$this->file = $file;
@@ -36,8 +38,7 @@ class Templating {
 		] );
 
 		$this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
-
-
+		$this->twig->addGlobal("bag", $bag);
 
 	}
 

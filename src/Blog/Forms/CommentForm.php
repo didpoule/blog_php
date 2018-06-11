@@ -3,7 +3,7 @@
 namespace Blog\Forms;
 
 use Blog\Entity\Comment;
-use Blog\Services\Form;
+use App\Services\Form;
 
 /**
  * Class CommentForm
@@ -20,16 +20,14 @@ class CommentForm extends Form {
 	 * @param bool $admin
 	 * @param string $action
 	 */
-	public function __construct( $comment = null, $post = null, $token = null, $admin = false, $action = null ) {
-		self::$entity = Comment::class;
-		self::$name   = 'comment';
 
-		if ( $action === null ) {
-			$this->action = "/chapitres/chapitre-" . ( isset( $post ) ? $post->getNumber() : null );
-		} else {
-			$this->action = $action;
-		}
-		$this->fields = [
+	public function __construct( $admin, $action, $comment = null, $post = null ) {
+
+
+		self::$name = "comment";
+		self::$action = $action;
+		self::$entity = Comment::class;
+		self::$fields = [
 			"author"  => [
 				"type"  => "text",
 				"label" => "Pseudonyme",
@@ -42,22 +40,18 @@ class CommentForm extends Form {
 			],
 			"post"    => [
 				"type"  => "hidden",
-				"value" => isset( $post ) ? (!is_int($post) ? $post->getId() : $post) : null
+				"value" => isset( $post ) ?  $post->getId()  : null
 			],
-			"token"   => [
-				"type"  => "hidden",
-				"value" => $token
-			]
 		];
 
 		if ( $admin ) {
-			$this->fields = [
+			self::$fields = [
 				                "published" => [
 					                "type"  => "boolean",
 					                "label" => "Publié",
 					                "value" => isset( $comment ) ? $comment->getPublished() : null
 				                ]
-			                ] + $this->fields;
+			                ] + self::$fields;
 		}
 	}
 }

@@ -2,6 +2,8 @@
 
 namespace Blog\Forms;
 
+use Blog\Entity\Post;
+
 /**
  * Class ChapterForm
  * @package Blog\Forms
@@ -15,10 +17,13 @@ class ChapterForm extends PostForm {
 	 * @param null $action
 	 * @param null $token
 	 */
-	public function __construct( $post = null, $action = null, $token = null ) {
-		parent::__construct( $post, $action, $token );
+	public function __construct( $post = null, $action = null) {
 
-		$this->fields = [
+		self::$name = 'chapter';
+		self::$action = $action;
+		self::$entity = Post::class;
+
+		self::$fields = [
 			"title"   => [
 				"type"  => "text",
 				"label" => "Titre",
@@ -39,10 +44,6 @@ class ChapterForm extends PostForm {
 				"label" => "Contenu",
 				"value" => isset( $post ) ? $post->getContent() : null
 			],
-			"token"   => [
-				"type"  => "hidden",
-				"value" => $token
-			]
 		];
 	}
 }

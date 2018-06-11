@@ -1,6 +1,6 @@
 twig:
   class: App\Templating\Templating
-  params: { file: ../views/ }
+  params: { file: ../views/, bag: bag }
 
 slug:
   class: Blog\Services\Slug
@@ -19,9 +19,9 @@ readchapters:
   params: {}
 
 form:
-  class: Blog\Services\Form
-  params: { metas: ../config/entities.yml }
+  class: App\Services\Form
+  params: { metas: ../config/entities.yml, request: request, databse: database }
 
 bag:
-  class: Blog\Services\MessagesBag
+  class: App\Services\MessagesBag
   params: {}

@@ -1,10 +1,15 @@
 <?php
 
-namespace Blog\Services;
+namespace App\Services;
 
 use App\Http\Request\Request;
+use App\Orm\Database;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Class Form
+ * @package App\Services
+ */
 class Form {
 
 	/**
@@ -42,10 +47,16 @@ class Form {
 	 */
 	protected static $request;
 
+	/**
+	 * @var Database
+	 */
+	private static $database;
 
-	public function __construct( $metas, Request $request ) {
+
+	public function __construct( $metas, Request $request, Database $database ) {
 		self::$metas   = Yaml::parseFile( $metas );
 		self::$request = $request;
+		self::$database = $database;
 
 	}
 
@@ -90,7 +101,7 @@ class Form {
 
 		}
 		if ( ! isset( $entity ) ) {
-			$entity = new static::$entity();
+			$entity = self::$database->getManager(static::$entity)->getNew();
 		}
 
 		$entity->hydrate( $datas );

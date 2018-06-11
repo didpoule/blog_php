@@ -16,7 +16,7 @@ class UserManager extends Manager {
 	}
 
 	public function checkLogin( $username, $password ) {
-		$request = sprintf( "SELECT * FROM user" );
+		$request = "SELECT * FROM user";
 
 		$statement = $this->pdo->prepare( $request );
 
@@ -30,5 +30,17 @@ class UserManager extends Manager {
 		}
 
 		return false;
+	}
+
+	public function updatePassword( $username, $password ) {
+		$request   = "UPDATE user SET password= :password WHERE username = :username ";
+		$statement = $this->pdo->prepare( $request );
+
+
+		$statement->execute( [
+			"password" => password_hash( $password, PASSWORD_BCRYPT ),
+			"username" => $username,
+		] );
+
 	}
 }

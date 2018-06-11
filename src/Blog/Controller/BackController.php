@@ -6,9 +6,12 @@ use App\Controller\Controller;
 use Blog\Entity\Category;
 use Blog\Entity\Comment;
 use Blog\Entity\Post;
+use Blog\Entity\User;
+use Blog\Forms\ChangePasswordForm;
 use Blog\Forms\ChapterForm;
 use Blog\Forms\CommentForm;
 use Blog\Forms\PostForm;
+use Blog\Forms\UserForm;
 
 /**
  * Class BackController
@@ -21,7 +24,9 @@ class BackController extends Controller {
 	 */
 	public function homeAction() {
 		if ( $_SESSION['authenticated'] ) {
-			return $this->render( 'admin/home.html.twig' );
+
+			return $this->render( 'admin/home.html.twig', [
+			] );
 
 		}
 
@@ -45,12 +50,14 @@ class BackController extends Controller {
 				$edito = $manager->fetch( [ "category" => $editoCat->getId() ] );
 			}
 
-			$form = new PostForm( $edito, "/admin/edito", $this->request->getToken() );
+			$form = $this->form->get( PostForm::class, [
+				'post'   => $edito,
+				'action' => '/admin/edito'
+			] );
 
 			if ( $this->request->getPost() ) {
 
-				$this->form->get( PostForm::class );
-				$result = $form->sendForm( $this->request, $edito );
+				$result = $this->form->sendForm( $edito );
 				if ( ! is_array( $result ) ) {
 					$manager->update( $edito );
 
@@ -64,7 +71,6 @@ class BackController extends Controller {
 
 			return $this->render( "admin/edito.html.twig", [
 				"form" => $form->getForm(),
-				"bag"  => $this->bag
 			] );
 
 		}
@@ -89,12 +95,14 @@ class BackController extends Controller {
 				$synopsis = $manager->fetch( [ "category" => $synopsisCat->getId() ] );
 			}
 
-			$form = new PostForm( $synopsis, "/admin/synopsis", $this->request->getToken() );
+			$form = $this->form->get( PostForm::class, [
+				'post'   => $synopsis,
+				'action' => '/admin/synopsis'
+			] );
 
 			if ( $this->request->getPost() ) {
 
-				$this->form->get( PostForm::class );
-				$result = $form->sendForm( $this->request, $synopsis );
+				$result = $form->sendForm( $synopsis );
 				if ( ! is_array( $result ) && $result !== false ) {
 
 					$manager->update( $synopsis );
@@ -109,7 +117,6 @@ class BackController extends Controller {
 
 			return $this->render( "admin/synopsis.html.twig", [
 				"form" => $form->getForm(),
-				"bag"  => $this->bag
 			] );
 
 		}
@@ -122,7 +129,7 @@ class BackController extends Controller {
 	 */
 	public function chaptersAction() {
 		if ( $_SESSION['authenticated'] ) {
-			$manager = $this->database->geTManager( Category::class );
+			$manager = $this->database->getManager( Category::class );
 
 			$cat = $manager->findByName( 'chapter' );
 
@@ -132,7 +139,6 @@ class BackController extends Controller {
 
 			return $this->render( 'admin/chapters.html.twig', [
 				"chapters" => $chapters,
-				"bag"      => $this->bag
 			] );
 
 		}
@@ -152,11 +158,13 @@ class BackController extends Controller {
 
 			$chapter = $manager->find( [ "id" => $id ] );
 
-			$form = new ChapterForm( $chapter, sprintf( "/admin/chapter/%s", $chapter->getId() ), $this->request->getToken() );
+			$form = $this->form->get( ChapterForm::class, [
+				"post"   => $chapter,
+				"action" => "/admin/chapter/" . $chapter->getId(),
+			] );
 
 			if ( $this->request->getPost() ) {
-				$this->form->get( ChapterForm::class );
-				$result = $form->sendForm( $this->request, $chapter );
+				$result = $form->sendForm( $chapter );
 				if ( ! is_array( $result ) && $result !== false ) {
 
 					$manager->update( $chapter );
@@ -174,7 +182,6 @@ class BackController extends Controller {
 
 			return $this->render( "admin/chapter.html.twig", [
 				"title"   => 'Editer un chapitre',
-				"bag"     => $this->bag,
 				"form"    => $form->getForm(),
 				"chapter" => $chapter
 			] );
@@ -194,20 +201,22 @@ class BackController extends Controller {
 
 			$manager = $this->database->getManager( Post::class );
 
-			$chapter = new Post();
+			$chapter = $manager->getNew();
 
 			$chapter->setCategory( $cat->getId() );
 			$chapter->setNumber( $manager->getNbChapters() + 1 );
-			$form = new ChapterForm( $chapter, "/admin/chapter/new", $this->request->getToken() );
+			$form = $this->form->get( ChapterForm::class, [
+				"post"   => $chapter,
+				"action" => "/admin/chapter/new"
+
+			] );
 			if ( ! $this->request->getPost() ) {
 				return $this->render( 'admin/chapter.html.twig', [
 					"form"  => $form->getForm(),
-					"bag"   => $this->bag,
 					"title" => 'Ecrire un chapitre'
 				] );
 			} else {
-				$this->form->get( ChapterForm::class );
-				$result = $form->sendForm( $this->request, $chapter );
+				$result = $form->sendForm( $chapter );
 				if ( ! is_array( $result ) && $result !== false ) {
 
 					$manager->insert( $result );
@@ -260,12 +269,11 @@ class BackController extends Controller {
 			$comments = $manager->fetchAll();
 
 
-			$titles = $this->database->getManager(Post::class)->getChaptersTitles();
+			$titles = $this->database->getManager( Post::class )->getChaptersTitles();
 
 
 			return $this->render( 'admin/comments.html.twig', [
 				"comments" => $comments,
-				"bag"      => $this->bag,
 				"titles"   => $titles
 			] );
 		}
@@ -285,12 +293,19 @@ class BackController extends Controller {
 
 			$comment = $manager->find( $id );
 
-			$form = new CommentForm( $comment, $comment->getPost(), $this->request->getToken(), true, "/admin/comment/" . $comment->getId() );
+			$post = $this->database->getManager( Post::class )->find( [ "id" => $comment->getPost() ] );
 
+			$form = $this->form->get( CommentForm::class, [
+					"admin"   => true,
+					"action"  => "/admin/comment/" . $comment->getId(),
+					"comment" => $comment,
+					"post"    => $post
+				]
+			);
 			if ( $this->request->getPost() ) {
-				$this->form->get( CommentForm::class );
-				$result = $form->sendForm( $this->request, $comment );
+				$result = $form->sendForm( $comment );
 				if ( ! is_array( $result ) && $result !== false ) {
+
 					$manager->update( $result );
 					$this->bag->addMessage( "Mise a jour effectuée", "success" );
 
@@ -305,7 +320,6 @@ class BackController extends Controller {
 
 			return $this->render( "admin/comment.html.twig", [
 				"title"   => 'Editer un commentaire',
-				"bag"     => $this->bag,
 				"form"    => $form->getForm(),
 				"comment" => $comment
 			] );
@@ -332,6 +346,45 @@ class BackController extends Controller {
 
 				return $this->redirect( 'adminComments' );
 			}
+		}
+
+		return $this->redirect( 'login' );
+	}
+
+	public function userAction() {
+		if ( $_SESSION['authenticated'] ) {
+
+			$manager = $this->database->getManager( User::class );
+
+			$form = $this->form->get( ChangePasswordForm::class, [
+				'action' => "/admin/user"
+			] );
+
+			if ( $this->request->getPost() ) {
+
+				if ( $this->request->getPost( 'newPassword' ) === $this->request->getPost( 'newPasswordRepeat' ) ) {
+					$check = $manager->checkLogin( $this->request->getPost( 'username' ), $this->request->getPost( 'password' ) );
+
+					if ( $check ) {
+						$manager->updatePassword( $this->request->getPost( 'username' ), $this->request->getPost( 'newPassword' ) );
+
+						$this->bag->addMessage( "Mise a jour effectuée", "success" );
+
+						return $this->redirect( 'admin' );
+					} else {
+						$this->bag->addMessage( 'Erreur: Le nom d\'utilisateur et/ou le mot de passe saisi est incorrect.' );
+					}
+				} else {
+					$this->bag->addMessage( 'Erreur: Les 2 mots de passes ne sont pas identiques' );
+				}
+
+				return $this->redirectToBack();
+			}
+
+			return $this->render( "admin/user.html.twig", [
+				"title" => 'Modifier le mot de passe',
+				"form"  => $form->getForm(),
+			] );
 		}
 
 		return $this->redirect( 'login' );

@@ -3,16 +3,16 @@
 namespace Blog\Forms;
 
 use Blog\Entity\User;
-use Blog\Services\Form;
+use App\Services\Form;
 
 class UserForm extends Form {
 
-	public function __construct($token = null) {
+	public function __construct($action) {
 		self::$entity = User::class;
 		self::$name = "user";
 
-		$this->action = "/login";
-		$this->fields = [
+		self::$action = $action;
+		self::$fields = [
 			"username"  => [
 				"type"  => "text",
 				"label" => "Nom d'utilisateur"
@@ -21,10 +21,7 @@ class UserForm extends Form {
 				"type"  => "password",
 				"label" => "Mot de passe"
 			],
-			"token"   => [
-				"type"  => "hidden",
-				"value" => $token
-			]
+
 		];
 	}
 }

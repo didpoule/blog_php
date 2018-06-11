@@ -1,12 +1,12 @@
 <?php
 
-namespace Blog\Services;
+namespace App\Services;
 
 use App\Http\Request\Request;
 
 /**
  * Class MessagesBag
- * @package Blog\Services
+ * @package App\Services
  */
 class MessagesBag {
 
