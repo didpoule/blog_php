@@ -21,12 +21,12 @@ abstract class Manager {
 	/**
 	 * @var string
 	 */
-	protected static $entity;
+	protected $entity;
 
 	/**
 	 * @var array
 	 */
-	protected static $meta;
+	protected $meta;
 
 	/**
 	 * Manager constructor.
@@ -37,8 +37,9 @@ abstract class Manager {
 	public function __construct( Database $database, $entity, $meta ) {
 		$this->database = $database;
 		$this->pdo      = $database->getPdo();
-		static::$entity = $entity;
-		static::$meta   = $meta;
+
+		$this->entity = $entity;
+		$this->meta   = $meta;
 	}
 
 	/**
@@ -49,19 +50,16 @@ abstract class Manager {
 	 * @return mixed
 	 */
 	public function fetch( $params = [] ) {
-
-		$request = sprintf( "SELECT * FROM  %s %s LIMIT 0,1", static::$meta['name'], $this->where( $params ) );
+		$request = sprintf( "SELECT * FROM  %s %s LIMIT 0,1", $this->meta['name'], $this->where( $params ) );
 
 		$statement = $this->pdo->prepare( $request );
 
 		$statement->execute( $params );
 
-
 		$result = $statement->fetch( \PDO::FETCH_ASSOC );
 
-
 		if ( $result ) {
-			$entity = new static::$entity();
+			$entity = new $this->entity( $this->meta );
 			$entity->hydrate( $result );
 
 			return $entity;
@@ -76,7 +74,7 @@ abstract class Manager {
 	 */
 	public function fetchAll( $params = [], $offset = null, $limit = null, $sort = [] ) {
 
-		$request   = sprintf( "SELECT * FROM %s %s %s %s", static::$meta['name'], $this->limit( $offset, $limit ), $this->where( $params ), $this->order( $sort ) );
+		$request   = sprintf( "SELECT * FROM %s %s %s %s", $this->meta['name'], $this->where( $params ), $this->order( $sort ), $this->limit( $offset, $limit ) );
 		$statement = $this->pdo->prepare( $request );
 
 		$statement->execute( $params );
@@ -87,7 +85,7 @@ abstract class Manager {
 
 
 			foreach ( $results as $result ) {
-				$entity = new static::$entity();
+				$entity = new $this->entity( $this->meta );
 				try {
 					$entity->hydrate( $result );
 				} catch ( ORMException $e ) {
@@ -175,7 +173,7 @@ abstract class Manager {
 	 * @return string
 	 */
 	private function set( $entity ) {
-		foreach ( self::$meta['columns'] as $property => $value ) {
+		foreach ( $this->meta['columns'] as $property => $value ) {
 			if ( $property != "id" ) {
 				$getter = sprintf( "get%s", ucfirst( $property ) );
 				if ( $entity->$getter() != null || $value["type"] === "boolean" ) {
@@ -185,30 +183,6 @@ abstract class Manager {
 		}
 
 		return sprintf( "SET %s", implode( ',', $set ) );
-	}
-
-	/**
-	 * @param $entity
-	 */
-	public static function setEntity( $entity ) {
-		self::$entity = $entity;
-
-		if ( self::$manager ) {
-			$manager       = self::$entity::getManager();
-			self::$manager = new $manager( self::$file );
-		}
-	}
-
-	/**
-	 * @return Manager
-	 */
-	public static function getManager() {
-		if ( ! self::$manager ) {
-			$manager       = self::$entity::getManager();
-			self::$manager = new $manager( self::$file );
-		}
-
-		return self::$manager;
 	}
 
 	public function find( $id ) {
@@ -224,9 +198,10 @@ abstract class Manager {
 	 * @param $entity Entity
 	 */
 	public function update( $entity ) {
-		$request = sprintf( "UPDATE %s %s WHERE id = :id", self::$meta['name'], $this->set( $entity ) );
+		$request = sprintf( "UPDATE %s %s WHERE id = :id", $this->meta['name'], $this->set( $entity ) );
 
 		$statement = $this->pdo->prepare( $request );
+
 
 		$params = $this->setParams( $entity );
 
@@ -243,7 +218,7 @@ abstract class Manager {
 	private function setParams( $entity ) {
 		$params = [];
 
-		foreach ( self::$meta['columns'] as $property => $value ) {
+		foreach ( $this->meta['columns'] as $property => $value ) {
 			$getter = sprintf( "get%s", ucfirst( $property ) );
 
 			if ( $entity->$getter() !== null || $value['type'] === "boolean" ) {
@@ -269,7 +244,7 @@ abstract class Manager {
 	 * @param array $params
 	 */
 	private function remove( $params = [] ) {
-		$request = sprintf( "DELETE FROM %s %s", self::$meta['name'], $this->where( $params ) );
+		$request = sprintf( "DELETE FROM %s %s", $this->meta['name'], $this->where( $params ) );
 
 		$statement = $this->pdo->prepare( $request );
 
@@ -295,11 +270,13 @@ abstract class Manager {
 	 * @param $entity
 	 */
 	public function insert( $entity ) {
-		$request = sprintf( "INSERT INTO %s %s %s", self::$meta['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity, true ) );
+		$request = sprintf( "INSERT INTO %s %s %s", $this->meta['name'], $this->stringProperties( $entity ), $this->stringProperties( $entity, true ) );
+
 
 		$statement = $this->pdo->prepare( $request );
 
 		$params = $this->setParams( $entity );
+
 
 		return $statement->execute( $params );
 	}
@@ -312,11 +289,10 @@ abstract class Manager {
 	 * @return string
 	 */
 	private function stringProperties( Entity $entity, $prepare = false ) {
-		foreach ( self::$meta['columns'] as $property => $value ) {
+		foreach ( $this->meta['columns'] as $property => $value ) {
 			if ( $property != "id" ) {
 				$getter = sprintf( "get%s", ucfirst( $property ) );
-
-				if ( $entity->$getter() != null ) {
+				if ( $entity->$getter() != null || $value['type'] === 'boolean' ) {
 					if ( $prepare ) {
 						$properties[] = sprintf( ":%s", $property );
 					} else {
@@ -331,5 +307,9 @@ abstract class Manager {
 		}
 
 		return sprintf( "(%s)", implode( ",", $properties ) );
+	}
+
+	public function getNew() {
+		return new $this->entity( $this->meta );
 	}
 }

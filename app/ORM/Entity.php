@@ -11,15 +11,7 @@ abstract class Entity {
 	/**
 	 * @var array
 	 */
-	protected static $meta;
-
-	/**
-	 * @param $datas
-	 */
-
-	public static function setMeta( $meta ) {
-		static::$meta = $meta;
-	}
+	protected  $meta;
 
 	/**
 	 * @param $datas
@@ -39,14 +31,20 @@ abstract class Entity {
 	 * @param $column
 	 * @param $value
 	 */
+
+	public function __construct($meta) {
+		$this->meta = $meta;
+	}
+
 	private function hydrateProperty( $column, $value ) {
 
 		$property = $column;
 		$setter   = sprintf( "set%s", ucfirst( $property ) );
 
-		if ( ! is_null( $value ) || static::$meta['columns'][ $column ]['type'] === 'datetime' ||
-		     static::$meta['columns'][ $column ]['type'] === "boolean" ) {
-			switch ( static::$meta['columns'][ $column ]['type'] ) {
+		if ( ! is_null( $value ) || $this->meta['columns'][ $column ]['type'] === 'datetime' ||
+		     $this->meta['columns'][ $column ]['type'] === "boolean" ) {
+
+			switch ( $this->meta['columns'][ $column ]['type'] ) {
 				case "int":
 					$this->$setter( (int) $value );
 					break;
@@ -71,7 +69,7 @@ abstract class Entity {
 	 */
 	public function validate() {
 		$errors = [];
-		foreach ( static::$meta['columns'] as $property => $params ) {
+		foreach ( $this->meta['columns'] as $property => $params ) {
 			$getter = sprintf( "get%s", ucfirst( $property ) );
 
 			if ( empty( $this->$getter() ) && $params['required'] === true ) {

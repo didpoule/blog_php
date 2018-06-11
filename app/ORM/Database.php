@@ -14,12 +14,12 @@ class Database {
 	/**
 	 * @var array
 	 */
-	private static $managers;
+	private $managers;
 
 	/**
 	 * @var array
 	 */
-	private static $metas;
+	private $metas;
 
 	/**
 	 * Database constructor.
@@ -30,7 +30,7 @@ class Database {
 	public function __construct( $file, $meta ) {
 
 		$file        = Yaml::parseFile( $file )['database'];
-		self::$metas = Yaml::parseFile( $meta );
+		$this->metas = Yaml::parseFile( $meta );
 
 		$db = sprintf( "mysql:dbname=%s;host=%s:%s", $file['name'], $file['host'], $file['port'] );
 
@@ -46,13 +46,12 @@ class Database {
 	 * @param $entity string className entité
 	 */
 	public function getManager( $entity ) {
-		if ( ! isset( self::$managers[ $entity ] ) ) {
-			$manager                   = self::$metas[ $entity ]["manager"];
-			self::$managers[ $entity ] = new $manager( $this, $entity, self::$metas[ $entity ] );
 
-			$entity::setMeta( self::$metas[ $entity ] );
+		if ( ! isset( $this->managers[ $entity ] ) ) {
+			$manager                   = $this->metas[ $entity ]["manager"];
+			$this->managers[ $entity ] = new $manager( $this, $entity, $this->metas[ $entity ] );
 		}
 
-		return self::$managers[ $entity ];
+		return $this->managers[ $entity ];
 	}
 }

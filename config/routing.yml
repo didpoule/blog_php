@@ -123,12 +123,23 @@ adminCommentDelete:
     controller: Blog\Controller\BackController
     action: commentDeleteAction
 
+adminUser:
+    path: /admin/user
+    parameters: {}
+    controller: Blog\Controller\BackController
+    action: userAction
+
 admin:
     path: /admin
     parameters: {}
     controller: Blog\Controller\BackController
     action: homeAction
 
+jsonComments:
+    path: /comments/:id/:offset/:limit
+    parameters: {id:  '[\d]+', offset: '[\d]+', limit: '[\d]+'}
+    controller: Blog\Controller\CommentController
+    action: getAction
 home:
     path: /
     parameters: {}
