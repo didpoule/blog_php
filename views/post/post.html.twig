@@ -32,17 +32,32 @@
         <hr>
         <section class="comments-section">
         <h2>Commentaires</h2>
-        <div class="comments">
+        <div class="comments" id="paginated-content">
             {% if not comments is empty %}
                 {% for comment in comments %}
-                    <h3>{{ comment.author }}</h3>
-                    <div><span>Posté le {{ comment.added|localizeddate('medium', 'none',  locale) }}</span></div>
-                    <p>{{ comment.content }}</p>
+                    <div>
+                        <h3>{{ comment.author }}</h3>
+                        <div><span>Posté le {{ comment.added|localizeddate('medium', 'none',  locale) }}</span></div>
+                        <p>{{ comment.content }}</p>
+                    </div>
                 {% endfor %}
+
             {% else %}
                 <p>Il n'y a pas encore de commentaire.</p>
             {% endif %}
         </div>
+        <nav>
+            <ul id="pagination-nav" class="pagination">
+                <li class="page-item">
+                    <button id="prev" class="page-link">Commentaires précédents</button>
+                </li>
+                <li class="page-item">
+                    <button id="next" class="page-link">Commentaires suivants</button>
+                </li>
+            </ul>
+        </nav>
+        <div id="current-page" hidden>0</div>
+
     {% else %}
         <h2>Le billet demandé n'existe pas.</h2>
     {% endif %}
@@ -60,4 +75,7 @@
     {% endif %}
     {{ form|raw }}
     </section>
+{% endblock %}
+{% block scripts %}
+    <script> pagination = new Pagination("http://localhost:8000/comments/{{ post.id }}/", {{ limit }}, "commentaires")</script>
 {% endblock %}

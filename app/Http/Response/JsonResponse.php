@@ -3,10 +3,10 @@
 namespace App\Http\Response;
 
 /**
- * Class Response
- * @package App\Response
+ * Class JsonResponse
+ * @package App\Http\Response
  */
-class Response implements ResponseInterface {
+class JsonResponse implements ResponseInterface {
 
 	/**
 	 * @var string
@@ -26,6 +26,12 @@ class Response implements ResponseInterface {
 	 * Gives content
 	 */
 	public function send() {
-		echo $this->content;
+
+		$content = [];
+		foreach($this->content as $object) {
+
+			$content[] = $object->jsonSerialize();
+		}
+		echo json_encode( $content, JSON_FORCE_OBJECT );
 	}
 }

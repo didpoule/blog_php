@@ -10,12 +10,12 @@ class Form {
 	/**
 	 * @var string
 	 */
-	protected $action;
+	protected static $action;
 
 	/**
 	 * @var array
 	 */
-	protected $fields = [];
+	protected static $fields = [];
 
 	/**
 	 * @var array
@@ -37,21 +37,30 @@ class Form {
 	 */
 	protected static $name;
 
-	public function __construct( $metas ) {
-		self::$metas = Yaml::parseFile( $metas );
+	/**
+	 * @var Request
+	 */
+	protected static $request;
+
+
+	public function __construct( $metas, Request $request ) {
+		self::$metas   = Yaml::parseFile( $metas );
+		self::$request = $request;
+
 	}
 
 	/**
 	 * @param $entity string className entity
 	 */
-	public function sendForm( Request $request, $entity = null ) {
-		if ( $request->getPost( 'token' ) === $request->getToken() ) {
+	public function sendForm( $entity = null ) {
+		if ( self::$request->getPost( 'token' ) === self::$request->getToken() ) {
 
-			$entity = $this->hydrate( $request, $entity );
+			$entity = $this->hydrate( $entity );
 
 			$errors = $entity->validate();
 
 			if ( ! is_array( $errors ) ) {
+
 				return $entity;
 			}
 
@@ -62,14 +71,14 @@ class Form {
 	}
 
 	/**
-	 * @param Request $request
+	 * @param Request $this ->request
 	 */
-	private function hydrate( Request $request, $entity = null ) {
+	private function hydrate( $entity = null ) {
 		foreach ( self::$metas[ static::$entity ]['columns'] as $property => $params ) {
 
-			if ( array_key_exists( $property, $request->getPost() ) ) {
+			if ( array_key_exists( $property, self::$request->getPost() ) ) {
 
-				$datas[ $property ] = $request->getPost( $property );
+				$datas[ $property ] = self::$request->getPost( $property );
 			} else {
 				if ( $params['type'] === "boolean" ) {
 					$datas[ $property ] = false;
@@ -80,11 +89,9 @@ class Form {
 			}
 
 		}
-
 		if ( ! isset( $entity ) ) {
 			$entity = new static::$entity();
 		}
-
 
 		$entity->hydrate( $datas );
 
@@ -93,8 +100,8 @@ class Form {
 	}
 
 	public function getForm() {
-		$content = sprintf( "<form action='%s' method='post' id='%s-form'>", $this->action, static::$name );
-		foreach ( $this->fields as $field => $params ) {
+		$content = sprintf( "<form action='%s' method='post' id='%s-form'>", static::$action, static::$name );
+		foreach ( static::$fields as $field => $params ) {
 			$content .= "<div class='group-form'>";
 			if ( $params['type'] != 'hidden' && isset( $params['label'] ) ) {
 				$content .= sprintf( "<label for='%s'>%s :</label>", $field, $params['label'] );
@@ -113,7 +120,7 @@ class Form {
 					break;
 				case "boolean" :
 					$content .= sprintf( "<input type='checkbox' id='%s' name='%s' %s />", $field, $field,
-						(( $params['value'] === false ) ? null : 'checked') );
+						( ( $params['value'] === false ) ? null : 'checked' ) );
 					break;
 				case "date" :
 					$content .= sprintf( "<input type='date' id='%s' name='%s' />", $field, $field );
@@ -127,6 +134,7 @@ class Form {
 					break;
 			}
 			$content .= "</div>";
+			$content .= sprintf( "<input type='hidden' id='token' name='token' value='%s' />", self::$request->getToken() );
 		}
 		$content .= sprintf( "<input type='submit' value='Envoyer' class='btn btn-primary'/>" );
 		$content .= "</form>";
@@ -134,11 +142,14 @@ class Form {
 		return $content;
 	}
 
-	public function get( $formClass ) {
+	public function get( $formClass, $args = [] ) {
 		if ( ! array_key_exists( $formClass, self::$forms ) ) {
 
-			self::$forms[ $formClass ] = new $formClass();
+			$reflect = new \ReflectionClass( $formClass );
+
+			self::$forms[ $formClass ] = $reflect->newInstanceArgs( $args );
 		}
+
 
 		return self::$forms[ $formClass ];
 	}

@@ -1,0 +1,7 @@
+{% extends "back_template.html.twig" %}
+{% block adminContent %}
+    <h2>{{ title }}</h2>
+    {% if form is not null %}
+        {{ form|raw }}
+    {% endif %}
+{% endblock %}

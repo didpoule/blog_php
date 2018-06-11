@@ -9,7 +9,7 @@ use App\Orm\Entity;
  * Class Comment
  * @package Blog\Entity\Comment
  */
-class Comment extends Entity {
+class Comment extends Entity implements \JsonSerializable {
 
 	/**
 	 * @var int
@@ -145,5 +145,16 @@ class Comment extends Entity {
 		return $this->published;
 	}
 
+	public function jsonSerialize() {
+		$formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::LONG, \IntlDateFormatter::NONE);
+
+		$date  =  "Posté le " . $formatter->format($this->added);
+		$datas            = [];
+		$datas["title"]   = $this->author;
+		$datas["date"]    = $date;
+		$datas["content"] = $this->content;
+
+		return $datas;
+	}
 
 }

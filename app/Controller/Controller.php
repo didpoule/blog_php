@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Http\Response\JsonResponse;
 use App\Http\Response\RedirectResponse;
 use App\Http\Response\Response;
 use App\Router\Router;
@@ -71,12 +72,24 @@ class Controller {
 	 * Renvoie a l'url précédente
 	 * @return RedirectResponse
 	 */
-	public function redirectToBack($anchor = null) {
+	public function redirectToBack( $anchor = null ) {
 		return new RedirectResponse ( $_SERVER['HTTP_REFERER'] . "#$anchor" );
 	}
 
 	/**
-	 * Racourci pour apeller un service
+	 * Renvoie Réponse encodée en JSON
+	 *
+	 * @param $datas
+	 *
+	 * @return JsonResponse
+	 */
+	public function json( $datas ) {
+		return new JsonResponse( $datas );
+	}
+
+
+	/**
+	 * Raccourci pour apeller un service
 	 *
 	 * @param $name
 	 *
