@@ -59,7 +59,7 @@ class PostController extends Controller {
 
 			}
 
-			$comments = $manager->findAllByPost( $post->getId() );
+			$comments = $manager->findAllByPost( [ "post" => $post->getId(), "published" => 1 ] );
 
 			return $this->render( "post/post.html.twig", [
 				"post"     => $post,
@@ -82,7 +82,7 @@ class PostController extends Controller {
 		$chapterCat = $manager->findByName( 'chapter' );
 
 		$manager = $this->database->getManager( Post::class );
-		$posts   = $manager->findChapters( $chapterCat->getId() );
+		$posts   = $manager->findChapters( [ "category" => $chapterCat->getId(), "published" => 1 ] );
 
 		return $this->render( "post/posts.html.twig", [
 			"posts" => $posts

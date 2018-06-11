@@ -22,8 +22,9 @@
                         <td>{{ chapter.number }}</td>
                         <td>{{ chapter.published ? "Oui" : "Non" }}</td>
                         <td><a href="/admin/chapter/{{ chapter.id }}"><i class="fas fa-edit"></i></a> -
-                            <button type="button" data-toggle="modal" data-target="#remove-{{ chapter.id }}"><i
-                                        class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-link" type="button" data-toggle="modal"
+                                    data-target="#remove-{{ chapter.id }}"><i
+                                        class="fas fa-trash-alt text-danger"></i></button>
                         </td>
                     </tr>
                     <div class="modal fade" id="remove-{{ chapter.id }}" tabindex="-1" role="dialog"

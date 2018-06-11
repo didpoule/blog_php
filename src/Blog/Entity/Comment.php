@@ -113,14 +113,14 @@ class Comment extends Entity {
 	/**
 	 * @return string
 	 */
-	public function getAuthor(): string {
+	public function getAuthor() {
 		return $this->author;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getContent(): string {
+	public function getContent() {
 		return $this->content;
 	}
 

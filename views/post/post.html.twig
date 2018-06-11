@@ -36,7 +36,7 @@
             {% if not comments is empty %}
                 {% for comment in comments %}
                     <h3>{{ comment.author }}</h3>
-                    <div><span>Posté le {{ comment.added|date }}</span></div>
+                    <div><span>Posté le {{ comment.added|localizeddate('medium', 'none',  locale) }}</span></div>
                     <p>{{ comment.content }}</p>
                 {% endfor %}
             {% else %}

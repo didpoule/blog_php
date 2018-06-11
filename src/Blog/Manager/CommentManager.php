@@ -19,8 +19,8 @@ class CommentManager extends Manager {
 		return $this->fetchAll( null, null, $limit, [ 'added' => "DESC" ] );
 	}
 
-	public function findAllByPost( $id ) {
-		return $this->fetchAll( [ "post" => $id ], null, null, [ "added" => "DESC" ] );
+	public function findAllByPost( $params = [] ) {
+		return $this->fetchAll( $params, null, null, [ "added" => "DESC" ] );
 	}
 
 }

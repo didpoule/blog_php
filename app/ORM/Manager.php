@@ -178,7 +178,7 @@ abstract class Manager {
 		foreach ( self::$meta['columns'] as $property => $value ) {
 			if ( $property != "id" ) {
 				$getter = sprintf( "get%s", ucfirst( $property ) );
-				if ( $entity->$getter() != null ) {
+				if ( $entity->$getter() != null || $value["type"] === "boolean" ) {
 					$set[] = sprintf( "%s = :%s", $property, $property );
 				}
 			}
@@ -245,10 +245,14 @@ abstract class Manager {
 
 		foreach ( self::$meta['columns'] as $property => $value ) {
 			$getter = sprintf( "get%s", ucfirst( $property ) );
-			if ( $entity->$getter() != null ) {
+
+			if ( $entity->$getter() !== null || $value['type'] === "boolean" ) {
+
 				if ( $value['type'] === 'datetime' ) {
 					$date                = $entity->$getter()->format( "Y-m-d-H-i-s" );
 					$params[ $property ] = $date;
+				} elseif ( $value['type'] === "boolean" ) {
+					$params[ $property ] = ( (int) $entity->$getter() );
 				} else {
 					$params[ $property ] = $entity->$getter();
 

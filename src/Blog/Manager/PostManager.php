@@ -21,8 +21,9 @@ class PostManager extends Manager {
 		parent::__construct( $database, $entity, $meta );
 	}
 
-	public function findChapters( $catId, $limit = null ) {
-		return $this->fetchAll( [ "category" => $catId ], null, $limit, [ 'number' => "ASC" ] );
+	public function findChapters( $params = [], $limit = null ) {
+
+		return $this->fetchAll( $params, null, $limit, [ 'number' => "ASC" ] );
 	}
 
 	public function find( $params = [] ) {
@@ -39,7 +40,7 @@ class PostManager extends Manager {
 
 	public function getExtract( $params = [] ) {
 		$post = $this->fetch( $params );
-		if (!$post) {
+		if ( ! $post ) {
 			return false;
 		}
 		$extract = ( substr( $post->getContent(), 0, 500 ) );
@@ -51,5 +52,21 @@ class PostManager extends Manager {
 		$post->setContent( $text );
 
 		return $post;
+	}
+
+	public function getChaptersTitles() {
+		$request = "SELECT title, id FROM post";
+
+		$statement = $this->pdo->prepare($request);
+
+		$statement->execute();
+
+		$results = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+		$titles = [];
+		foreach($results as $result) {
+			$titles[$result["id"]] = $result['title'];
+		}
+		return $titles;
 	}
 }

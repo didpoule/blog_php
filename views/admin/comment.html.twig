@@ -1,0 +1,8 @@
+{% extends "back_template.html.twig" %}
+{% block adminContent %}
+    <h2>{{ title }}</h2>
+    <p>Créé le {{ comment.added|localizeddate('medium', 'none',  locale) }}</p>
+    {% if form is not null %}
+        {{ form|raw }}
+    {% endif %}
+{% endblock %}

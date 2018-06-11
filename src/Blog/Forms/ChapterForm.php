@@ -24,6 +24,11 @@ class ChapterForm extends PostForm {
 				"label" => "Titre",
 				"value" => isset( $post ) ? $post->getTitle() : null,
 			],
+			"published" => [
+				"type"	=> "boolean",
+				"label" => "Publier",
+				"value" => isset( $post ) ? $post->getPublished() : null
+			],
 			"number"  => [
 				"type"  => "number",
 				"label" => "Numéro",

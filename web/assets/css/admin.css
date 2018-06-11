@@ -2,7 +2,7 @@
     margin: 0 !important;
     max-width: 100% !important;
     background-color: #293133;
-    padding: 0 10px 0 10px !important;
+    padding: 0 10px 0 40px !important;
 }
 
 #main-menu {
@@ -23,7 +23,7 @@
 }
 
 .sidebar {
-    padding: 15px;
+    padding: 25px;
 }
 
 .container-fluid {
@@ -32,6 +32,10 @@
 
 .nav-item {
     margin-bottom: 10px;
+}
+
+nav {
+    background: #3C4345;
 }
 
 nav ul {
@@ -61,3 +65,8 @@ input[type='number'] {
 input[type='submit'] {
     width: 25%;
 }
+
+#body-container {
+    margin-bottom: 0 !important;
+}
+

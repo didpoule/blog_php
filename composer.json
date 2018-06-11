@@ -11,7 +11,8 @@
   "minimum-stability": "dev",
   "require": {
     "twig/twig": "2.x-dev",
-    "symfony/yaml": "^4.1@dev"
+    "symfony/yaml": "^4.1@dev",
+    "twig/extensions": "v1.5.1"
   },
   "autoload": {
     "psr-4": {

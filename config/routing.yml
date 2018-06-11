@@ -93,11 +93,35 @@ adminChapters:
     controller: Blog\Controller\BackController
     action: chaptersAction
 
-adminChapter:
+admimChapters:
     path: /admin/chapter/:id
     parameters: {id: '[\d]+'}
     controller: Blog\Controller\BackController
     action: chapterAction
+
+adminComments:
+    path: /admin/comments
+    parameters: {}
+    controller: Blog\Controller\BackController
+    action: commentsAction
+
+adminComment:
+    path: /admin/comment/:id
+    parameters: {id: '[\d]+'}
+    controller: Blog\Controller\BackController
+    action: commentAction
+
+adminCommentEdit:
+    path: /admin/comment/edit/:id
+    parameters: {id: '[\d]+'}
+    controller: Blog\Controller\BackController
+    action: commentEditAction
+
+adminCommentDelete:
+    path: /admin/comment/delete/:id
+    parameters: {id: '[\d]+'}
+    controller: Blog\Controller\BackController
+    action: commentDeleteAction
 
 admin:
     path: /admin

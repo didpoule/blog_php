@@ -3,8 +3,6 @@
 namespace Blog\Services;
 
 use App\Http\Request\Request;
-use App\Orm\Entity;
-use App\Orm\Manager;
 use Symfony\Component\Yaml\Yaml;
 
 class Form {
@@ -67,13 +65,18 @@ class Form {
 	 * @param Request $request
 	 */
 	private function hydrate( Request $request, $entity = null ) {
-
 		foreach ( self::$metas[ static::$entity ]['columns'] as $property => $params ) {
 
 			if ( array_key_exists( $property, $request->getPost() ) ) {
+
 				$datas[ $property ] = $request->getPost( $property );
 			} else {
-				$datas[ $property ] = null;
+				if ( $params['type'] === "boolean" ) {
+					$datas[ $property ] = false;
+				} else {
+					$datas[ $property ] = null;
+
+				}
 			}
 
 		}
@@ -81,6 +84,7 @@ class Form {
 		if ( ! isset( $entity ) ) {
 			$entity = new static::$entity();
 		}
+
 
 		$entity->hydrate( $datas );
 
@@ -91,6 +95,7 @@ class Form {
 	public function getForm() {
 		$content = sprintf( "<form action='%s' method='post' id='%s-form'>", $this->action, static::$name );
 		foreach ( $this->fields as $field => $params ) {
+			$content .= "<div class='group-form'>";
 			if ( $params['type'] != 'hidden' && isset( $params['label'] ) ) {
 				$content .= sprintf( "<label for='%s'>%s :</label>", $field, $params['label'] );
 			}
@@ -107,7 +112,8 @@ class Form {
 						isset ( $params['value'] ) ? $params['value'] : null );
 					break;
 				case "boolean" :
-					$content .= sprintf( "<input type='checkbox' id='%s' name='%s' />", $field, $field );
+					$content .= sprintf( "<input type='checkbox' id='%s' name='%s' %s />", $field, $field,
+						(( $params['value'] === false ) ? null : 'checked') );
 					break;
 				case "date" :
 					$content .= sprintf( "<input type='date' id='%s' name='%s' />", $field, $field );
@@ -118,7 +124,9 @@ class Form {
 					break;
 				case "hidden" :
 					$content .= sprintf( "<input type='hidden' id='%s' name='%s' value=\"%s\" />", $field, $field, $params['value'] );
+					break;
 			}
+			$content .= "</div>";
 		}
 		$content .= sprintf( "<input type='submit' value='Envoyer' class='btn btn-primary'/>" );
 		$content .= "</form>";

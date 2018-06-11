@@ -44,8 +44,8 @@ abstract class Entity {
 		$property = $column;
 		$setter   = sprintf( "set%s", ucfirst( $property ) );
 
-		if ( ! is_null( $value ) || static::$meta['columns'][ $column ]['type'] === 'datetime' ) {
-
+		if ( ! is_null( $value ) || static::$meta['columns'][ $column ]['type'] === 'datetime' ||
+		     static::$meta['columns'][ $column ]['type'] === "boolean" ) {
 			switch ( static::$meta['columns'][ $column ]['type'] ) {
 				case "int":
 					$this->$setter( (int) $value );

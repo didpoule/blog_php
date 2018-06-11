@@ -1,6 +1,10 @@
 {% extends "back_template.html.twig" %}
 {% block adminContent %}
     <h2>{{ title }}</h2>
+    <p>Créé le {{ chapter.added|localizeddate('medium', 'none',  locale) }}</p>
+    {% if chapter.updated is not null %}
+        <p>Mis à jour le {{ chapter.updated|localizeddate('medium', 'none',  locale) }}</p>
+    {% endif %}
     {% if form is not null %}
         {{ form|raw }}
     {% endif %}

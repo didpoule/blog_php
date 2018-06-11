@@ -35,6 +35,9 @@ class Templating {
 			'cache' => false
 		] );
 
+		$this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
+
+
 
 	}
 
