@@ -2,7 +2,15 @@
 
 {% block pageTitle %}Erreur 404{% endblock %}
 
+{% block heroImage %}{% include "hero_image.html.twig" %}{% endblock %}
 {% block content %}
-    <h1>Erreur 404</h1>
-    <p>{{ message }}</p>
+    <div class="row" id="error-404">
+        <i class="fas fa-exclamation-triangle text-warning"></i>
+        <div class="content">
+            <h1>Erreur 404</h1>
+            <p>{{ message }}</p>
+        </div>
+
+    </div>
+
 {% endblock %}

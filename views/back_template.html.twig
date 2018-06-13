@@ -51,13 +51,18 @@
                                 Modérer les commentaires
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/comments/moderate">
+                                Commentaires en attente
+                            </a>
+                        </li>
                     </ul>
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                         A propos
                     </h6>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="/admin/about">
                                 Modifier contenu
                             </a>
                         </li>
@@ -103,6 +108,7 @@
             // outside this DOM ready function
             $('#content').trumbowyg({
                 lang: 'fr',
+                imageWidthModalEdit: true,
                 btns: [
                     ['fontsize'],
                     ['foreColor', 'backColor'],

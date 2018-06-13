@@ -27,7 +27,7 @@ class HomeController extends Controller {
 			$chapter = $this->database->getManager( Post::class )->getExtract( [ "number" => $this->request->getCookie( "current" ) ] );
 		}
 
-		$featured = ( isset( $synopsis ) ) ? $synopsis->posts[0] : $chapter;
+		$featured = ( isset( $chapter ) ) ? $chapter : $synopsis->posts[0];
 
 		return $this->render( 'home/home.html.twig', [
 			'edito'    => $edito->posts[0],

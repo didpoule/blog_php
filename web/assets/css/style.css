@@ -297,3 +297,13 @@ input[type=submit] {
 #about {
     width: 75%;
 }
+
+#error-404 {
+    align-items: center;
+    width: 75%;
+
+}
+
+#error-404 i {
+    font-size: 10em;
+}

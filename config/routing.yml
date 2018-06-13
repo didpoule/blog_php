@@ -24,13 +24,13 @@ editBillet:
 nextChapter:
     path: /chapitres/next
     parameters: {}
-    controller: Blog\Controller\Postcontroller
+    controller: Blog\Controller\PostController
     action: nextAction
 
 previousChapter:
     path: /chapitres/previous
     parameters: {}
-    controller: Blog\Controller\Postcontroller
+    controller: Blog\Controller\PostController
     action: previousAction
 
 idChapter:
@@ -166,6 +166,7 @@ jsonComments:
     parameters: {id:  '[\d]+', offset: '[\d]+', limit: '[\d]+'}
     controller: Blog\Controller\CommentController
     action: getAction
+
 home:
     path: /
     parameters: {}

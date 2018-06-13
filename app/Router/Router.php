@@ -2,6 +2,7 @@
 
 namespace App\Router;
 
+use App\Controller\Controller;
 use App\Http\Request\Request;
 use App\ServicesProvider\ServicesProvider;
 use Symfony\Component\Yaml\Yaml;
@@ -38,9 +39,9 @@ class Router {
 	 *
 	 * @param Request $request
 	 */
-	public function __construct($services ) {
+	public function __construct( $services ) {
 		$this->services = $services;
-		$this->request  = $this->services->get("request");
+		$this->request  = $this->services->get( "request" );
 
 	}
 
@@ -77,7 +78,9 @@ class Router {
 				return $this->call();
 			};
 		}
-		throw new RouterException( "Route inconnue" );
+
+		// Renvoie une erreur 404
+		return $this->call( false );
 	}
 
 	/**
@@ -93,24 +96,35 @@ class Router {
 			return $this->routes[ $name ];
 		}
 
-		throw new RouterException( 'Route inconnue' );
+		// Renvoie une erreur 404
+		return $this->call( false );
 	}
 
 	/**
 	 * Appelle la méthode du contrôleur de la route
 	 */
-	public function call() {
-		if(!$this->request->getPost()) {
-			$this->request->setToken();
+	public function call( $success = true ) {
+		if ( $success ) {
+
+			if ( ! $this->request->getPost() ) {
+				$this->request->setToken();
+			}
+
+			$controller = $this->matchedRoute->getController();
+			$action     = $this->matchedRoute->getAction();
+			$params     = $this->matchedRoute->getArgs();
+
+			$controller = new $controller( $this->services, $this );
+
+			return call_user_func_array( [ $controller, $action ], $params );
 		}
 
-		$controller = $this->matchedRoute->getController();
-		$action     = $this->matchedRoute->getAction();
-		$params     = $this->matchedRoute->getArgs();
+		$controller = new Controller( $this->services, $this );
 
-		$controller = new $controller( $this->services, $this );
+		return $controller->render("error/404.html.twig", [
+			"message" => "La page que vous avez demandé n'existe pas."
+		]);
 
-		return call_user_func_array( [ $controller, $action ], $params );
 	}
 
 
