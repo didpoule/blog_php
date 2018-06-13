@@ -34,7 +34,11 @@ class Database {
 
 		$db = sprintf( "mysql:dbname=%s;host=%s:%s", $file['name'], $file['host'], $file['port'] );
 
-		$this->pdo = new \PDO( $db, $file['user'], $file['password'] );
+		try {
+			$this->pdo = new \PDO( $db, $file['user'], $file['password'] );
+		} catch (\PDOException $e) {
+			exit($e->getMessage());
+		}
 
 	}
 

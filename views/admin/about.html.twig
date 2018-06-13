@@ -1,0 +1,10 @@
+{% extends "back_template.html.twig" %}
+{% block adminContent %}
+    <h2>Modifier la page À propos</h2>
+    {% if not about.updated is null %}
+        <p>Dernère mise à jour le {{ about.updated|localizeddate('long', 'short',  locale) }}</p>
+    {% endif %}
+    {% if form is not null %}
+        {{ form|raw }}
+    {% endif %}
+{% endblock %}

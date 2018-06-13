@@ -34,7 +34,7 @@ class App {
 	public function __construct() {
 		$this->services = new ServicesProvider( __DIR__ . "/../config/services.yml" );
 
-		$this->router  = new Router( $this->services );
+		$this->router = new Router( $this->services );
 
 		$this->routingConfig = __DIR__ . "/../config/routing.yml";
 

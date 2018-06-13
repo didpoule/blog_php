@@ -70,7 +70,7 @@ a:hover, button:hover, input[type="submit"]:hover {
     box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.5);
 }
 
-img {
+.hero-image img {
     display: none;
 }
 
@@ -288,4 +288,12 @@ input[type=submit] {
 .group-form {
     display: flex;
     flex-direction: column;
+}
+
+#pagination-nav {
+    display: none;
+}
+
+#about {
+    width: 75%;
 }

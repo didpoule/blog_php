@@ -3,6 +3,7 @@
 namespace Blog\Entity;
 
 use App\Orm\Entity;
+use Blog\Manager\CommentManager;
 
 /**
  * Class Post
@@ -40,10 +41,11 @@ class Post extends Entity {
 	 */
 	private $content;
 
+
 	/**
-	 * @var array
+	 * @var mixed
 	 */
-	private $comments;
+	private $comments = null;
 
 	/**
 	 * @var integer
@@ -56,9 +58,21 @@ class Post extends Entity {
 	private $number;
 
 	/**
+	 * @var CommentManager
+	 */
+	private $commentManager;
+
+
+	public function __construct( $meta, CommentManager $commentManager = null ) {
+		parent::__construct( $meta );
+
+		$this->commentManager = $commentManager;
+	}
+
+	/**
 	 * @param int $id
 	 */
-	public function setId( int $id ): void {
+	public function setId( int $id ) {
 		$this->id = $id;
 	}
 
@@ -72,35 +86,35 @@ class Post extends Entity {
 	/**
 	 * @param string $content
 	 */
-	public function setContent( string $content ): void {
+	public function setContent( string $content ) {
 		$this->content = $content;
 	}
 
 	/**
 	 * @param string $title
 	 */
-	public function setTitle( string $title ): void {
+	public function setTitle( string $title ) {
 		$this->title = $title;
 	}
 
 	/**
 	 * @param \DateTime $added
 	 */
-	public function setAdded( \DateTime $added ): void {
+	public function setAdded( \DateTime $added ) {
 		$this->added = $added;
 	}
 
 	/**
 	 * @param \DateTime $updated
 	 */
-	public function setUpdated( $updated ): void {
+	public function setUpdated( $updated ) {
 		$this->updated = $updated;
 	}
 
 	/**
 	 * @param bool $published
 	 */
-	public function setPublished( bool $published ): void {
+	public function setPublished( bool $published ) {
 		$this->published = $published;
 	}
 
@@ -140,27 +154,6 @@ class Post extends Entity {
 	}
 
 	/**
-	 * @return array
-	 */
-	public function getComments() {
-		return $this->comments;
-	}
-
-	/**
-	 * @param array $comments
-	 */
-	public function setComments( array $comments ): void {
-		$this->comments = $comments;
-	}
-
-	/**
-	 * @param Comment $comment
-	 */
-	public function addComment( Comment $comment ) {
-		$this->comments[] = $comment;
-	}
-
-	/**
 	 * @return integer
 	 */
 	public function getCategory() {
@@ -170,7 +163,7 @@ class Post extends Entity {
 	/**
 	 * @param string $category
 	 */
-	public function setCategory( int $category ): void {
+	public function setCategory( int $category ) {
 		$this->category = $category;
 	}
 
@@ -184,8 +177,52 @@ class Post extends Entity {
 	/**
 	 * @param int $number
 	 */
-	public function setNumber( int $number ): void {
+	public function setNumber( int $number ) {
 		$this->number = $number;
+	}
+
+	private function addComment( $comment ) {
+		$this->comments[] = $comment;
+	}
+
+	/**
+	 * Lazy Loader commentaires
+	 * @return mixed
+	 */
+	public function getComments() {
+		if ( empty( $this->comments ) ) {
+			$comments = $this->commentManager->findAllByPost( [
+				"postId"    => $this->getId(),
+				"published" => 1
+			], 0, 5 );
+
+			if ( $comments ) {
+				foreach ( $comments as $comment ) {
+					$this->addComment( $comment );
+
+				}
+			}
+		}
+
+		return $this->comments;
+	}
+
+	/**
+	 * @param $keys
+	 *
+	 * @return mixed
+	 */
+	public
+	function __get(
+		$key
+	) {
+		if ( ! is_callable( $this->$key ) ) {
+
+			$method = "get" . ucfirst( $key );
+			$this->$method();
+		}
+
+		return $this->$key;
 	}
 
 }

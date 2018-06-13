@@ -20,11 +20,6 @@ class User extends Entity {
 	/**
 	 * @var string
 	 */
-	private $salt;
-
-	/**
-	 * @var string
-	 */
 	private $password;
 
 	/**
@@ -42,7 +37,7 @@ class User extends Entity {
 	/**
 	 * @param int $id
 	 */
-	public function setId( int $id ): void {
+	public function setId( int $id ) {
 		$this->id = $id;
 	}
 
@@ -56,7 +51,7 @@ class User extends Entity {
 	/**
 	 * @param string $username
 	 */
-	public function setUsername( string $username ): void {
+	public function setUsername( string $username ) {
 		$this->username = $username;
 	}
 
@@ -70,7 +65,7 @@ class User extends Entity {
 	/**
 	 * @param string $password
 	 */
-	public function setPassword( string $password ): void {
+	public function setPassword( string $password ) {
 		$this->password = $password;
 	}
 
@@ -84,7 +79,7 @@ class User extends Entity {
 	/**
 	 * @param string $name
 	 */
-	public function setName( string $name ): void {
+	public function setName( string $name ) {
 		$this->name = $name;
 	}
 

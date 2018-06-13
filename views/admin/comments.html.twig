@@ -2,25 +2,33 @@
 
 {% block adminContent %}
 
-    <h2>Commentaires</h2>
-    <div class="tab-responsive">
+    <h2>{% if post is not empty %}{{ post.title }} - {% endif %}Commentaires</h2>
+    {% if comments is not empty %}
 
-        <table class="table table-striped table-sm">
-            <thead>
-            <tr>
-                <th>Auteur</th>
-                <th>Chapitre</th>
-                <th>Publié</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% if comments is not empty %}
+        <div class="tab-responsive">
+
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>Auteur</th>
+                    {% if post is null %}
+                        <th>Chapitre</th>{% endif %}
+                    <th>Publié</th>
+                    <th>Ajouté le</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
                 {% for comment in comments %}
                     <tr>
                         <td class="table-title">{{ comment.author }}</td>
-                        <td><a href="/admin/chapter/{{ comment.post }}">{{ titles[comment.post] }}</a></td>
+                        {% if post is empty %}
+                            <td>
+                                <a href="/admin/chapter/{{ comment.post.id }}">{{ comment.post.title }}</a>
+                            </td>
+                        {% endif %}
                         <td>{{ comment.published ? "Oui" : "Non" }}</td>
+                        <td>{{ comment.added|localizeddate('long', 'short',  locale) }}</td>
                         <td><a href="/admin/comment/{{ comment.id }}"><i class="fas fa-edit"></i></a> -
                             <button class="btn btn-link" type="button" data-toggle="modal"
                                     data-target="#remove-{{ comment.id }}"><i
@@ -50,15 +58,12 @@
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
                 {% endfor %}
-            {% else %}
-                <tr>
-                    Aucun commentaire à afficher.
-                </tr>
-            {% endif %}
-            </tbody>
-        </table>
-    </div>
-
-
-
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="text-center">
+            <p>Aucun commentaire à afficher.</p>
+        </div>
+    {% endif %}
 {% endblock %}

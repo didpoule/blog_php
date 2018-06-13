@@ -57,6 +57,12 @@ login:
     controller: Blog\Controller\UserController
     action: loginAction
 
+about:
+    path: /a-propos
+    parameters: {}
+    controller: Blog\Controller\PostController
+    action: aboutAction
+
 adminEdito:
     path: /admin/edito
     parameters: {}
@@ -99,6 +105,18 @@ admimChapters:
     controller: Blog\Controller\BackController
     action: chapterAction
 
+adminCommentsChapter:
+    path: /admin/comments/:id
+    parameters: {id: '[\d]+?'}
+    controller: Blog\Controller\BackController
+    action: commentsAction
+
+adminCommentsModerate:
+    path: /admin/comments/moderate
+    parameters: {}
+    controller: Blog\Controller\BackController
+    action: commentsModerateAction
+
 adminComments:
     path: /admin/comments
     parameters: {}
@@ -128,6 +146,14 @@ adminUser:
     parameters: {}
     controller: Blog\Controller\BackController
     action: userAction
+
+
+adminAbout:
+    path: /admin/about
+    parameters: {}
+    controller: Blog\Controller\BackController
+    action: aboutAction
+
 
 admin:
     path: /admin

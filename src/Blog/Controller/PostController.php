@@ -23,6 +23,9 @@ class PostController extends Controller {
 		$manager = $this->database->getManager( Post::class );
 		$post    = $manager->find( [ "number" => $value ] );
 
+		/**
+		 * Gestion du cookie de lecture
+		 */
 		$nbChapters   = $manager->getNbChapters();
 		$readChapters = $this->readChapters;
 
@@ -30,6 +33,9 @@ class PostController extends Controller {
 		$current = ( $readChapters->getCookie() > 1 ) ?? null;
 
 
+		/**
+		 * Si le chapitre demandé n'existe pas en base de donnée
+		 */
 		if ( ! $post ) {
 			return $this->render( 'error/404.html.twig', [
 				"message" => "Le chapitre demandé n'a pas encore été écrit."
@@ -37,8 +43,11 @@ class PostController extends Controller {
 		} else {
 			$manager = $this->database->getManager( Comment::class );
 
+			/**
+			 * Création formulaire
+			 */
 			$comment = $manager->getNew();
-			$comment->setPost( $post->getId() );
+			$comment->setPostId( $post->getId() );
 			$form = $this->form->get( CommentForm::class, [
 				"admin"   => false,
 				"action"  => "/chapitres/chapitre-" . $post->getNumber(),
@@ -47,6 +56,9 @@ class PostController extends Controller {
 			] );
 
 
+			/**
+			 * Gestion envoi du formulaire
+			 */
 			if ( $this->request->getPost() ) {
 
 				$result = $form->sendForm();
@@ -63,16 +75,12 @@ class PostController extends Controller {
 
 			}
 
-			$limit    = 5;
-			$comments = $manager->findAllByPost( [ "post" => $post->getId(), "published" => 1 ], 0, $limit );
-
 			return $this->render( "post/post.html.twig", [
-				"post"     => $post,
-				"comments" => $comments,
-				"state"    => $readChapters->getState(),
-				"current"  => $current,
-				"form"     => $form->getForm(),
-				"limit"    => $limit
+				"post"       => $post,
+				"current"    => $current,
+				"form"       => $form->getForm(),
+				"nbComments" => $this->database->getManager( Comment::class )->countComments( [ "postId" => $post->getId() ] ),
+				"limit"      => COM_PER_PAGE
 
 			] );
 		}
@@ -94,47 +102,11 @@ class PostController extends Controller {
 		] );
 	}
 
-	/**
-	 * Modifie un post
-	 *
-	 * @param $id int
-	 */
-	public function editAction( $id ) {
-		$manager = $this->database->getManager( Post::class );
-		$post    = $manager->find( [ "id" => $id ] );
-
-		if ( $post ) {
-			$post->setTitle( "truc machin" );
-			$post->setSlug( $this->slug->slugify( $post->getTitle() ) );
-
-			$post->setUpdated( new \DateTime() );
-			if ( $manager->update( $post ) ) {
-				return $this->redirect( 'billet', [ 'id' => $id ] );
-			}
-		}
-
-		return $this->redirect( 'billets' );
-	}
 
 	/**
-	 * Supprime un billet
-	 *
-	 * @param $id
+	 * Met à jour le cookie de lecture
+	 * @return \App\Http\Response\RedirectResponse
 	 */
-	public function deleteAction( $id ) {
-
-		return $this->redirect( "billets" );
-
-	}
-
-	/**
-	 * Insère un billet
-	 */
-	public function insertAction() {
-
-		return $this->redirect( "billets" );
-	}
-
 	public function nextAction() {
 		$manager = $this->database->getManager( Post::class );
 		$this->request->setPost( "next" );
@@ -157,5 +129,21 @@ class PostController extends Controller {
 
 
 		return $this->redirect( "numberChapter", [ "number" => sprintf( "%s", $readChapters->getCurrent() ) ], sprintf( "#%s", $readChapters->getCurrent() ) );
+	}
+
+	public function aboutAction() {
+		$manager = $this->database->getManager(Category::class);
+
+		$about = $manager->findByName('about')->posts[0];
+
+		if (!$about) {
+			return $this->render("error/404.html.twig", [
+				"message" => "La page n'existe pas."
+			]);
+		}
+
+		return $this->render("about/about.html.twig", [
+			"about" => $about
+		]);
 	}
 }

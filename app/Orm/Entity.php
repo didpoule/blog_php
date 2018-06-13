@@ -11,7 +11,7 @@ abstract class Entity {
 	/**
 	 * @var array
 	 */
-	protected  $meta;
+	protected $meta;
 
 	/**
 	 * @param $datas
@@ -32,7 +32,7 @@ abstract class Entity {
 	 * @param $value
 	 */
 
-	public function __construct($meta) {
+	public function __construct( $meta ) {
 		$this->meta = $meta;
 	}
 
@@ -52,7 +52,7 @@ abstract class Entity {
 					$this->$setter( (string) $value );
 					break;
 				case "datetime":
-					$date = new \DateTime();
+					$date = new \DateTime( $value );
 					$this->$setter( $date );
 					break;
 				case "boolean":

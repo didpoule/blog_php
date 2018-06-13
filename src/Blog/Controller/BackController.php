@@ -3,6 +3,7 @@
 namespace Blog\Controller;
 
 use App\Controller\Controller;
+use App\Orm\Database;
 use Blog\Entity\Category;
 use Blog\Entity\Comment;
 use Blog\Entity\Post;
@@ -41,14 +42,7 @@ class BackController extends Controller {
 
 			$manager = $this->database->getManager( Category::class );
 
-			$editoCat = $manager->findByName( 'edito' );
-
-			$manager = $this->database->getManager( Post::class );
-
-			// Récupération de l'edito
-			if ( $editoCat ) {
-				$edito = $manager->fetch( [ "category" => $editoCat->getId() ] );
-			}
+			$edito = $manager->findByName( 'edito' )->posts[0];
 
 			$form = $this->form->get( PostForm::class, [
 				'post'   => $edito,
@@ -59,6 +53,7 @@ class BackController extends Controller {
 
 				$result = $this->form->sendForm( $edito );
 				if ( ! is_array( $result ) ) {
+					$manager = $this->database->getManager( Post::class );
 					$manager->update( $edito );
 
 					$this->bag->addMessage( "Mise a jour effectuée", "success" );
@@ -70,7 +65,8 @@ class BackController extends Controller {
 			}
 
 			return $this->render( "admin/edito.html.twig", [
-				"form" => $form->getForm(),
+				"edito" => $edito,
+				"form"  => $form->getForm(),
 			] );
 
 		}
@@ -86,14 +82,8 @@ class BackController extends Controller {
 
 			$manager = $this->database->getManager( Category::class );
 
-			$synopsisCat = $manager->findByName( 'synopsis' );
+			$synopsis = $manager->findByName( 'synopsis' )->posts[0];
 
-			$manager = $this->database->getManager( Post::class );
-
-			// Récupération de l'edito
-			if ( $synopsisCat ) {
-				$synopsis = $manager->fetch( [ "category" => $synopsisCat->getId() ] );
-			}
 
 			$form = $this->form->get( PostForm::class, [
 				'post'   => $synopsis,
@@ -104,7 +94,7 @@ class BackController extends Controller {
 
 				$result = $form->sendForm( $synopsis );
 				if ( ! is_array( $result ) && $result !== false ) {
-
+					$manager = $this->database->getManager( Post::class );
 					$manager->update( $synopsis );
 
 					$this->bag->addMessage( "Mise a jour effectuée", "success" );
@@ -116,7 +106,8 @@ class BackController extends Controller {
 			}
 
 			return $this->render( "admin/synopsis.html.twig", [
-				"form" => $form->getForm(),
+				"synopsis" => $synopsis,
+				"form"     => $form->getForm(),
 			] );
 
 		}
@@ -131,14 +122,19 @@ class BackController extends Controller {
 		if ( $_SESSION['authenticated'] ) {
 			$manager = $this->database->getManager( Category::class );
 
-			$cat = $manager->findByName( 'chapter' );
 
-			$manager = $this->database->getManager( Post::class );
+			$chapters = $manager->findByName( 'chapter' )->posts;
 
-			$chapters = $manager->findChapters( [ "category" => $cat->getId() ], null );
+			/**
+			 * Récupère le nombre de commentaire de chaque chapitre
+			 */
+			foreach ( $chapters as $chapter ) {
+				$nbComs[ $chapter->getId() ] = $this->database->getManager( Comment::class )->countComments( [ "postId" => $chapter->getId() ] );
+			}
 
 			return $this->render( 'admin/chapters.html.twig', [
 				"chapters" => $chapters,
+				"nbComs"   => $nbComs
 			] );
 
 		}
@@ -262,24 +258,57 @@ class BackController extends Controller {
 		return $this->redirect( 'login' );
 	}
 
-	public function commentsAction() {
+	/**
+	 * Retourne tous les commentaires ou ceux d'un chapitre si spécifié
+	 *
+	 * @param null $postId
+	 *
+	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
+	 */
+	public function commentsAction( $postId = null ) {
 		if ( $_SESSION['authenticated'] ) {
-			$manager = $this->database->getManager( Comment::class );
+			if ( ! $postId ) {
+				$manager  = $this->database->getManager( Comment::class );
+				$comments = $manager->fetchAll();
+			} else {
+				$manager = $this->database->getManager( Post::class );
+				$post    = $manager->find( [ "id" => $postId ] );
 
-			$comments = $manager->fetchAll();
+			}
 
 
-			$titles = $this->database->getManager( Post::class )->getChaptersTitles();
+			if ( ( $postId && $post ) || $comments ) {
+				return $this->render( 'admin/comments.html.twig', [
+					"post"     => isset( $post ) ? $post : null,
+					"comments" => isset( $post ) ? $post->comments : $comments,
+				] );
+			}
+			$this->bag->addMessage( "Le billet demandé n'existe pas.", "danger" );
 
+			return $this->redirect( "admin" );
+		}
+
+		return $this->redirect( 'login' );
+	}
+
+	/**
+	 * Affiche les commentaires encore non publiés
+	 *
+	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
+	 */
+	public function commentsModerateAction() {
+		if ( $_SESSION['authenticated'] ) {
+			$manager  = $this->database->getManager( Comment::class );
+			$comments = $manager->fetchAll( [ "published" => 0 ] );
 
 			return $this->render( 'admin/comments.html.twig', [
-				"comments" => $comments,
-				"titles"   => $titles
+				"comments" => ! is_null( $comments ) ? $comments : null,
 			] );
 		}
 
 		return $this->redirect( 'login' );
 	}
+
 
 	/**
 	 * @param $id
@@ -293,7 +322,7 @@ class BackController extends Controller {
 
 			$comment = $manager->find( $id );
 
-			$post = $this->database->getManager( Post::class )->find( [ "id" => $comment->getPost() ] );
+			$post = $this->database->getManager( Post::class )->find( [ "id" => $comment->getPostId() ] );
 
 			$form = $this->form->get( CommentForm::class, [
 					"admin"   => true,
@@ -337,6 +366,7 @@ class BackController extends Controller {
 
 			$comment = $manager->find( $id );
 
+
 			if ( $comment ) {
 				if ( $manager->delete( $comment->getId() ) ) {
 					$this->bag->addMessage( "Commentaire supprimé avec succès", "success" );
@@ -344,13 +374,17 @@ class BackController extends Controller {
 					$this->bag->addMessage( "Erreur : Impossible de supprimer le commentaire demandé.", "danger" );
 				}
 
-				return $this->redirect( 'adminComments' );
+				return $this->redirectToBack();
 			}
 		}
 
 		return $this->redirect( 'login' );
 	}
 
+	/**
+	 * Mise à jour du mot de passe de l'admin
+	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
+	 */
 	public function userAction() {
 		if ( $_SESSION['authenticated'] ) {
 
@@ -385,6 +419,44 @@ class BackController extends Controller {
 				"title" => 'Modifier le mot de passe',
 				"form"  => $form->getForm(),
 			] );
+		}
+
+		return $this->redirect( 'login' );
+	}
+
+	public function aboutAction() {
+		if ( $_SESSION['authenticated'] ) {
+
+			$manager = $this->database->getManager( Category::class );
+
+			$about = $manager->findByName( 'about' )->posts[0];
+
+			$form = $this->form->get( PostForm::class, [
+				'post'   => $about,
+				'action' => '/admin/about'
+			] );
+
+			if ( $this->request->getPost() ) {
+
+				$result = $this->form->sendForm( $about );
+				if ( ! is_array( $result ) ) {
+					$manager = $this->database->getManager( Post::class );
+
+					$manager->update( $about );
+
+					$this->bag->addMessage( "Mise a jour effectuée", "success" );
+
+					return $this->redirect( 'adminAbout' );
+				} else {
+					$this->bag->addMessage( sprintf( "Erreur: Aucun texte n'a été renseigné. La page n'a pas été modifié." ), "danger" );
+				}
+			}
+
+			return $this->render( "admin/about.html.twig", [
+				"about" => $about,
+				"form"  => $form->getForm(),
+			] );
+
 		}
 
 		return $this->redirect( 'login' );

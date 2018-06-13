@@ -4,6 +4,8 @@ namespace Blog\Manager;
 
 use App\Orm\Database;
 use App\Orm\Manager;
+use Blog\Entity\Comment;
+use Blog\Entity\Post;
 
 /**
  * Class PostManager
@@ -57,16 +59,24 @@ class PostManager extends Manager {
 	public function getChaptersTitles() {
 		$request = "SELECT title, id FROM post";
 
-		$statement = $this->pdo->prepare($request);
+		$statement = $this->pdo->prepare( $request );
 
 		$statement->execute();
 
-		$results = $statement->fetchAll(\PDO::FETCH_ASSOC);
+		$results = $statement->fetchAll( \PDO::FETCH_ASSOC );
 
 		$titles = [];
-		foreach($results as $result) {
-			$titles[$result["id"]] = $result['title'];
+		foreach ( $results as $result ) {
+			$titles[ $result["id"] ] = $result['title'];
 		}
+
 		return $titles;
+	}
+
+	/**
+	 * @return Post
+	 */
+	public function getNew() {
+		return new $this->entity( $this->meta, $this->database->getManager( Comment::class ) );
 	}
 }

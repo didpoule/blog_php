@@ -4,12 +4,6 @@
 
 {% block content %}
     {% if not post is null %}
-
-        {% if state is not null %}
-            {% if state == "next" %}
-                <h2>Vous venez de terminer le chapitre {{ current - 1 }}</h2>
-            {% endif %}
-        {% endif %}
         <section class="single-chapter" id="{{ post.number }}">
             <article class="chapter-content" data-chapter="{{ post.number }}">
                 <h2>Chapitre {{ post.number }}</h2>
@@ -26,18 +20,17 @@
                     <button class="btn btn-primary" onclick="window.location = '/chapitres/next'">Chapitre suivant
                     </button>
                 </div>
-
             </div>
         </section>
         <hr>
         <section class="comments-section">
         <h2>Commentaires</h2>
         <div class="comments" id="paginated-content">
-            {% if not comments is empty %}
-                {% for comment in comments %}
+            {% if not post.comments is empty %}
+                {% for comment in post.comments %}
                     <div>
                         <h3>{{ comment.author }}</h3>
-                        <div><span>Posté le {{ comment.added|localizeddate('medium', 'none',  locale) }}</span></div>
+                        <div><span>Posté le {{ comment.added|localizeddate('long', 'short',  locale) }}</span></div>
                         <p>{{ comment.content }}</p>
                     </div>
                 {% endfor %}
@@ -73,9 +66,11 @@
             </div>
         {% endfor %}
     {% endif %}
+
     {{ form|raw }}
     </section>
 {% endblock %}
+
 {% block scripts %}
-    <script> pagination = new Pagination("http://localhost:8000/comments/{{ post.id }}/", {{ limit }}, "commentaires")</script>
+    <script> pagination = new Pagination("http://localhost:8000/comments/{{ post.id }}/", {{ limit }}, "commentaires", {{ nbComments }})</script>
 {% endblock %}

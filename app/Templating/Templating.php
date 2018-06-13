@@ -37,13 +37,13 @@ class Templating {
 			'cache' => false
 		] );
 
-		$this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
-		$this->twig->addGlobal("bag", $bag);
-
+		$this->twig->addExtension( new \Twig_Extensions_Extension_Intl() );
+		$this->twig->addGlobal( "bag", $bag );
 	}
 
 	/**
 	 * Appel du load de twig
+	 *
 	 * @param $name
 	 * @param $args
 	 *

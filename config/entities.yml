@@ -49,7 +49,7 @@ Blog\Entity\Comment:
         content:
          type: string
          required: true
-        post:
+        postId:
          type: int
          required: true
 

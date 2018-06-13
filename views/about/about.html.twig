@@ -1,0 +1,10 @@
+{% extends "front_template.html.twig" %}
+{% block pageTitle %}{{ about.title }}{% endblock %}
+{% block content %}
+        <section id="about" class="row">
+            <article>
+                <h2 class="text-center">{{ about.title }}</h2>
+                {{ about.content|raw }}
+            </article>
+        </section>
+{% endblock %}

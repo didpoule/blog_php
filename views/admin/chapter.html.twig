@@ -1,9 +1,9 @@
 {% extends "back_template.html.twig" %}
 {% block adminContent %}
     <h2>{{ title }}</h2>
-    <p>Créé le {{ chapter.added|localizeddate('medium', 'none',  locale) }}</p>
+    <p>Créé le {{ chapter.added|localizeddate('long', 'short',  locale) }}</p>
     {% if chapter.updated is not null %}
-        <p>Mis à jour le {{ chapter.updated|localizeddate('medium', 'none',  locale) }}</p>
+        <p>Dernière mise à jour le {{ chapter.updated|localizeddate('long', 'short',  locale) }}</p>
     {% endif %}
     {% if form is not null %}
         {{ form|raw }}

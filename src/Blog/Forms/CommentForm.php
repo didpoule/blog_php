@@ -38,7 +38,7 @@ class CommentForm extends Form {
 				"label" => "message",
 				"value" => isset( $comment ) ? $comment->getContent() : null
 			],
-			"post"    => [
+			"postId"    => [
 				"type"  => "hidden",
 				"value" => isset( $post ) ?  $post->getId()  : null
 			],

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Request\Request;
 
 /**
  * Class MessagesBag

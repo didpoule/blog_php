@@ -59,7 +59,7 @@ abstract class Manager {
 		$result = $statement->fetch( \PDO::FETCH_ASSOC );
 
 		if ( $result ) {
-			$entity = new $this->entity( $this->meta );
+			$entity = $this->getNew();
 			$entity->hydrate( $result );
 
 			return $entity;
@@ -85,7 +85,7 @@ abstract class Manager {
 
 
 			foreach ( $results as $result ) {
-				$entity = new $this->entity( $this->meta );
+				$entity = $this->getNew();
 				try {
 					$entity->hydrate( $result );
 				} catch ( ORMException $e ) {
@@ -108,7 +108,7 @@ abstract class Manager {
 	 *
 	 * @return string
 	 */
-	private function where( $params ) {
+	protected function where( $params ) {
 		if ( ! empty( $params ) ) {
 
 			foreach ( $params as $property => $value ) {
@@ -198,6 +198,10 @@ abstract class Manager {
 	 * @param $entity Entity
 	 */
 	public function update( $entity ) {
+		if ( method_exists( $entity, "setUpdated" ) ) {
+			$entity->setUpdated( new \DateTime() );
+		}
+
 		$request = sprintf( "UPDATE %s %s WHERE id = :id", $this->meta['name'], $this->set( $entity ) );
 
 		$statement = $this->pdo->prepare( $request );
@@ -309,7 +313,9 @@ abstract class Manager {
 		return sprintf( "(%s)", implode( ",", $properties ) );
 	}
 
-	public function getNew() {
-		return new $this->entity( $this->meta );
-	}
+	/**
+	 * Retourne une nouvelle entité liée au manager
+	 * @return mixed
+	 */
+	abstract public function getNew();
 }

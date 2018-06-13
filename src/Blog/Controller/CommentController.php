@@ -31,7 +31,7 @@ class CommentController extends Controller {
 	public function getAction($postId, $offset, $limit) {
 		$manager = $this->database->getManager(Comment::class);
 
-		$comments = $manager->findAllByPost(["post" => $postId, "published" => 1], $offset, $limit);
+		$comments = $manager->findAllByPost(["postId" => $postId, "published" => 1], $offset, $limit);
 
 		return $this->json($comments);
 	}

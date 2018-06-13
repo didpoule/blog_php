@@ -4,6 +4,7 @@ namespace Blog\Entity;
 
 
 use App\Orm\Entity;
+use Blog\Manager\PostManager;
 
 /**
  * Class Comment
@@ -44,62 +45,86 @@ class Comment extends Entity implements \JsonSerializable {
 	/**
 	 * @var int
 	 */
-	private $post;
+
+	private $postId;
+
+
+	/**
+	 * @var Post
+	 */
+	private $post = null;
+
+	/**
+	 * @var PostManager
+	 */
+	private $postManager;
+
+	/**
+	 * Comment constructor.
+	 *
+	 * @param $meta
+	 * @param PostManager $postManager
+	 */
+	public function __construct( $meta, PostManager $postManager ) {
+		parent::__construct( $meta );
+		$this->postManager = $postManager;
+	}
+
 
 	/**
 	 * @return mixed
 	 */
-	public function getPost() {
-		return $this->post;
+	public function getPostId() {
+		return $this->postId;
 	}
 
 	/**
-	 * @param mixed $post
+	 * @param mixed $postId
 	 */
-	public function setPost( $post ): void {
-		$this->post = $post;
+	public function setPostId( $postId ) {
+		$this->postId = $postId;
 	}
 
 
 	/**
 	 * @param int $id
 	 */
-	public function setId( int $id ): void {
+	public function setId( int $id ) {
 		$this->id = $id;
 	}
 
 	/**
 	 * @param string $author
 	 */
-	public function setAuthor( string $author ): void {
+	public function setAuthor( string $author ) {
 		$this->author = $author;
 	}
 
 	/**
 	 * @param string $content
 	 */
-	public function setContent( string $content ): void {
+	public function setContent( string $content ) {
 		$this->content = $content;
 	}
 
 	/**
 	 * @param \DateTime $added
 	 */
-	public function setAdded( \DateTime $added ): void {
+	public function setAdded( \DateTime $added ) {
 		$this->added = $added;
 	}
 
 	/**
 	 * @param \DateTime $updated
 	 */
-	public function setUpdated( $updated ): void {
+	public function setUpdated( $updated ) {
 		$this->updated = $updated;
 	}
 
 	/**
 	 * @param bool $published
 	 */
-	public function setPublished( bool $published ): void {
+	public function setPublished( bool $published ) {
 		$this->published = $published;
 	}
 
@@ -146,9 +171,9 @@ class Comment extends Entity implements \JsonSerializable {
 	}
 
 	public function jsonSerialize() {
-		$formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::LONG, \IntlDateFormatter::NONE);
+		$formatter = new \IntlDateFormatter( 'fr_FR', \IntlDateFormatter::LONG, \IntlDateFormatter::SHORT );
 
-		$date  =  "Posté le " . $formatter->format($this->added);
+		$date             = "Posté le " . $formatter->format( $this->added );
 		$datas            = [];
 		$datas["title"]   = $this->author;
 		$datas["date"]    = $date;
@@ -156,5 +181,32 @@ class Comment extends Entity implements \JsonSerializable {
 
 		return $datas;
 	}
+
+	/**
+	 *
+	 */
+	public function getPost() {
+		if ( empty( $this->post ) ) {
+			$this->post = $this->postManager->find( [ "id" => $this->postId ] );
+		}
+
+		return $this->post;
+	}
+
+	/**
+	 * @param $key
+	 *
+	 * @return mixed
+	 */
+	public function __get( $key ) {
+		if ( ! is_callable( $this->$key ) ) {
+
+			$method = "get" . ucfirst( $key );
+			$this->$method();
+		}
+
+		return $this->$key;
+	}
+
 
 }

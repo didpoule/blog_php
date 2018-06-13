@@ -1,17 +1,21 @@
-function Pagination(action, max_per_page, name) {
+function Pagination(action, max_per_page, name, nb) {
 
     this.name = name;
     this.action = action;
     this.container = $("#paginated-content");
-    this.elements = $("#paginated-content").children();
+    this.nb = nb;
     this.current_page_container = $("#current-page");
     this.current_page = 0;
     this.prevBtn = $("#prev");
     this.nextBtn = $("#next");
-
+    this.navigation = $("#pagination-nav");
     this.max_per_page = max_per_page;
-    this.nb_pages = Math.ceil(this.elements.length / this.max_per_page);
+    this.nb_pages = Math.ceil(this.nb / this.max_per_page);
     this.offset = 0;
+
+    if (this.nb_pages > 1) {
+        this.navigation.show().css("display", "flex");
+    }
 
     this.next = function (action, offset, max_per_page) {
         if (this.current_page + 1 > this.nb_pages) {
@@ -27,7 +31,6 @@ function Pagination(action, max_per_page, name) {
 
             success: function (data) {
 
-                console.log(data);
                 var items = [];
                 $.each(data, function (key, val) {
                     items.push("<div>" +

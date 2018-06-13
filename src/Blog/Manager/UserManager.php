@@ -43,4 +43,8 @@ class UserManager extends Manager {
 		] );
 
 	}
+
+	public function getNew() {
+		return new $this->entity($this->meta);
+	}
 }

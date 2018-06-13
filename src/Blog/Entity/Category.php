@@ -3,6 +3,7 @@
 namespace Blog\Entity;
 
 use App\Orm\Entity;
+use Blog\Manager\PostManager;
 
 class Category extends Entity {
 
@@ -17,6 +18,27 @@ class Category extends Entity {
 	private $name;
 
 	/**
+	 * @var array
+	 */
+	private $posts = null;
+
+	/**
+	 * @var PostManager
+	 */
+	private $postManager;
+
+	/**
+	 * Category constructor.
+	 *
+	 * @param $meta
+	 * @param PostManager|null $postManager
+	 */
+	public function __construct( $meta, PostManager $postManager = null ) {
+		parent::__construct( $meta );
+		$this->postManager = $postManager;
+	}
+
+	/**
 	 * @return int
 	 */
 	public function getId() {
@@ -26,7 +48,7 @@ class Category extends Entity {
 	/**
 	 * @param int $id
 	 */
-	public function setId( int $id ): void {
+	public function setId( int $id ) {
 		$this->id = $id;
 	}
 
@@ -40,9 +62,49 @@ class Category extends Entity {
 	/**
 	 * @param string $name
 	 */
-	public function setName( string $name ): void {
+	public function setName( string $name ) {
 		$this->name = $name;
 	}
 
+	/**
+	 * @param Post $post
+	 */
+	private function addPost( Post $post ) {
+		$this->posts[] = $post;
+	}
 
+	/**
+	 * Lazy Loader posts
+	 */
+	public function getPosts() {
+		if ( empty( $this->posts ) ) {
+			$posts = $this->postManager->fetchAll( [ "category" => $this->id ] );
+
+			if ( $posts ) {
+				foreach ( $posts as $post ) {
+					$this->addPost( $post );
+				}
+			}
+		}
+
+		return $this->posts;
+	}
+
+	/**
+	 * @param $keys
+	 *
+	 * @return mixed
+	 */
+	public
+	function __get(
+		$key
+	) {
+		if ( ! is_callable( $this->$key ) ) {
+
+			$method = "get" . ucfirst( $key );
+			$this->$method();
+		}
+
+		return $this->$key;
+	}
 }

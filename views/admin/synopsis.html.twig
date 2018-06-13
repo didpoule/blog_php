@@ -1,6 +1,9 @@
 {% extends "back_template.html.twig" %}
 {% block adminContent %}
     <h2>Modifier le synopsis</h2>
+    {% if not synopsis.updated is null %}
+        <p>Dernère mise à jour le {{ synopsis.updated|localizeddate('long', 'short',  locale) }}</p>
+    {% endif %}
     {% if form is not null %}
         {{ form|raw }}
     {% endif %}
