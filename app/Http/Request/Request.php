@@ -111,4 +111,8 @@ class Request {
 		$_SESSION['token'] = uniqid();
 	}
 
+	public function setUrl($url) {
+		$this->url = $url;
+	}
+
 }

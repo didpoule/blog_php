@@ -42,6 +42,7 @@ class Router {
 	public function __construct( $services ) {
 		$this->services = $services;
 		$this->request  = $this->services->get( "request" );
+		$this->firewall = $this->services->get( "firewall" );
 
 	}
 
@@ -71,6 +72,22 @@ class Router {
 	 * @throws RouterException
 	 */
 	public function getRoute() {
+		// Vérifie si l'utilisateur a accès à la route
+		$access = $this->firewall->checkPath();
+
+		// On redirige vers la route définie dans les paramètres du firewall
+		if ( $access !== true ) {
+			$route = $this->getRouteByName( $access );
+
+			if ( $route instanceof Route ) {
+				$url = $route->generateUrl( [] );
+				$this->request->setUrl( $url );
+			} else {
+				throw new RouterException( sprintf( "La route '%s' définie dans security.yml n'existe pas", $access ) );
+			}
+		}
+
+		// Cherche une route correspondant à l'url
 		foreach ( $this->routes as $route ) {
 			if ( $route->match( $this->request->getUrl() ) ) {
 				$this->matchedRoute = $route;
@@ -93,6 +110,7 @@ class Router {
 	 */
 	public function getRouteByName( $name ) {
 		if ( isset( $this->routes[ $name ] ) ) {
+
 			return $this->routes[ $name ];
 		}
 
@@ -121,9 +139,9 @@ class Router {
 
 		$controller = new Controller( $this->services, $this );
 
-		return $controller->render("error/404.html.twig", [
+		return $controller->render( "error/404.html.twig", [
 			"message" => "La page que vous avez demandé n'existe pas."
-		]);
+		] );
 
 	}
 

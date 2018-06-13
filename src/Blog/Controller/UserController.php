@@ -28,10 +28,10 @@ class UserController extends Controller {
 				if ( ! is_array( $user ) ) {
 					if ( $manager->checkLogin( $user->getUsername(), $user->getPassword() ) ) {
 						$_SESSION['authenticated'] = true;
-
 						$this->bag->addMessage("Connexion réussie", "success");
 						return $this->redirect( 'admin' );
 					} else {
+
 						$this->bag->addMessage("Erreur: Le nom d'utilisateur et/ou le mot de passe sont incorrectes.", "danger");
 						return $this->redirect('login');
 					}

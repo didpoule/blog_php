@@ -1,0 +1,4 @@
+admin:
+    pattern: 'admin'
+    conditions: { authenticated: true }
+    redirect: login

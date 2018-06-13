@@ -8,7 +8,7 @@
           integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
     {% block head %}{% endblock %}
-    <title>Un billet simple pour l'Alaska - {% block pageTitle %}{% endblock %}</title>
+    <title>{% block pageTitle %}{% endblock %} - Un billet simple pour l'Alaska</title>
     <meta name="description"
           content="Ecrivain et passionné du monde numérique, j'ai créé ce blog afin de vous faire découvrir mon nouveau roman Un billet simple pour l'Alaska que je publierai par chapitre."/>
 </head>
@@ -35,7 +35,7 @@
     <footer>
         <div class="container">
             <div class="footer-block">
-                <a href="/login#user-form">Administration</a>
+                <a href="/admin">Administration</a>
             </div>
             <div class="footer-block">
                 <a href="#">Mentions légales</a>

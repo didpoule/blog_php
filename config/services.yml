@@ -2,6 +2,10 @@ twig:
   class: App\Templating\Templating
   params: { file: ../views/, bag: bag }
 
+firewall:
+  class: App\Services\Firewall
+  params: { file: ../config/security.yml, request: request }
+
 slug:
   class: Blog\Services\Slug
   params: {}
