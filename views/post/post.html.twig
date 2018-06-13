@@ -72,5 +72,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script> pagination = new Pagination("http://localhost:8000/comments/{{ post.id }}/", {{ limit }}, "commentaires", {{ nbComments }})</script>
+    <script> pagination = new Pagination("/comments/{{ post.id }}/", {{ limit }}, "commentaires", {{ nbComments }})</script>
 {% endblock %}
