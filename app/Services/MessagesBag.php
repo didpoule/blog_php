@@ -14,6 +14,9 @@ class MessagesBag {
 	 */
 	private $messages = [];
 
+	/**
+	 * MessagesBag constructor.
+	 */
 	public function __construct() {
 
 		if ( empty( $_SESSION['messages'] ) ) {
@@ -29,6 +32,12 @@ class MessagesBag {
 		return $_SESSION['messages'];
 	}
 
+	/**
+	 * Ajoute un message au conteneur
+	 *
+	 * @param $message
+	 * @param string $type
+	 */
 	public function addMessage( $message, $type = "info" ) {
 		$_SESSION['messages'][] = [
 			"type"    => $type,
@@ -37,6 +46,8 @@ class MessagesBag {
 	}
 
 	/**
+	 * Dépile un message
+	 *
 	 * @return mixed
 	 */
 	public function getMessage() {
@@ -45,6 +56,9 @@ class MessagesBag {
 		return array_shift( $_SESSION['messages'] );
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getMessages() {
 		return $this->messages;
 	}

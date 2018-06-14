@@ -33,7 +33,8 @@ class ServicesProvider {
 	/**
 	 * @param $service
 	 *
-	 * @return bool|mixed
+	 * @return mixed
+	 * @throws \ReflectionException
 	 */
 	public function get( $service ) {
 
@@ -62,6 +63,8 @@ class ServicesProvider {
 	 * @param $service
 	 *
 	 * @return bool
+	 * @throws ServicesException
+	 * @throws \ReflectionException
 	 */
 	private function createService( $service ) {
 
@@ -89,6 +92,6 @@ class ServicesProvider {
 				return true;
 			}
 		}
-		throw new ServicesException( "Le service $service n'existe pas." );
+		throw new ServicesException( "Erreur: Le service $service n'existe pas." );
 	}
 }

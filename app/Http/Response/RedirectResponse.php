@@ -8,7 +8,6 @@ namespace App\Http\Response;
  */
 class RedirectResponse implements ResponseInterface {
 
-
 	/**
 	 * @var string
 	 */

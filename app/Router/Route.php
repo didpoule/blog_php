@@ -98,6 +98,8 @@ class Route {
 	}
 
 	/**
+	 * Vérifie si l'url soumise correspond au pattern de la route
+	 *
 	 * @param $uri
 	 *
 	 * @return bool
@@ -105,7 +107,7 @@ class Route {
 	public function match( $uri ) {
 
 		/**
-		 * Récupération des regex des parameters
+		 * Récupération des regex des parametres
 		 */
 		$path = preg_replace_callback( "/:(\w+)/", [ $this, "parameterMatch" ], $this->path );
 
@@ -132,6 +134,8 @@ class Route {
 	}
 
 	/**
+	 * retourne la REGEX du paramètre demandé
+	 *
 	 * @param $match
 	 *
 	 * @return string
@@ -146,6 +150,8 @@ class Route {
 	}
 
 	/**
+	 * Génère une URL à partir des arguments envoyés
+	 *
 	 * @param $args
 	 *
 	 * @return string
@@ -155,6 +161,7 @@ class Route {
 		$url = str_replace( ":", "", $url );
 
 		$url .= $anchor;
+
 		return $url;
 	}
 

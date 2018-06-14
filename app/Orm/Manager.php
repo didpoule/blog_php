@@ -315,6 +315,7 @@ abstract class Manager {
 
 	/**
 	 * Retourne une nouvelle entité liée au manager
+	 *
 	 * @return mixed
 	 */
 	abstract public function getNew();

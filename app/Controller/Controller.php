@@ -7,6 +7,7 @@ use App\Http\Response\RedirectResponse;
 use App\Http\Response\Response;
 use App\Router\Router;
 use App\Router\RouterException;
+use App\ServicesProvider\ServicesException;
 use App\ServicesProvider\ServicesProvider;
 
 /**
@@ -44,7 +45,7 @@ class Controller {
 	 */
 	public function render( $fileName, $datas = [] ) {
 
-		$view = $this->services->get( 'twig' )->load( $fileName );
+		$view = $this->twig->load( $fileName );
 
 		$content = $view->render( $datas );
 
@@ -96,6 +97,11 @@ class Controller {
 	 * @return bool|mixed
 	 */
 	public function __get( $name ) {
-		return $this->services->get( strtolower( $name ) );
+		try {
+			return $this->services->get( strtolower( $name ) );
+		} catch ( ServicesException $e ) {
+			echo( $e );
+		}
+		exit();
 	}
 }

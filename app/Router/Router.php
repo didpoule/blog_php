@@ -47,6 +47,8 @@ class Router {
 	}
 
 	/**
+	 * Parse le fichier de configuration des routes
+	 *
 	 * @param $file
 	 */
 	public function parseRouting( $file ) {
@@ -56,6 +58,8 @@ class Router {
 	}
 
 	/**
+	 * Ajoute les routes du fichier de configuration
+	 *
 	 * @param $routes
 	 */
 	public function setRoutes( $routes ) {
@@ -119,7 +123,11 @@ class Router {
 	}
 
 	/**
-	 * Appelle la méthode du contrôleur de la route
+	 * Appelle le controleur sinon erreur 404
+	 *
+	 * @param bool $success
+	 *
+	 * @return \App\Http\Response\Response|mixed
 	 */
 	public function call( $success = true ) {
 		if ( $success ) {

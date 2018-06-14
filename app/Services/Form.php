@@ -178,7 +178,7 @@ class Form {
 	 * @param $formClass
 	 * @param array $args
 	 *
-	 * @return mixed
+	 * @return Form
 	 * @throws \ReflectionException
 	 */
 	public function get( $formClass, $args = [] ) {

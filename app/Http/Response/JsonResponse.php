@@ -9,7 +9,7 @@ namespace App\Http\Response;
 class JsonResponse implements ResponseInterface {
 
 	/**
-	 * @var string
+	 * @var array
 	 */
 	private $content;
 

@@ -36,18 +36,23 @@ class Database {
 
 		try {
 			$this->pdo = new \PDO( $db, $file['user'], $file['password'] );
-		} catch (\PDOException $e) {
-			exit($e->getMessage());
+		} catch ( \PDOException $e ) {
+			exit( $e->getMessage() );
 		}
 
 	}
 
+	/**
+	 * @return \PDO
+	 */
 	public function getPdo() {
 		return $this->pdo;
 	}
 
 	/**
-	 * @param $entity string className entité
+	 * @param $entity
+	 *
+	 * @return Manager
 	 */
 	public function getManager( $entity ) {
 

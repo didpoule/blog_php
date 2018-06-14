@@ -31,11 +31,16 @@ abstract class Entity {
 	 * @param $column
 	 * @param $value
 	 */
-
 	public function __construct( $meta ) {
 		$this->meta = $meta;
 	}
 
+	/**
+	 * Hydrate une entité avec les paramètres reçus
+	 *
+	 * @param $column
+	 * @param $value
+	 */
 	private function hydrateProperty( $column, $value ) {
 
 		$property = $column;

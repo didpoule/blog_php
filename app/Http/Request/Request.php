@@ -99,6 +99,11 @@ class Request {
 		return isset( $this->post[ $name ] ) ? $this->post[ $name ] : false;
 	}
 
+	/**
+	 * Renvoie le token existant ou créé un nouveau si inexistant
+	 *
+	 * @return string
+	 */
 	public function getToken() {
 		if ( ! isset( $_SESSION['token'] ) ) {
 			$_SESSION['token'] = uniqid();
@@ -107,11 +112,19 @@ class Request {
 		return $_SESSION['token'];
 	}
 
+	/**
+	 * Définit un token
+	 */
 	public function setToken() {
 		$_SESSION['token'] = uniqid();
 	}
 
-	public function setUrl($url) {
+	/**
+	 * Définit une url
+	 *
+	 * @param $url
+	 */
+	public function setUrl( $url ) {
 		$this->url = $url;
 	}
 

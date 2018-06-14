@@ -10,6 +10,7 @@ use Symfony\Component\Yaml\Yaml;
  * @package App\Services
  */
 class Firewall {
+
 	/**
 	 * @var array
 	 */
@@ -89,7 +90,7 @@ class Firewall {
 	private function checkConditions( $conditions ) {
 
 		foreach ( $conditions as $condition => $value ) {
-			if ( !isset( $_SESSION[ $condition ] ) || $_SESSION[ $condition ] !== true ) {
+			if ( ! isset( $_SESSION[ $condition ] ) || $_SESSION[ $condition ] !== true ) {
 				return false;
 			}
 		}
