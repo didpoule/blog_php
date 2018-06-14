@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Request\Request;
 use App\Orm\Database;
+use App\Orm\Entity;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -53,17 +54,28 @@ class Form {
 	private static $database;
 
 
+	/**
+	 * Form constructor.
+	 *
+	 * @param $metas
+	 * @param Request $request
+	 * @param Database $database
+	 */
 	public function __construct( $metas, Request $request, Database $database ) {
-		self::$metas   = Yaml::parseFile( $metas );
-		self::$request = $request;
+		self::$metas    = Yaml::parseFile( $metas );
+		self::$request  = $request;
 		self::$database = $database;
 
 	}
 
 	/**
-	 * @param $entity string className entity
+	 * Traitement du formulaire
+	 *
+	 * @param Entity|null $entity
+	 *
+	 * @return Entity|bool|null
 	 */
-	public function sendForm( $entity = null ) {
+	public function sendForm( Entity $entity = null ) {
 		if ( self::$request->getPost( 'token' ) === self::$request->getToken() ) {
 
 			$entity = $this->hydrate( $entity );
@@ -82,12 +94,15 @@ class Form {
 	}
 
 	/**
-	 * @param Request $this ->request
+	 * @param Entity|null $entity
+	 *
+	 * @return Entity
 	 */
-	private function hydrate( $entity = null ) {
+	private function hydrate( Entity $entity = null ) {
 		foreach ( self::$metas[ static::$entity ]['columns'] as $property => $params ) {
 
-			if ( array_key_exists( $property, self::$request->getPost() ) ) {
+			// Vérifie si la proriété de l'entité est soumise et attendue par le formulaire
+			if ( array_key_exists( $property, self::$request->getPost() ) && array_key_exists( $property, self::$fields ) ) {
 
 				$datas[ $property ] = self::$request->getPost( $property );
 			} else {
@@ -101,7 +116,7 @@ class Form {
 
 		}
 		if ( ! isset( $entity ) ) {
-			$entity = self::$database->getManager(static::$entity)->getNew();
+			$entity = self::$database->getManager( static::$entity )->getNew();
 		}
 
 		$entity->hydrate( $datas );
@@ -110,6 +125,10 @@ class Form {
 
 	}
 
+	/**
+	 * Retourne un formulaire avec token CSRF
+	 * @return string
+	 */
 	public function getForm() {
 		$content = sprintf( "<form action='%s' method='post' id='%s-form'>", static::$action, static::$name );
 		foreach ( static::$fields as $field => $params ) {
@@ -145,14 +164,23 @@ class Form {
 					break;
 			}
 			$content .= "</div>";
-			$content .= sprintf( "<input type='hidden' id='token' name='token' value='%s' />", self::$request->getToken() );
 		}
+		$content .= sprintf( "<input type='hidden' id='token' name='token' value='%s' />", self::$request->getToken() );
 		$content .= sprintf( "<input type='submit' value='Envoyer' class='btn btn-primary'/>" );
 		$content .= "</form>";
 
 		return $content;
 	}
 
+	/**
+	 * Singleton formulaires
+	 *
+	 * @param $formClass
+	 * @param array $args
+	 *
+	 * @return mixed
+	 * @throws \ReflectionException
+	 */
 	public function get( $formClass, $args = [] ) {
 		if ( ! array_key_exists( $formClass, self::$forms ) ) {
 

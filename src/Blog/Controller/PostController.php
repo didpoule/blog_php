@@ -65,13 +65,15 @@ class PostController extends Controller {
 				if ( ! is_array( $result ) && $result !== false ) {
 					$manager->insert( $result );
 					$this->bag->addMessage( "Votre commentaire a bien été envoyé.", "success" );
-				} else {
+				} elseif ( is_array( $result ) ) {
 					foreach ( $result as $error ) {
 						$this->bag->addMessage( sprintf( "Erreur: le champ %s doit être renseigné", $error ), "danger" );
 					}
+				} else {
+					$this->bag->addMessage( "Le commentaire n'a pas pu être envoyé.", "danger" );
 				}
 
-				return $this->redirect( 'numberChapter', [ "number" => $post->getNumber() ] );
+				return $this->redirect( 'numberChapter', [ "number" => $post->getNumber() ], "#comment-form" );
 
 			}
 
@@ -132,18 +134,18 @@ class PostController extends Controller {
 	}
 
 	public function aboutAction() {
-		$manager = $this->database->getManager(Category::class);
+		$manager = $this->database->getManager( Category::class );
 
-		$about = $manager->findByName('about')->posts[0];
+		$about = $manager->findByName( 'about' )->posts[0];
 
-		if (!$about) {
-			return $this->render("error/404.html.twig", [
+		if ( ! $about ) {
+			return $this->render( "error/404.html.twig", [
 				"message" => "La page n'existe pas."
-			]);
+			] );
 		}
 
-		return $this->render("about/about.html.twig", [
+		return $this->render( "about/about.html.twig", [
 			"about" => $about
-		]);
+		] );
 	}
 }
