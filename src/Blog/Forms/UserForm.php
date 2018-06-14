@@ -5,6 +5,10 @@ namespace Blog\Forms;
 use Blog\Entity\User;
 use App\Services\Form;
 
+/**
+ * Class UserForm
+ * @package Blog\Forms
+ */
 class UserForm extends Form {
 
 	public function __construct($action) {

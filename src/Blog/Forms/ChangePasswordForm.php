@@ -5,6 +5,10 @@ namespace Blog\Forms;
 use Blog\Entity\User;
 use App\Services\Form;
 
+/**
+ * Class ChangePasswordForm
+ * @package Blog\Forms
+ */
 class ChangePasswordForm extends Form {
 
 	public function __construct() {

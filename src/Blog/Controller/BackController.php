@@ -3,7 +3,6 @@
 namespace Blog\Controller;
 
 use App\Controller\Controller;
-use App\Orm\Database;
 use Blog\Entity\Category;
 use Blog\Entity\Comment;
 use Blog\Entity\Post;
@@ -12,7 +11,6 @@ use Blog\Forms\ChangePasswordForm;
 use Blog\Forms\ChapterForm;
 use Blog\Forms\CommentForm;
 use Blog\Forms\PostForm;
-use Blog\Forms\UserForm;
 
 /**
  * Class BackController
@@ -21,6 +19,8 @@ use Blog\Forms\UserForm;
 class BackController extends Controller {
 
 	/**
+	 * Accueil Administration
+	 *
 	 * @return \App\Http\Response\Response
 	 */
 	public function homeAction() {
@@ -32,6 +32,8 @@ class BackController extends Controller {
 	}
 
 	/**
+	 * Formulaire Edito
+	 *
 	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
 	 */
 	public function editoAction() {
@@ -69,6 +71,8 @@ class BackController extends Controller {
 	}
 
 	/**
+	 * Formulaire Synopsis
+	 *
 	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
 	 */
 	public function synopsisAction() {
@@ -107,6 +111,8 @@ class BackController extends Controller {
 	}
 
 	/**
+	 * Liste des chapitres
+	 *
 	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
 	 */
 	public function chaptersAction() {
@@ -131,6 +137,8 @@ class BackController extends Controller {
 	}
 
 	/**
+	 * Edition Chapitre
+	 *
 	 * @param $id
 	 *
 	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
@@ -172,6 +180,8 @@ class BackController extends Controller {
 	}
 
 	/**
+	 * Écriture chapitre
+	 *
 	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
 	 */
 	public function chapterNewAction() {
@@ -215,6 +225,8 @@ class BackController extends Controller {
 	}
 
 	/**
+	 * Suppression Chapitre
+	 *
 	 * @param $id
 	 *
 	 * @return \App\Http\Response\RedirectResponse
@@ -285,6 +297,8 @@ class BackController extends Controller {
 
 
 	/**
+	 * Édition commentaire
+	 *
 	 * @param $id
 	 *
 	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
@@ -328,6 +342,8 @@ class BackController extends Controller {
 	}
 
 	/**
+	 * Supression commentaire
+	 *
 	 * @param $id
 	 *
 	 * @return \App\Http\Response\RedirectResponse
@@ -355,6 +371,7 @@ class BackController extends Controller {
 
 	/**
 	 * Mise à jour du mot de passe de l'admin
+	 *
 	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
 	 */
 	public function userAction() {
@@ -392,6 +409,11 @@ class BackController extends Controller {
 		] );
 	}
 
+	/**
+	 * Formulaire page à propos
+	 *
+	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
+	 */
 	public function aboutAction() {
 		$manager = $this->database->getManager( Category::class );
 

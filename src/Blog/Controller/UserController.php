@@ -12,11 +12,16 @@ use Blog\Forms\UserForm;
  */
 class UserController extends Controller {
 
+	/**
+	 * Traitement du formulaire de connexion
+	 *
+	 * @return \App\Http\Response\RedirectResponse|\App\Http\Response\Response
+	 */
 	public function loginAction() {
 
 		if ( ! isset( $_SESSION['authenticated'] ) ) {
 
-			$form    = $this->form->get( UserForm::class, [
+			$form = $this->form->get( UserForm::class, [
 				"action" => "/login"
 			] );
 
@@ -28,12 +33,14 @@ class UserController extends Controller {
 				if ( ! is_array( $user ) ) {
 					if ( $manager->checkLogin( $user->getUsername(), $user->getPassword() ) ) {
 						$_SESSION['authenticated'] = true;
-						$this->bag->addMessage("Connexion réussie", "success");
+						$this->bag->addMessage( "Connexion réussie", "success" );
+
 						return $this->redirect( 'admin' );
 					} else {
 
-						$this->bag->addMessage("Erreur: Le nom d'utilisateur et/ou le mot de passe sont incorrectes.", "danger");
-						return $this->redirect('login');
+						$this->bag->addMessage( "Erreur: Le nom d'utilisateur et/ou le mot de passe sont incorrectes.", "danger" );
+
+						return $this->redirect( 'login' );
 					}
 				}
 				foreach ( $user as $error ) {

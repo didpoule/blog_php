@@ -107,6 +107,7 @@ class PostController extends Controller {
 
 	/**
 	 * Met à jour le cookie de lecture
+	 *
 	 * @return \App\Http\Response\RedirectResponse
 	 */
 	public function nextAction() {
@@ -121,6 +122,11 @@ class PostController extends Controller {
 		return $this->redirect( "numberChapter", [ "number" => sprintf( "%s", $readChapters->getCurrent() ) ], sprintf( "#%s", $readChapters->getCurrent() ) );
 	}
 
+	/**
+	 * Met à jour le cookie de lecture
+	 *
+	 * @return \App\Http\Response\RedirectResponse
+	 */
 	public function previousAction() {
 		$manager = $this->database->getManager( Post::class );
 		$this->request->setPost( "previous" );
@@ -133,6 +139,11 @@ class PostController extends Controller {
 		return $this->redirect( "numberChapter", [ "number" => sprintf( "%s", $readChapters->getCurrent() ) ], sprintf( "#%s", $readChapters->getCurrent() ) );
 	}
 
+	/**
+	 * Page A propos
+	 *
+	 * @return \App\Http\Response\Response
+	 */
 	public function aboutAction() {
 		$manager = $this->database->getManager( Category::class );
 

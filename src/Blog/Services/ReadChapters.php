@@ -81,6 +81,8 @@ class ReadChapters {
 
 			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -95,6 +97,8 @@ class ReadChapters {
 		} else {
 			$this->current = $this->qt;
 		}
+
+		return false;
 	}
 
 	/**
@@ -112,6 +116,10 @@ class ReadChapters {
 		return $this->request->getcookie( "current" );
 	}
 
+	/**
+	 *
+	 * @return string
+	 */
 	public function getState() {
 		return $this->state;
 	}

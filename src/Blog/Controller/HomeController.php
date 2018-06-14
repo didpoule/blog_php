@@ -6,28 +6,27 @@ use App\Controller\Controller;
 use Blog\Entity\Category;
 use Blog\Entity\Post;
 
+/**
+ * Class HomeController
+ * @package Blog\Controller
+ */
 class HomeController extends Controller {
 
+	/**
+	 * @return \App\Http\Response\Response
+	 */
 	public function homeAction() {
 		$manager = $this->database->getManager( Category::class );
-		/**
-		 * $editoCat = $manager->findByName( 'edito' );
-		 * $synopsisCat = $manager->findByName( 'synopsis' );
-		 *
-		 * $manager = $this->database->getManager( Post::class );
-		 **/
 
-
-		$edito    = $manager->findByName( 'edito' );
-		$synopsis = $manager->findByName( 'synopsis' );
-
+		$edito = $manager->findByName( 'edito' );
 
 		// Récupération du chapitre en cours
 		if ( $this->request->getCookie( 'current' ) ) {
 			$chapter = $this->database->getManager( Post::class )->getExtract( [ "number" => $this->request->getCookie( "current" ) ] );
 		}
 
-		$featured = ( isset( $chapter ) ) ? $chapter : $synopsis->posts[0];
+		// Si un chapitre est en cours de lecture on affiche le résumé de celui ci sinon le synopsis
+		$featured = ( isset( $chapter ) ) ? $chapter : $manager->findByName( 'synopsis' )->posts[0];
 
 		return $this->render( 'home/home.html.twig', [
 			'edito'    => $edito->posts[0],

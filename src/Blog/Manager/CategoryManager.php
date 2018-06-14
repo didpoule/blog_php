@@ -8,6 +8,13 @@ use Blog\Entity\Post;
 
 class CategoryManager extends Manager {
 
+	/**
+	 * Récupère une catégorie par son nom
+	 *
+	 * @param $name
+	 *
+	 * @return mixed
+	 */
 	public function findByName($name) {
 		return  $this->fetch(["name" => $name]);
 	}
