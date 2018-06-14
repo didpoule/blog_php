@@ -1,8 +1,37 @@
 {% extends "back_template.html.twig" %}
 {% block adminContent %}
 
-    <h2>Administration</h2>
-    <div>
-        <p>Bienvenue dans votre administration</p>
+    <h2 class="text-center">Administration</h2>
+
+    <div class="container-fluid">
+
+    <div class="row">
+
+    <div class="card offset-2 col-3 text-center">
+        <div class="card-body">
+            <div class="dashboard-number">
+                <span>{{ comments }}</span>
+            </div>
+        <h4>Commentaires</h4>
+        {% if waitComs > 0 %}
+            <p>
+                <a href="/admin/comments/moderate">{{ waitComs }} en attente de validation</a>
+            </p>
+        {% endif %}
+        </div>
+
     </div>
+
+    <div class="card offset-2 col-3 text-center">
+        <div class="card-body">
+            <div class="dashboard-number">
+                <span>{{ chapters }}</span>
+            </div>
+            <h4>Chapitres</h4>
+            <p>
+                <a href="/admin/chapter/new">Envie d'écrire ?</a>
+            </p>
+        </div>
+    </div>
+
 {% endblock %}

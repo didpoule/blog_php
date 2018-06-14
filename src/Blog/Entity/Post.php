@@ -189,12 +189,18 @@ class Post extends Entity {
 	 * Lazy Loader commentaires
 	 * @return mixed
 	 */
-	public function getComments() {
+	public function getComments( $all = false ) {
 		if ( empty( $this->comments ) ) {
-			$comments = $this->commentManager->findAllByPost( [
-				"postId"    => $this->getId(),
-				"published" => 1
-			], 0, 5 );
+			if ( ! $all ) {
+
+				$comments = $this->commentManager->findAllByPost( [
+					"postId"    => $this->getId(),
+					"published" => 1
+				], 0, COM_PER_PAGE );
+
+			} else {
+				$comments = $this->commentManager->findAllByPost( [ "postId" => $this->getId() ] );
+			}
 
 			if ( $comments ) {
 				foreach ( $comments as $comment ) {

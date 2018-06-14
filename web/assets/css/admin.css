@@ -75,3 +75,24 @@ input[type='submit'] {
     color: white;
 }
 
+i {
+    margin-right: 10px;
+}
+
+.card {
+    border-radius: 25px;
+    color: #3C4345;
+
+    -webkit-box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.5);
+}
+
+.dashboard-number {
+    font-size: 3rem;
+    margin-bottom: 50px !important;
+}
+
+.dashboard-number span {
+    font-weight: 100;
+}

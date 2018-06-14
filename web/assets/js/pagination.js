@@ -2,7 +2,6 @@ function Pagination(action, max_per_page, name, nb) {
 
     this.name = name;
     this.action = action;
-    this.container = $("#paginated-content");
     this.nb = nb;
     this.current_page_container = $("#current-page");
     this.current_page = 0;

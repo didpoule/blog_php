@@ -25,7 +25,15 @@ class BackController extends Controller {
 	 */
 	public function homeAction() {
 
+		$totalComs     = $this->database->getManager( Comment::class )->countComments();
+		$totalChapters = $this->database->getManager( Post::class )->getNbChapters();
+
+		$waitComs = $this->database->getManager( Comment::class )->countComments( [ "published" => 0 ] );
+
 		return $this->render( 'admin/home.html.twig', [
+			"comments" => $totalComs,
+			"waitComs" => $waitComs,
+			"chapters" => $totalChapters
 		] );
 
 
@@ -273,7 +281,7 @@ class BackController extends Controller {
 		if ( ( $postId && $post ) || $comments ) {
 			return $this->render( 'admin/comments.html.twig', [
 				"post"     => isset( $post ) ? $post : null,
-				"comments" => isset( $post ) ? $post->comments : $comments,
+				"comments" => isset( $post ) ? $post->getComments( true ) : $comments,
 			] );
 		}
 		$this->bag->addMessage( "Le billet demandé n'existe pas.", "danger" );
