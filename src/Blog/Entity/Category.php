@@ -67,24 +67,11 @@ class Category extends Entity {
 	}
 
 	/**
-	 * @param Post $post
-	 */
-	private function addPost( Post $post ) {
-		$this->posts[] = $post;
-	}
-
-	/**
 	 * Lazy Loader posts
 	 */
 	public function getPosts() {
 		if ( empty( $this->posts ) ) {
-			$posts = $this->postManager->fetchAll( [ "category" => $this->id ] );
-
-			if ( $posts ) {
-				foreach ( $posts as $post ) {
-					$this->addPost( $post );
-				}
-			}
+			$this->posts = $this->postManager->fetchAll( [ "category" => $this->id ] );
 		}
 
 		return $this->posts;

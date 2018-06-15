@@ -181,10 +181,6 @@ class Post extends Entity {
 		$this->number = $number;
 	}
 
-	private function addComment( $comment ) {
-		$this->comments[] = $comment;
-	}
-
 	/**
 	 * Lazy Loader commentaires
 	 * @return mixed
@@ -193,21 +189,15 @@ class Post extends Entity {
 		if ( empty( $this->comments ) ) {
 			if ( ! $all ) {
 
-				$comments = $this->commentManager->findAllByPost( [
+				$this->comments = $this->commentManager->findAllByPost( [
 					"postId"    => $this->getId(),
 					"published" => 1
 				], 0, COM_PER_PAGE );
 
 			} else {
-				$comments = $this->commentManager->findAllByPost( [ "postId" => $this->getId() ] );
+				$this->comments = $this->commentManager->findAllByPost( [ "postId" => $this->getId() ] );
 			}
 
-			if ( $comments ) {
-				foreach ( $comments as $comment ) {
-					$this->addComment( $comment );
-
-				}
-			}
 		}
 
 		return $this->comments;

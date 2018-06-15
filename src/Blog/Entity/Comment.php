@@ -48,7 +48,6 @@ class Comment extends Entity implements \JsonSerializable {
 
 	private $postId;
 
-
 	/**
 	 * @var Post
 	 */
@@ -170,6 +169,10 @@ class Comment extends Entity implements \JsonSerializable {
 		return $this->published;
 	}
 
+	/**
+	 * Formate l'entité en json
+	 * @return array|mixed
+	 */
 	public function jsonSerialize() {
 		$formatter = new \IntlDateFormatter( 'fr_FR', \IntlDateFormatter::LONG, \IntlDateFormatter::SHORT );
 
