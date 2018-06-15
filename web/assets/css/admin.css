@@ -83,9 +83,19 @@ i {
     border-radius: 25px;
     color: #3C4345;
 
+    cursor: pointer;
+
     -webkit-box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.5);
     box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover {
+    transform: translate(0, -5px);
+
+    -webkit-box-shadow: 0 10px 10px -3px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 10px 10px -3px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 10px -3px rgba(0, 0, 0, 0.5);
 }
 
 .dashboard-number {
@@ -95,4 +105,22 @@ i {
 
 .dashboard-number span {
     font-weight: 100;
+}
+
+@media screen and (max-width: 670px) {
+    .dropdown-menu {
+        right: 0 !important;
+        transform: translate(-30%, 30px) !important;
+    }
+    #company-name {
+        margin-left: 20px;
+    }
+
+    #main-menu {
+        margin: auto 20px;
+    }
+
+    th, td, td button {
+        font-size: 80%;
+    }
 }

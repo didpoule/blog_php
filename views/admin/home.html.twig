@@ -7,22 +7,22 @@
 
     <div class="row">
 
-    <div class="card offset-2 col-3 text-center">
+    <div class="card mb-5 offset-md-1 col-md-4 col-sm-12 text-center" onclick="window.location = '/admin/comments'">
         <div class="card-body">
             <div class="dashboard-number">
                 <span>{{ comments }}</span>
             </div>
-        <h4>Commentaires</h4>
-        {% if waitComs > 0 %}
-            <p>
-                <a href="/admin/comments/moderate">{{ waitComs }} en attente de validation</a>
-            </p>
-        {% endif %}
+            <h4>Commentaires</h4>
+            {% if waitComs > 0 %}
+                <p>
+                    <a href="/admin/comments/moderate">{{ waitComs }} en attente de validation</a>
+                </p>
+            {% endif %}
         </div>
 
     </div>
 
-    <div class="card offset-2 col-3 text-center">
+    <div class="card mb-5 offset-md-2 col-md-4 col-sm-12 text-center" onclick="window.location = '/admin/chapters'">
         <div class="card-body">
             <div class="dashboard-number">
                 <span>{{ chapters }}</span>

@@ -5,10 +5,29 @@
     <link rel="stylesheet" href="/assets/css/admin.css">
     <link rel="stylesheet" href="/assets/trumbowyg/dist/ui/trumbowyg.min.css">
 {% endblock %}
+
+{% block mainMenu %}
+    <li><a href="/">Retourner à l'accueil</a></li>
+    <li class="dropdown show d-md-none">
+        <a href="#" class="text-white dropdown-toggle" data-toggle="dropdown" role="button"
+                aria-haspopup="true" aria-expanded="false" id="adminMenu">Administration
+        </a>
+
+        <ul class="dropdown-menu" role="menu" aria-labelledby="adminMenu">
+            <li class="dropdown-item"><a href="/admin/edito" class="text-dark">Edito</a></li>
+            <li class="dropdown-item"><a href="/admin/synopsis" class="text-dark">Synopsis</a></li>
+            <li class="dropdown-item"><a href="/admin/chapters" class="text-dark">Chapitres</a></li>
+            <li class="dropdown-item"><a href="/admin/chapter/new" class="text-dark">Ecrire chapitre</a></li>
+            <li class="dropdown-item"><a href="/admin/comments" class="text-dark">Commentaires</a></li>
+            <li class="dropdown-item"><a href="/admin/about" class="text-dark">A propos</a></li>
+            <li class="dropdown-item"><a href="/admin/user" class="text-dark">Modifier mot de passe</a></li>
+        </ul>
+    </li>
+{% endblock %}
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-            <nav class="col-md-2 d-none d-md-block sidebar">
+            <nav class="col-md-3 d-none d-md-block sidebar">
                 <div class="sidebar-sticky">
                     <h5 class="sidebar-heading d-flex align-items-center mt-4 mb-1 text-muted">
                         <a href="/admin" class="nav-link d-flex"><i class="fas fa-tachometer-alt"></i>Administration</a>
@@ -82,11 +101,11 @@
                     </ul>
                 </div>
             </nav>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
                 {% if bag.messages is not empty %}
                     {% for message in bag.messages %}
-                        <div class="alert alert-{{ bag.messages[0].type }} alert-dismissible fade show" role="alert">
+                        <div class="alert alert-{{ bag.messages[0].type }} alert-dismissible fade show"
+                             role="alert">
                             {{ bag.getMessage.message }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -98,6 +117,7 @@
             </main>
         </div>
     </div>
+
 
 
 {% endblock %}

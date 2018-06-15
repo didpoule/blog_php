@@ -1,22 +1,25 @@
 {% extends "front_template.html.twig" %}
-{% block pageTitle %}Chapitres{% endblock %}
+{% block pageTitle %}Le sommaire{% endblock %}
 
 {% block content %}
     {% if not posts is empty %}
-        <div class="row">
+        <div class="container">
 
-            <ul class="list-chapter">
+            <div class="row d-block">
+                <h2 class="text-muted text-center">Sommaire</h2>
+                <hr>
 
                 {% for post in posts %}
-                    <li class="listed-article">
-                        <h2><a href="/chapitres/chapitre-{{ post.number }}">Chapitre {{ post.number }}
-                                : {{ post.title }}</a></h2>
-                    </li>
+                    <h4>
+                        <a href="/chapitres/chapitre-{{ post.number }}#{{ post.number }}"
+                           class="text-dark">Chapitre {{ post.number }}
+                            : {{ post.title }}</a>
+                    </h4>
                 {% endfor %}
-            </ul>
-
+            </div>
         </div>
+
     {% else %}
-        <p>Le premier n'est pas encore arrivé, revenez plus tard.</p>
+        <p>Le premier chapitre n'est pas encore arrivé, essayer de repasser plus tard.</p>
     {% endif %}
 {% endblock %}

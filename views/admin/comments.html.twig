@@ -13,7 +13,7 @@
                     <th>Auteur</th>
                     {% if post is null %}
                         <th>Chapitre</th>{% endif %}
-                    <th>Publié</th>
+                    <th class="d-none">Publié</th>
                     <th>Ajouté le</th>
                     <th>Action</th>
                 </tr>
@@ -21,13 +21,13 @@
                 <tbody>
                 {% for comment in comments %}
                     <tr>
-                        <td class="table-title">{{ comment.author }}</td>
+                        <td>{{ comment.author }}</td>
                         {% if post is empty %}
                             <td>
                                 <a href="/admin/chapter/{{ comment.post.id }}">{{ comment.post.title }}</a>
                             </td>
                         {% endif %}
-                        <td>{{ comment.published ? "Oui" : "Non" }}</td>
+                        <td class="d-none">{{ comment.published ? "Oui" : "Non" }}</td>
                         <td>{{ comment.added|localizeddate('long', 'short',  locale) }}</td>
                         <td><a href="/admin/comment/{{ comment.id }}"><i class="fas fa-edit"></i></a> -
                             <button class="btn btn-link" type="button" data-toggle="modal"
