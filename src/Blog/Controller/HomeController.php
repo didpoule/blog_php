@@ -33,4 +33,9 @@ class HomeController extends Controller {
 			'featured' => $featured
 		] );
 	}
+
+	public function mentionsAction() {
+
+		return $this->render("mentions.html.twig");
+	}
 }

@@ -154,6 +154,11 @@ adminAbout:
     controller: Blog\Controller\BackController
     action: aboutAction
 
+mentions:
+    path: /mentions-legales
+    parameters: {}
+    controller: Blog\Controller\HomeController
+    action: mentionsAction
 
 admin:
     path: /admin

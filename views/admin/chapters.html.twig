@@ -10,7 +10,7 @@
             <tr>
                 <th>Titre</th>
                 <th>Numéro de chapitre</th>
-                <th class="d-none">Publié</th>
+                <th class="d-none d-md-table-cell">Publié</th>
                 <th>Nombre de commentaires</th>
                 <th>Action</th>
             </tr>
@@ -21,7 +21,7 @@
                     <tr>
                         <td>{{ chapter.title }}</td>
                         <td>{{ chapter.number }}</td>
-                        <td class="d-none">{{ chapter.published ? "Oui" : "Non" }}</td>
+                        <td class="d-none d-md-table-cell">{{ chapter.published ? "Oui" : "Non" }}</td>
                         <td><a href="/admin/comments/{{ chapter.id }}">{{ nbComs[chapter.id] }}</a></td>
                         <td><a href="/admin/chapter/{{ chapter.id }}"><i class="fas fa-edit"></i></a> -
                             <button class="btn btn-link" type="button" data-toggle="modal"
