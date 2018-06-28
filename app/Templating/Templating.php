@@ -39,6 +39,7 @@ class Templating {
 
 		$this->twig->addExtension( new \Twig_Extensions_Extension_Intl() );
 		$this->twig->addGlobal( "bag", $bag );
+		$this->twig->addGlobal("session", $_SESSION);
 	}
 
 	/**

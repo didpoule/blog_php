@@ -1,7 +1,17 @@
 {% extends "front_template.html.twig" %}
-
 {% block pageTitle %}La couverture{% endblock %}
 {% block content %}
+    {% if bag.messages is not empty %}
+        {% for message in bag.messages %}
+            <div class="alert alert-{{ bag.messages[0].type }} alert-dismissible fade show"
+                 role="alert">
+                {{ bag.getMessage.message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="row">
         <section>
             <div class="post-container">
@@ -9,7 +19,6 @@
                     <h2>{{ edito.title }}</h2>
                     <p>{{ edito.content|raw }}</p>
                 </article>
-
             </div>
         </section>
     </div>

@@ -25,9 +25,12 @@
             </div>
             <ul id="main-menu">
                 {% block mainMenu %}
-                <li><a href="/">Accueil</a></li>
-                <li><a href="/chapitres">Chapitres</a></li>
-                <li><a href="/a-propos">À propos</a></li>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="/chapitres">Chapitres</a></li>
+                    <li><a href="/a-propos">À propos</a></li>
+                    {% if session.authenticated is not null and session.authenticated %}
+                        <li><a href="/deconnexion">Déconnexion</a></li>
+                    {% endif %}
                 {% endblock %}
             </ul>
         </div>
@@ -80,8 +83,6 @@
     </script>
     {% block scripts %}
     {% endblock %}
-
-
 </div>
 </body>
 </html>

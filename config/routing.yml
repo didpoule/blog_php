@@ -172,6 +172,12 @@ jsonComments:
     controller: Blog\Controller\CommentController
     action: getAction
 
+disconnect:
+    path: /deconnexion
+    parameters: {}
+    controller: Blog\Controller\UserController
+    action: disconnectAction
+
 home:
     path: /
     parameters: {}

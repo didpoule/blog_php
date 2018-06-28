@@ -56,4 +56,14 @@ class UserController extends Controller {
 		return $this->redirect( 'admin' );
 	}
 
+	public function disconnectAction() {
+		if (isset($_SESSION['authenticated']) and $_SESSION['authenticated'] === true) {
+			unset($_SESSION['authenticated']);
+		}
+
+		$this->bag->addMessage( "Déconnexion réussie", "success" );
+
+		return $this->redirect('home');
+	}
+
 }
